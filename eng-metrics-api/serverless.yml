@@ -12,5 +12,5 @@ functions:
     handler: functions/backlog-handlers.backlogs
     events:
       - http:
-         path: /
+         path: /backlogs
          method: get
