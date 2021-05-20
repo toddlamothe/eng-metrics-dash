@@ -1,0 +1,14 @@
+{
+  "name": "eng-metrics-api",
+  "version": "1.0.0",
+  "description": "Engineering Metrics Dashboard API",
+  "main": "handler.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^26.6.3"
+  }
+}
