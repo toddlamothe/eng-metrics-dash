@@ -8,15 +8,9 @@ provider:
   lambdaHashingVersion: '20201221'
 
 functions:
-  # hello:
-  #   handler: handler.hello
-  #   events:
-  #     - http:
-  #         path: /
-  #         method: get
   backlogs:
-    handler: functions/backlog-handlers.backlog
+    handler: functions/backlog-handlers.backlogs
     events:
       - http:
-        path: /
-        method: get
+         path: /
+         method: get

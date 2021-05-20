@@ -1,4 +1,5 @@
-exports.handler = async (event) => {
+module.exports.backlogs = async (event) => {
+    console.log("[backlogs]");
     // TODO implement
     const response = {
         statusCode: 200,
