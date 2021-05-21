@@ -10,7 +10,7 @@ module.exports.backlogs = async (event, context, callback) => {
      })
         .then(response => {
             if (!response.ok) {
-                const response = {
+                const responseMessage = {
                     statusCode: response.status,
                     body: response.statusText
                 };
@@ -19,24 +19,28 @@ module.exports.backlogs = async (event, context, callback) => {
             return response.json()            
         })
         .then(data => {
-            responseBody = {
-                'boardCount': data.total,
-                'boards': data.values
+            const responseBody = {
+                boardCount: data.total,
+                boards: data.values
             }
-        const responseMessage = {
-                statusCode: 200,
-                body: responseBody
-            }; 
-            callback(null, JSON.stringify(responseMessage));
+
+            const responseMessage = {
+                "isBase64Encoded": false,
+                "statusCode": 200,
+                "headers": {
+                },
+                "body": JSON.stringify(responseBody)
+            }            
+            callback(null, responseMessage);
         }).catch((error) => {
             callback(Error(error));
         });
 };
 
 module.exports.backlogEpics = async (event, context, callback) => {
-    response = {
-        'status' : 200,
-        'body': 'EPIC!'
+    let response = {
+        status : 200,
+        body: 'EPIC!'
     }
     callback(null, JSON.stringify(response));
 }
