@@ -175,6 +175,43 @@ module.exports.backlogEpics = async (event, context, callback) => {
     // In the reduce, we fetch all issues for that epic and tally up the points and issue counts
     // But, need to figure out how to nest a synchronous fetch inside map reduce
 
+    var epicIssuesUri;
+    epicArray.forEach( async function (epic) {
+        console.log(epic.name)
+        epicIssuesUri = "https://unionstmedia.atlassian.net/rest/agile/1.0/epic/" + epic.key + "/issue";
+        await fetch(
+            epicIssuesUri, {
+            method: 'GET',
+            headers: {
+                Authorization: 'Basic dGxhbW90aGVAdW5pb25zdG1lZGlhLmNvbTp5R2xrV3RVZ2V5d1Jjbk9SZ25uRkQ1Nzg=',
+            }
+         })
+         .then(response => {
+            return response.json()            
+        })
+    
+
+    })
+
+    // await Promise.all(epicArray.map(epic => fetchEpicIssues(epic)))
+    //     .then(function (responses) {
+    //         // Get a JSON object from each of the responses
+    //         return Promise.all(responses.map(function (response) {
+    //             return response.json();
+    //         }));
+    //     }).then(function (data) {
+    //         // Log the data to the console
+    //         // You would do something with both sets of data here
+    //         console.log(data);
+    //     }).catch(function (error) {
+    //         // if there's an error, log it
+    //         console.log(error);
+    //     });
+
+        
+
+    console.log("5");
+
 
 
     //      3. Tally up stats for this epic
@@ -193,6 +230,26 @@ module.exports.backlogEpics = async (event, context, callback) => {
     }            
     callback(null, responseMessage);
 
+}
+
+function fetchEpicIssues(epic) {
+    console.log("epic = ", epic);
+    epicIssuesUri = "https://unionstmedia.atlassian.net/rest/agile/1.0/epic/" + epic.key + "/issue";
+    fetchPromise = fetch(
+        epicIssuesUri, {
+        method: 'GET',
+        headers: {
+            Authorization: 'Basic dGxhbW90aGVAdW5pb25zdG1lZGlhLmNvbTp5R2xrV3RVZ2V5d1Jjbk9SZ25uRkQ1Nzg=',
+        }
+     })
+    //  .then( response => {
+    //      return response.json()
+    //  })
+    //  .then( data => {
+    //      console.log(data)
+    //  })
+
+     return fetchPromise;
 }
 
 
