@@ -14,9 +14,15 @@ functions:
       - http:
          path: /backlogs
          method: get
-  backlogEpics:
+  backlog-epics:
     handler: functions/backlog-handlers.backlogEpics
     events:
       - http:
           path: /backlogs/{backlogId}/epics
           method: get
+  epic-issues:
+    handler: functions/backlog-handlers.epicIssues
+    events:
+        - http:
+            path: /backlogs/{backlogId}/epics/{epicId}/epicIssues
+            method: get
