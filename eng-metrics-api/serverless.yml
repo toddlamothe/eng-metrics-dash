@@ -7,7 +7,7 @@ provider:
   runtime: nodejs12.x
   lambdaHashingVersion: '20201221'
   environment:
-      ATLASSIAN_API_KEY : 'Basic dGxhbW90aGVAdW5pb25zdG1lZGlhLmNvbTp5R2xrV3RVZ2V5d1Jjbk9SZ25uRkQ1Nzg='
+      ATLASSIAN_API_KEY : ${env:ATLASSIAN_API_KEY}
 
 plugins:
   - serverless-api-gateway-caching
