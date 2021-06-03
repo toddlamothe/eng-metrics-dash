@@ -16,6 +16,7 @@ functions:
          method: get
   backlog-epics:
     handler: functions/backlog-handlers.backlogEpics
+    timeout: 20
     events:
       - http:
           path: /backlogs/{backlogId}/epics

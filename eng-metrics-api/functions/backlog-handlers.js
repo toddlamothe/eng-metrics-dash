@@ -38,7 +38,7 @@ module.exports.backlogs = async (event, context, callback) => {
 };
 
 // Get all epics for the backlog containing the "Budget-Reporting" tag
-// Then talle the total points, stories done/in progress/to do
+// Then tally the total points, stories done/in progress/to do
 module.exports.backlogEpics = async (event, context, callback) => {
     if (!event.pathParameters.backlogId) {
         const responseMessage = {
@@ -50,13 +50,10 @@ module.exports.backlogEpics = async (event, context, callback) => {
 
     const budgetReportingTag = "Budget-Reporting";
     var responseBody
-    var epicArray, budgetReportingEpics = [];
+    var epicArray, budgetReportingEpics = [], epicsWithStats = [];
     backlogId = event.pathParameters.backlogId;
 
-    // 1. Fetch the backlog
     backlogEpicsUri = "https://unionstmedia.atlassian.net/rest/agile/1.0/board/" + backlogId + "/epic";
-
-    console.log("1");
 
     // Fetch epics
     await fetch(
@@ -70,9 +67,6 @@ module.exports.backlogEpics = async (event, context, callback) => {
         return response.json()            
     })
     .then(data => {
-
-        console.log("2");
-
         epicArray = data.values.map((element, index, array) => {            
             return { 
                 "id" : element.id,
@@ -83,8 +77,6 @@ module.exports.backlogEpics = async (event, context, callback) => {
     }).catch((error) => {
         callback(Error(error));
     });
-
-    console.log("3");
 
     // Only include the epic if it was labeled with the budget reporting tag
     for (const epic of epicArray) {
@@ -99,48 +91,75 @@ module.exports.backlogEpics = async (event, context, callback) => {
                 return response.json()            
             })
             .then(data => {
-        
-                console.log("4");
                 if (data.fields.labels && data.fields.labels[0] && data.fields.labels[0] == budgetReportingTag) {
                     // Include this budget reporting epic
                     budgetReportingEpics.push(epic);
                 }
-        
                 
             }).catch((error) => {
                 callback(Error(error));
-            });
-        
+            });        
     }
 
-
-    // 2. epicArray now contains an array of backlog epics.
-    //    For each epic labeled Budget-Reporting, fetch all issues
-
-    // Consider: map/reduce where each time we call map, we fetch labels for that 
-    // epic and only return it if the epic has the Budget-Reporting label
-    // In the reduce, we fetch all issues for that epic and tally up the points and issue counts
-    // But, need to figure out how to nest a synchronous fetch inside map reduce
-
-    var epicIssuesUri;
+    // epicArray now contains an array of backlog epics.
+    // For each epic labeled Budget-Reporting, fetch all issues
     for (const epic of budgetReportingEpics) {
         // Only include if the epic was tagged with the budget reporting tag
+        var epicTotalIssues=0, epicDoneIssues=0, epicInProgressIssues=0, epicToDoIssues=0, epicUnestimatedIssues=0;
+        var epicTotalPoints=0, epicDonePoints=0, epicInProgressPoints=0, epicToDoPoints=0;
 
-        console.log(epic.name)
-        console.log("5");
         await module.exports.epicIssues({pathParameters: { backlogId: 23, epicId : epic.id}}, null, (error, response) => {
-            console.log("6");
-            // 3. Tally up stats for this epic
+            // Tally up stats for this epic
+            allEpicIssues = JSON.parse(response.body).issues;
+            allEpicIssues.forEach(issue => {
+                var storyPoints = 0;
+                epicTotalIssues++;
+                if (issue.fields.customfield_10035){
+                    storyPoints=issue.fields.customfield_10035;
+                    epicTotalPoints+=storyPoints;
+                } 
+                else {
+                    storyPoints = 0;
+                    epicUnestimatedIssues++;
+                }
+                switch(issue.fields.status.name) {
+                    case "Done":
+                        epicDoneIssues++;
+                        epicDonePoints+=storyPoints;
+                        break;
+                    case "In Progress":
+                        epicInProgressIssues++;
+                        epicInProgressPoints+=storyPoints;
+                        break;
+                    case "To Do":
+                        epicToDoIssues++;
+                        epicToDoPoints+=storyPoints;
+                        break;
+                }
+            });
+
+            epicsWithStats.push({ 
+                "id" : epic.id,
+                "key" : epic.key,
+                "name" : epic.name,
+                "totalPoints" : epicTotalPoints,
+                "pointsToDo" : epicToDoPoints,
+                "pointsInProgress" : epicInProgressPoints,
+                "pointsDone" : epicDonePoints,
+                "totalIssues" : epicTotalIssues,
+                "issuesToDo" : epicToDoIssues,
+                "issuesInProgress" : epicInProgressIssues,
+                "issuesDone" : epicDoneIssues,
+                "issuesUnestimated" : epicUnestimatedIssues
+            })
 
         });
-        console.log("7");
     }
-    console.log("8");
 
-    // 4. Return retults
+    // Return retults
     var responseBody = {
-        // epicCount: epicArray.length,
-        // epics: epicArray
+        epicCount: epicsWithStats.length,
+        epics: epicsWithStats
     }
     const responseMessage = {
         "isBase64Encoded": false,
@@ -198,6 +217,5 @@ module.exports.epicIssues = async (event, context, callback) => {
         });
 };
 
-
 // module.exports.epicIssues({pathParameters: { backlogId: 23, epicId : "A20-2137"}}, null, (error, response) => console.log(response))
-module.exports.backlogEpics({pathParameters: { backlogId: 23}}, null, (error, response) => console.log(response))
+// module.exports.backlogEpics({pathParameters: { backlogId: 23}}, null, (error, response) => console.log(response))
