@@ -5,7 +5,7 @@ module.exports.backlogs = async (event, context, callback) => {
         'https://unionstmedia.atlassian.net/rest/agile/1.0/board/', {
         method: 'GET',
         headers: {
-            Authorization: 'Basic dGxhbW90aGVAdW5pb25zdG1lZGlhLmNvbTp5R2xrV3RVZ2V5d1Jjbk9SZ25uRkQ1Nzg=',
+            Authorization: process.env.ATLASSIAN_API_KEY,
         }
      })
         .then(response => {
@@ -60,7 +60,7 @@ module.exports.backlogEpics = async (event, context, callback) => {
         backlogEpicsUri, {
         method: 'GET',
         headers: {
-            Authorization: 'Basic dGxhbW90aGVAdW5pb25zdG1lZGlhLmNvbTp5R2xrV3RVZ2V5d1Jjbk9SZ25uRkQ1Nzg=',
+            Authorization: process.env.ATLASSIAN_API_KEY,
         }
      })
      .then(response => {
@@ -85,7 +85,7 @@ module.exports.backlogEpics = async (event, context, callback) => {
             epicLabelsUri, {
                 method: 'GET',
                 headers: {
-                    Authorization: 'Basic dGxhbW90aGVAdW5pb25zdG1lZGlhLmNvbTp5R2xrV3RVZ2V5d1Jjbk9SZ25uRkQ1Nzg=',
+                    Authorization: process.env.ATLASSIAN_API_KEY,
                 }
              })     .then(response => {
                 return response.json()            
@@ -186,7 +186,7 @@ module.exports.epicIssues = async (event, context, callback) => {
         epicIssuesUri, {
         method: 'GET',
         headers: {
-            Authorization: 'Basic dGxhbW90aGVAdW5pb25zdG1lZGlhLmNvbTp5R2xrV3RVZ2V5d1Jjbk9SZ25uRkQ1Nzg=',
+            Authorization: process.env.ATLASSIAN_API_KEY,
         }
      })
         .then(response => {
@@ -219,3 +219,4 @@ module.exports.epicIssues = async (event, context, callback) => {
 
 // module.exports.epicIssues({pathParameters: { backlogId: 23, epicId : "A20-2137"}}, null, (error, response) => console.log(response))
 // module.exports.backlogEpics({pathParameters: { backlogId: 23}}, null, (error, response) => console.log(response))
+module.exports.backlogs({}, null, (error, response) => console.log(response))
