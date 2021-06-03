@@ -2,16 +2,28 @@ service: eng-metrics-api
 
 frameworkVersion: '2'
 
-
 provider:
   name: aws
   runtime: nodejs12.x
   lambdaHashingVersion: '20201221'
 
 functions:
-  hello:
-    handler: handler.hello
+  backlogs:
+    handler: functions/backlog-handlers.backlogs
     events:
       - http:
-          path: /
+         path: /backlogs
+         method: get
+  backlog-epics:
+    handler: functions/backlog-handlers.backlogEpics
+    timeout: 20
+    events:
+      - http:
+          path: /backlogs/{backlogId}/epics
           method: get
+  epic-issues:
+    handler: functions/backlog-handlers.epicIssues
+    events:
+        - http:
+            path: /backlogs/{backlogId}/epics/{epicId}/epicIssues
+            method: get
