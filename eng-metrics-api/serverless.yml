@@ -1,0 +1,43 @@
+service: eng-metrics-api
+
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  lambdaHashingVersion: '20201221'
+  environment:
+      ATLASSIAN_API_KEY : ${env:ATLASSIAN_API_KEY}
+
+plugins:
+  - serverless-api-gateway-caching
+
+custom:
+  apiGatewayCaching:
+    enabled: true    
+
+functions:
+  backlogs:
+    handler: functions/backlog-handlers.backlogs
+    events:
+      - http:
+         path: /backlogs
+         method: get
+  backlog-epics:
+    handler: functions/backlog-handlers.backlogEpics
+    timeout: 20
+    events:
+      - http:
+          path: /backlogs/{backlogId}/epics
+          method: get
+          caching:
+            enabled: true
+            ttlInSeconds: 3600
+            cacheKeyParameters:
+              - name: request.path.backlogId
+  epic-issues:
+    handler: functions/backlog-handlers.epicIssues
+    events:
+        - http:
+            path: /backlogs/{backlogId}/epics/{epicId}/epicIssues
+            method: get
