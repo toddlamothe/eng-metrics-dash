@@ -138,6 +138,9 @@ module.exports.backlogEpics = async (event, context, callback) => {
                 }
             });
 
+            var epicIssuesPercentComplete = epicTotalIssues>0 ? epicDoneIssues/epicTotalIssues : 0
+            var epicPointsPercentComplete = epicTotalPoints>0 ? epicDonePoints/epicTotalPoints : 0
+
             epicsWithStats.push({ 
                 "id" : epic.id,
                 "key" : epic.key,
@@ -150,7 +153,9 @@ module.exports.backlogEpics = async (event, context, callback) => {
                 "issuesToDo" : epicToDoIssues,
                 "issuesInProgress" : epicInProgressIssues,
                 "issuesDone" : epicDoneIssues,
-                "issuesUnestimated" : epicUnestimatedIssues
+                "issuesUnestimated" : epicUnestimatedIssues,
+                "issuesPecentComplete": epicIssuesPercentComplete,
+                "pointsPercentComplete" : epicPointsPercentComplete
             })
 
         });
@@ -218,5 +223,5 @@ module.exports.epicIssues = async (event, context, callback) => {
 };
 
 // module.exports.epicIssues({pathParameters: { backlogId: 23, epicId : "A20-2137"}}, null, (error, response) => console.log(response))
-// module.exports.backlogEpics({pathParameters: { backlogId: 23}}, null, (error, response) => console.log(response))
-module.exports.backlogs({}, null, (error, response) => console.log(response))
+module.exports.backlogEpics({pathParameters: { backlogId: 23}}, null, (error, response) => console.log(response))
+// module.exports.backlogs({}, null, (error, response) => console.log(response))
