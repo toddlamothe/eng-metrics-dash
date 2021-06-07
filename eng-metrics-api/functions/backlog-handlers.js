@@ -164,7 +164,7 @@ module.exports.backlogEpics = async (event, context, callback) => {
                 "issuesInProgress" : epicInProgressIssues,
                 "issuesDone" : epicDoneIssues,
                 "issuesUnestimated" : epicUnestimatedIssues,
-                "issuesPecentComplete": epicIssuesPercentComplete,
+                "issuesPercentComplete": epicIssuesPercentComplete,
                 "pointsPercentComplete" : epicPointsPercentComplete
             })
 
@@ -178,10 +178,12 @@ module.exports.backlogEpics = async (event, context, callback) => {
         backlogPointsDone : backlogPointsDone,
         backlogPointsInProgress : backlogPointsInProgress,
         backlogPointsToDo : backlogPointsToDo,
+        backlogPointsPercentComplete : backlogPointsDone/backlogTotalPoints,
         backlogTotalIssues : backlogTotalIssues,
         backlogIssuesDone : backlogIssuesDone,
         backlogIssuesInProgress : backlogIssuesInProgress,
         backlogIssuesToDo : backlogIssuesToDo,
+        backlogIssuesPercentComplete : backlogIssuesDone/backlogTotalIssues,
         epics: epicsWithStats
     }
     const responseMessage = {
