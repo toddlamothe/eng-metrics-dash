@@ -149,7 +149,7 @@ module.exports.backlogEpics = async (event, context, callback) => {
             backlogTotalIssues+=epicTotalIssues;
             backlogIssuesDone+=epicDoneIssues;
             backlogIssuesInProgress+=epicInProgressIssues;
-            backlogIssuesToDo+=epicTotalIssues
+            backlogIssuesToDo+=epicToDoIssues;
 
             epicsWithStats.push({ 
                 "id" : epic.id,
