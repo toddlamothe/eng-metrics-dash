@@ -51,7 +51,9 @@ module.exports.backlogEpics = async (event, context, callback) => {
     const budgetReportingTag = "Budget-Reporting";
     var responseBody
     var epicArray, budgetReportingEpics = [], epicsWithStats = [];
-    backlogId = event.pathParameters.backlogId;
+    var backlogId = event.pathParameters.backlogId;
+    var backlogTotalPoints=0, backlogPointsDone=0, backlogPointsInProgress=0, backlogPointsToDo=0;
+    var backlogTotalIssues=0, backlogIssuesDone=0, backlogIssuesInProgress=0, backlogIssuesToDo=0;
 
     backlogEpicsUri = "https://unionstmedia.atlassian.net/rest/agile/1.0/board/" + backlogId + "/epic";
 
@@ -140,6 +142,14 @@ module.exports.backlogEpics = async (event, context, callback) => {
 
             var epicIssuesPercentComplete = epicTotalIssues>0 ? epicDoneIssues/epicTotalIssues : 0
             var epicPointsPercentComplete = epicTotalPoints>0 ? epicDonePoints/epicTotalPoints : 0
+            backlogTotalPoints+=epicTotalPoints;
+            backlogPointsDone+=epicDonePoints;
+            backlogPointsInProgress+=epicInProgressPoints;
+            backlogPointsToDo+=epicToDoPoints;
+            backlogTotalIssues+=epicTotalIssues;
+            backlogIssuesDone+=epicDoneIssues;
+            backlogIssuesInProgress+=epicInProgressIssues;
+            backlogIssuesToDo+=epicTotalIssues
 
             epicsWithStats.push({ 
                 "id" : epic.id,
@@ -154,7 +164,7 @@ module.exports.backlogEpics = async (event, context, callback) => {
                 "issuesInProgress" : epicInProgressIssues,
                 "issuesDone" : epicDoneIssues,
                 "issuesUnestimated" : epicUnestimatedIssues,
-                "issuesPecentComplete": epicIssuesPercentComplete,
+                "issuesPercentComplete": epicIssuesPercentComplete,
                 "pointsPercentComplete" : epicPointsPercentComplete
             })
 
@@ -164,6 +174,16 @@ module.exports.backlogEpics = async (event, context, callback) => {
     // Return retults
     var responseBody = {
         epicCount: epicsWithStats.length,
+        backlogTotalPoints : backlogTotalPoints,
+        backlogPointsDone : backlogPointsDone,
+        backlogPointsInProgress : backlogPointsInProgress,
+        backlogPointsToDo : backlogPointsToDo,
+        backlogPointsPercentComplete : backlogPointsDone/backlogTotalPoints,
+        backlogTotalIssues : backlogTotalIssues,
+        backlogIssuesDone : backlogIssuesDone,
+        backlogIssuesInProgress : backlogIssuesInProgress,
+        backlogIssuesToDo : backlogIssuesToDo,
+        backlogIssuesPercentComplete : backlogIssuesDone/backlogTotalIssues,
         epics: epicsWithStats
     }
     const responseMessage = {
@@ -223,5 +243,5 @@ module.exports.epicIssues = async (event, context, callback) => {
 };
 
 // module.exports.epicIssues({pathParameters: { backlogId: 23, epicId : "A20-2137"}}, null, (error, response) => console.log(response))
-// module.exports.backlogEpics({pathParameters: { backlogId: 23}}, null, (error, response) => console.log(response))
+module.exports.backlogEpics({pathParameters: { backlogId: 23}}, null, (error, response) => console.log(response))
 // module.exports.backlogs({}, null, (error, response) => console.log(response))
