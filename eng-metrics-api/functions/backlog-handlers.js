@@ -243,5 +243,5 @@ module.exports.epicIssues = async (event, context, callback) => {
 };
 
 // module.exports.epicIssues({pathParameters: { backlogId: 23, epicId : "A20-2137"}}, null, (error, response) => console.log(response))
-module.exports.backlogEpics({pathParameters: { backlogId: 23}}, null, (error, response) => console.log(response))
+// module.exports.backlogEpics({pathParameters: { backlogId: 23}}, null, (error, response) => console.log(response))
 // module.exports.backlogs({}, null, (error, response) => console.log(response))
