@@ -7,14 +7,22 @@ provider:
   runtime: nodejs12.x
   lambdaHashingVersion: '20201221'
   environment:
-      ATLASSIAN_API_KEY : ${env:ATLASSIAN_API_KEY}
+    ATLASSIAN_API_KEY : ${env:ATLASSIAN_API_KEY}
+    GW_URL:
+      Fn::Join:
+        - ""
+        - - "https://"
+          - Ref: "ApiGatewayRestApi"
+          - ".execute-api.${self:custom.region}.amazonaws.com/${self:custom.stage}"
 
 plugins:
   - serverless-api-gateway-caching
 
 custom:
   apiGatewayCaching:
-    enabled: true    
+    enabled: true
+  stage: "${opt:stage, self:provider.stage}"
+  region: "us-east-1"
 
 functions:
   backlogs:
@@ -42,4 +50,4 @@ functions:
             path: /backlogs/{backlogId}/epics/{epicId}/epicIssues
             method: get
   export-backlog-epic-google-sheet:
-      handler: functions/google-doc-handlers.exportBacklogEpicsGoogleSheet      
+      handler: functions/google-doc-handlers.exportBacklogEpicsGoogleSheet
