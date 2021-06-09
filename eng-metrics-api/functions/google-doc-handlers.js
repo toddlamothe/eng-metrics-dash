@@ -1,9 +1,53 @@
 const fetch = require('node-fetch');
 
-module.exports.exportBacklogEpicsGoogleSheet = async (event, context, callback) => {
-    console.log("[exportBacklogEpicsGoogleSheet]");
-    console.log("process.env.GW_URL = ", process.env.GW_URL);
-    callback(null);
+module.exports.exportBacklogEpicsGoogleSheet = (event, context, callback) => {
+    if (!event.pathParameters.backlogId) {
+        const responseMessage = {
+            statusCode: 500,
+            body: "Backlog ID not provided"
+        };
+        callback(JSON.stringify(responseMessage));
+    }
+
+    const backlogApiUrl = process.env.GW_URL + + '/backlogs/' + event.pathParameters.backlogId + '/epics';
+    console.log("backlogApiUrl = ", backlogApiUrl);
+    // Fetch specified backlog and epics
+    fetch(
+        backlogApiUrl , {
+        method: 'GET',
+        headers: {
+            Authorization: process.env.ATLASSIAN_API_KEY,
+        }
+     })
+        .then(response => {
+            if (!response.ok) {
+                const responseMessage = {
+                    statusCode: response.status,
+                    body: response.statusText
+                };
+                callback(JSON.stringify(responseMessage));
+            }
+            return response.json()            
+        })
+        .then(data => {
+            // const responseBody = {
+            //     boardCount: data.total,
+            //     boards: data.values
+            // }
+
+            // const responseMessage = {
+            //     "isBase64Encoded": false,
+            //     "statusCode": 200,
+            //     "headers": {
+            //     },
+            //     "body": JSON.stringify(responseBody)
+            // }            
+            // callback(null, responseMessage);
+        }).catch((error) => {
+            callback(Error(error));
+        });
+
+    
 }
 
 // module.exports.exportBacklogEpicsGoogleSheet({}, null, () => console.log("callback ;)"));
