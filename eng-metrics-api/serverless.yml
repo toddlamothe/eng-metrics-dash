@@ -51,3 +51,4 @@ functions:
             method: get
   export-backlog-epic-google-sheet:
       handler: functions/google-doc-handlers.exportBacklogEpicsGoogleSheet
+      timeout: 20

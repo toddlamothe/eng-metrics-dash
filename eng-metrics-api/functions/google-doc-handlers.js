@@ -1,7 +1,7 @@
 const fetch = require('node-fetch');
 
 module.exports.exportBacklogEpicsGoogleSheet = (event, context, callback) => {
-    if (!event.pathParameters.backlogId) {
+    if (!event.backlogId) {
         const responseMessage = {
             statusCode: 500,
             body: "Backlog ID not provided"
@@ -9,7 +9,7 @@ module.exports.exportBacklogEpicsGoogleSheet = (event, context, callback) => {
         callback(JSON.stringify(responseMessage));
     }
 
-    const backlogApiUrl = process.env.GW_URL + + '/backlogs/' + event.pathParameters.backlogId + '/epics';
+    const backlogApiUrl = process.env.GW_URL + '/backlogs/' + event.backlogId + '/epics';
     console.log("backlogApiUrl = ", backlogApiUrl);
     // Fetch specified backlog and epics
     fetch(
@@ -30,6 +30,7 @@ module.exports.exportBacklogEpicsGoogleSheet = (event, context, callback) => {
             return response.json()            
         })
         .then(data => {
+            console.log("data = ", data);
             // const responseBody = {
             //     boardCount: data.total,
             //     boards: data.values
