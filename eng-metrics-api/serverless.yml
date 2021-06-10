@@ -6,14 +6,7 @@ provider:
   name: aws
   runtime: nodejs12.x
   lambdaHashingVersion: '20201221'
-  environment:
-    ATLASSIAN_API_KEY : ${env:ATLASSIAN_API_KEY}
-    GW_URL:
-      Fn::Join:
-        - ""
-        - - "https://"
-          - Ref: "ApiGatewayRestApi"
-          - ".execute-api.${self:custom.region}.amazonaws.com/${self:custom.stage}"
+  environment: ${file(.env.yml):}
 
 plugins:
   - serverless-api-gateway-caching

@@ -12,6 +12,7 @@
     "jest": "^26.6.3"
   },
   "dependencies": {
+    "googleapis": "^76.0.0",
     "node-fetch": "^2.6.1",
     "serverless-api-gateway-caching": "^1.7.2"
   }
