@@ -1,6 +1,10 @@
-const fetch = require('node-fetch');
+'use strict';
 
-module.exports._exportBacklogEpicsGoogleSheet = (event, context, callback) => {
+const fetch = require('node-fetch');
+const { GoogleSpreadsheet } = require('google-spreadsheet');
+const doc = new GoogleSpreadsheet(process.env.SPREADSHEET_ID);
+
+module.exports._exportBacklogEpicsToGoogleSheet = (event, context, callback) => {
     if (!event.backlogId) {
         const responseMessage = {
             statusCode: 500,
@@ -49,7 +53,7 @@ module.exports._exportBacklogEpicsGoogleSheet = (event, context, callback) => {
         });   
 }
 
-module.exports.exportBacklogEpicsGoogleSheet = async event => {
+module.exports.exportBacklogEpicsToGoogleSheet = async event => {
     console.log('Starting write function');
   
     if(!event.body) {
@@ -81,4 +85,23 @@ function spreadsheetAuth(document) {
     });
   }
 
-// module.exports.exportBacklogEpicsGoogleSheet({}, null, () => console.log("callback ;)"));
+function formatResponse(statusCode, payload) {
+  return {
+    statusCode: statusCode,
+    body: JSON.stringify(
+      payload,
+      null,
+      2
+    ),
+  };
+}  
+
+// var mockBody = {
+//   "cells" : [1,2,3,4,5]
+// }
+// var mockEvent = {
+//   "body": JSON.stringify(mockBody)
+// }
+// console.log("mockEvent:")
+// console.log(mockEvent)
+// module.exports.exportBacklogEpicsToGoogleSheet(mockEvent, null, () => console.log("callback ;)"));

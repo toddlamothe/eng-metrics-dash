@@ -43,5 +43,5 @@ functions:
             path: /backlogs/{backlogId}/epics/{epicId}/epicIssues
             method: get
   export-backlog-epic-google-sheet:
-      handler: functions/google-doc-handlers.exportBacklogEpicsGoogleSheet
+      handler: functions/google-doc-handlers.exportBacklogEpicsToGoogleSheet
       timeout: 20
