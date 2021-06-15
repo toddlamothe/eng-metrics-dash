@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "google-spreadsheet": "^3.1.15",
-    "googleapis": "^76.0.0",
+    "googleapis": "^39.2.0",
     "node-fetch": "^2.6.1",
     "serverless-api-gateway-caching": "^1.7.2"
   }
