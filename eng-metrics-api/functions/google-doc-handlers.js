@@ -3,17 +3,18 @@ const readline = require('readline');
 const {google} = require('googleapis');
 
 // If modifying these scopes, delete token.json.
-const SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly'];
+const SCOPES = ['https://www.googleapis.com/auth/drive'];
 // The file token.json stores the user's access and refresh tokens, and is
 // created automatically when the authorization flow completes for the first
 // time.
 const TOKEN_PATH = 'token.json';
 
 // Load client secrets from a local file.
-fs.readFile('client_secret_471764715762-1t74lrms3t9s6oocsspvohv249h3thgv.apps.googleusercontent.com.json', (err, content) => {
+fs.readFile('/Users/todd/code/usm/eng-metrics-dash/eng-metrics-api/functions/client_secret_471764715762-1t74lrms3t9s6oocsspvohv249h3thgv.apps.googleusercontent.com.json', (err, content) => {
   if (err) return console.log('Error loading client secret file:', err);
   // Authorize a client with credentials, then call the Google Drive API.
-  authorize(JSON.parse(content), listFiles);
+  // authorize(JSON.parse(content), listFiles);
+  authorize(JSON.parse(content), createFile);
 });
 
 /**
@@ -89,4 +90,26 @@ function listFiles(auth) {
   });
 }
 
-// 4/1AY0e-g7XV9mqtUvj-RVR11SRSVgIYVfZNiOFL4o7Hcl4Iod2X7l82cCXAMU
+function createFile(auth) {
+  const drive = google.drive({version: 'v3', auth});
+  // text/plain
+  var parentId = '';//some parentId of a folder under which to create the new folder
+  var fileMetadata = {
+    'name' : 'Todds New File',
+    // 'mimeType' : 'application/vnd.google-apps.folder',
+    // 'parents': [parentId]
+  };
+  drive.files.create({
+    resource: fileMetadata,
+  }).then(function(response) {
+    switch(response.status){
+      case 200:
+        var file = response.result;
+        console.log('Created new file!');
+        break;
+      default:
+        console.log('Error creating file, '+response);
+        break;
+      }
+  });
+}
