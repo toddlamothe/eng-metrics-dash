@@ -1,6 +1,7 @@
 const fs = require('fs');
 const readline = require('readline');
 const {google} = require('googleapis');
+const backlogHandlers = require('./backlog-handlers');
 
 // If modifying these scopes, delete token.json.
 const SCOPES = ['https://www.googleapis.com/auth/drive'];
@@ -15,6 +16,7 @@ fs.readFile('/Users/todd/code/usm/eng-metrics-dash/eng-metrics-api/functions/cli
   // Authorize a client with credentials, then call the Google Drive API.
   // authorize(JSON.parse(content), listFiles);
   authorize(JSON.parse(content), createFile);
+  // authorize(JSON.parse(content), run);
 });
 
 /**
@@ -95,21 +97,30 @@ function createFile(auth) {
   // text/plain
   var parentId = '';//some parentId of a folder under which to create the new folder
   var fileMetadata = {
-    'name' : 'Todds New File',
+    'name' : 'toddsnewfile.json',
+    'parents' : ['1SfVBiDrWC_pNngV_eqMPAS_tjS8gjHmZ']
     // 'mimeType' : 'application/vnd.google-apps.folder',
     // 'parents': [parentId]
   };
-  drive.files.create({
-    resource: fileMetadata,
-  }).then(function(response) {
-    switch(response.status){
-      case 200:
-        var file = response.result;
-        console.log('Created new file!');
-        break;
-      default:
-        console.log('Error creating file, '+response);
-        break;
-      }
-  });
+
+  backlogHandlers.backlogEpics({pathParameters: { backlogId: 23}}, null, (error, response) => {
+    var fileMedia = {
+      mimeType : "application/json",
+      body : JSON.stringify(response)
+    }
+    drive.files.create({
+      resource: fileMetadata,
+      media : fileMedia
+    }).then(function(response) {
+      switch(response.status){
+        case 200:
+          var file = response.result;
+          console.log('Created new file!');
+          break;
+        default:
+          console.log('Error creating file, '+response);
+          break;
+        }
+    });
+  })
 }
