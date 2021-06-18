@@ -103,10 +103,13 @@ function createFile(auth) {
     // 'parents': [parentId]
   };
 
-  backlogHandlers.backlogEpics({pathParameters: { backlogId: 23}}, null, (error, response) => {
+  // Accelerator: 23
+  // Beacon: 32
+  backlogHandlers.backlogEpics({pathParameters: { backlogId: 32}}, null, (error, response) => {
     var fileMedia = {
       mimeType : "application/json",
-      body : JSON.stringify(response)
+      body : JSON.stringify(JSON.parse(response.body)),
+      id : "toddsnewfile"
     }
     drive.files.create({
       resource: fileMetadata,
