@@ -1,6 +1,12 @@
 # package directories
 node_modules
 jspm_packages
+.DS_Store
 
 # Serverless directories
 .serverless
+.env.yml
+.DS_Store
+token.json
+client_secret*.json
+
