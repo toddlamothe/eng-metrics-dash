@@ -4,11 +4,16 @@ import crossfilter from 'crossfilter2';
 import { useState, useEffect } from 'react';
 
 function App() {
-  const [cx, setCx] = useState(null);
+  const [backlogEpicData, setBacklogEpicData] = useState(null);
 
-  (async () => {
-    console.log("[in async]");
+  useEffect( () => {
+    if (!backlogEpicData) {
+      getBacklogEpicData();
+    }
+  }, [])
 
+  const getBacklogEpicData = async () => {
+    console.log("[getBacklogEpicData]");
     let baseUrl = "https://ausl4ri6y1.execute-api.us-east-1.amazonaws.com/test-tl/backlogs/32/epics";
     let response = await fetch(baseUrl, {
       method: 'GET',
@@ -16,26 +21,20 @@ function App() {
         "Content-Type": "application/json"
       },
     });
-    let data = await response.json();
-    console.log("got data:");
-    console.log(data);
+    setBacklogEpicData(await response.json());
+  }
 
-  //   const data = await d3.csv(csv)
-  //   const dateFormatSpecifier = '%m/%d/%Y'
-  //   const dateFormatParser = d3.timeParse(dateFormatSpecifier)
-  //   data.forEach(d => {
-  //     d.dd = dateFormatParser(d.date)
-  //     d.month = d3.timeMonth(d.dd) // pre-calculate month for better performance
-  //     d.close = +d.close // coerce to number
-  //     d.open = +d.open
-  //   })
-  //   const cx = crossfilter(data)
-  //   setCx(cx)
-  })()
+  // console.log("[after async]");
+  // console.log(backlogEpicData);
+  var cx = crossfilter(backlogEpicData.epics);
+  // console.log("ndx:");
+  // console.log(ndx)
+  var epicTotalPointsDimension = cx.dimension( d => d.totalPoints)
+  console.log("epicTotalPointsDimension = ", epicTotalPointsDimension);
 
   return (
     <div className="App">
-      Here is some data.
+      <PieChart dimension={epicTotalPointsDimension} group={epicTotalPointsDimension.group()} />
     </div>
   );
 }
