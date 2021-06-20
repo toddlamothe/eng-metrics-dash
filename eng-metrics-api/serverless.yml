@@ -24,6 +24,7 @@ functions:
       - http:
          path: /backlogs
          method: get
+         cors: true
   backlog-epics:
     handler: functions/backlog-handlers.backlogEpics
     timeout: 20
@@ -31,6 +32,7 @@ functions:
       - http:
           path: /backlogs/{backlogId}/epics
           method: get
+          cors: true
           caching:
             enabled: true
             ttlInSeconds: 3600
@@ -42,6 +44,7 @@ functions:
         - http:
             path: /backlogs/{backlogId}/epics/{epicId}/epicIssues
             method: get
+            cors: true
   export-backlog-epic-google-sheet:
       handler: functions/google-doc-handlers.exportBacklogEpicsToGoogleSheet
       timeout: 20

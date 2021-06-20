@@ -28,6 +28,8 @@ module.exports.backlogs = async (event, context, callback) => {
                 "isBase64Encoded": false,
                 "statusCode": 200,
                 "headers": {
+                    "Access-Control-Allow-Origin" : "*",
+                    "Access-Control-Allow-Credentials" : "true"
                 },
                 "body": JSON.stringify(responseBody)
             }            
@@ -190,6 +192,8 @@ module.exports.backlogEpics = async (event, context, callback) => {
         "isBase64Encoded": false,
         "statusCode": 200,
         "headers": {
+            "Access-Control-Allow-Origin" : "*",
+            "Access-Control-Allow-Credentials" : "true"
         },
         "body": JSON.stringify(responseBody)
     }            
@@ -233,6 +237,8 @@ module.exports.epicIssues = async (event, context, callback) => {
                 "isBase64Encoded": false,
                 "statusCode": 200,
                 "headers": {
+                    "Access-Control-Allow-Origin" : "*",
+                    "Access-Control-Allow-Credentials" : "true"
                 },
                 "body": JSON.stringify(responseBody)
             }            
