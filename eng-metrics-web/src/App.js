@@ -1,5 +1,7 @@
 import './App.css';
-import { PieChart } from 'react-dc-js';
+import {   
+  PieChart,
+ } from 'react-dc-js';
 import crossfilter from 'crossfilter2';
 import { useState, useEffect } from 'react';
 
@@ -24,11 +26,14 @@ function App() {
     setBacklogEpicData(await response.json());
   }
 
-  // console.log("[after async]");
-  // console.log(backlogEpicData);
+  if (!backlogEpicData) {
+    return(
+      <div>Loading data...</div>
+    )
+  }
   var cx = crossfilter(backlogEpicData.epics);
-  // console.log("ndx:");
-  // console.log(ndx)
+  var epicDimension = cx.dimension( d => d.name);
+  var epicPointsGroup = epicDimension.group().reduce(e => e.totalPoints);
   var epicTotalPointsDimension = cx.dimension( d => d.totalPoints)
   console.log("epicTotalPointsDimension = ", epicTotalPointsDimension);
 
@@ -40,3 +45,12 @@ function App() {
 }
 
 export default App;
+
+
+{/* <BarChart
+        width={420}
+        height={180}
+        elasticY={true}
+        dimension={epicTotalPointsDimension}
+        group={epicPointsGroup}
+      /> */}
