@@ -1,0 +1,68 @@
+<html>
+   <head>
+      <title>USM Engineering Metrics Dash</title>
+      <link rel = "stylesheet" type = "text/css" href = "css/bootstrap.min.css">
+      <link rel = "stylesheet" type = "text/css" href = "css/dc.css"/>
+      <script src = "js/d3.js"></script>
+      <script src = "js/crossfilter.js"></script>
+      <script src = "js/dc.js"></script>
+   </head>   
+   <body>
+      <div>
+         <div id="epicPointsPieChart"></div>
+         <div id="epicPointsBarChart"></div>
+      </div>
+
+    <script language = "javascript">
+        var epicPointsPieChart = dc.pieChart('#epicPointsPieChart');
+        var epicPointsBarChart = dc.barChart('#epicPointsBarChart');
+        d3.json("data/epics.json")
+            .then( (backlogEpics) => {
+                var cx = crossfilter(backlogEpics.epics);
+                var epicDimension = cx.dimension( function(epic) { return epic.name});
+                var epicTotalPointsGroup = epicDimension.group().reduceSum(function (epic) { return 0 + epic.totalPoints} );
+                                            // runDimension.group().reduceSum(function(d) {return d.Speed * d.Run / 1000;});
+
+
+                epicPointsBarChart
+                    .width(768)
+                    .height(480)
+                    .x(d3.scaleOrdinal(epicDimension)) // Need the empty val to offset the first value
+                    .xUnits(dc.units.ordinal) // Tell Dc.js that we're using an ordinal x axis
+                    .brushOn(false)
+                    .yAxisLabel("This is the Y Axis!")
+                    .dimension(epicDimension)
+                    .group(epicTotalPointsGroup)
+                    .on('renderlet', function(chart) {
+                        chart.selectAll('rect').on("click", function(d) {
+                            console.log("click!", d);
+                        });
+                    });
+
+
+
+
+
+
+                epicPointsPieChart
+                    .width(800)
+                    .height(300)
+                    .label( epic => epic.key + " (" + epic.value, ")")
+                    .dimension(epicDimension)
+                    .group(epicTotalPointsGroup)
+                    .on('renderlet', function(chart) {
+                        chart.selectAll('rect').on('click', function(d) {
+                            console.log('click!', d);
+                        });
+                    });
+                
+
+                dc.renderAll();
+            }, (error) => {
+                console.log("Error: ", error);                
+            })
+      </script>
+   </body>
+</html>
+
+
