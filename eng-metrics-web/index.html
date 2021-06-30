@@ -17,14 +17,20 @@
                 Project
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="#">Map Search</a>
-                    <a class="dropdown-item" href="#">Beacon</a>
+                    <a class="dropdown-item" href="/index.html?backlog=23">Map Search</a>
+                    <a class="dropdown-item" href="/index.html?backlog=32">Beacon</a>
                 </div>
             </li>            
             </ul>
         </nav>
 
         <div class="container-fluid">
+            <div class="row mb-2 mt-2">
+                <h1>
+                    <div id="backlogTitle"></div>
+                </h1>
+            </div>
+
             <div class="row mb-2 mt-2">
                 <div class="col-6">
                     <div class="card" style="width: 16em;">
@@ -182,19 +188,44 @@
 
 
     <script language = "javascript">
+        const backlogs = {
+            23: "Map Search",
+            32: "Beacon"
+        }
+        // Grab backlog ID from querystring
+        const urlSearchParams = new URLSearchParams(window.location.search);
+        const params = Object.fromEntries(urlSearchParams.entries());        
+        var backlogId;
+        if (params.backlog) {
+            backlogId = params.backlog;
+        }
+        else {
+            window.location.href = "/index.html?backlog=23"
+        }
+
         var epicPointsPieChart = dc.pieChart('#epicPointsPieChart');
         var epicPointsBarChart = dc.barChart('#epicPointsBarChart');
-        d3.json("data/epics.json")
+        var backlogEpicsUrl = "https://ausl4ri6y1.execute-api.us-east-1.amazonaws.com/test-tl/backlogs/" + backlogId + "/epics";
+        d3.json(backlogEpicsUrl)
             .then( (backlogEpics) => {
-                // First populate scalar data points                
+                // Project title
+                d3.select("#backlogTitle").text(backlogs[backlogId] + " Project Progress");
+                // Populate scalar data points                
                 d3.select("#issuesPercentComplete").text(formatAsPercent(backlogEpics.backlogIssuesPercentComplete));
                 d3.select("#pointsPercentComplete").text(formatAsPercent(backlogEpics.backlogPointsPercentComplete));
+
+                // Calaulate # of unestimated stories
+                unestimatedStories = backlogEpics.epics.map( (epic) => {
+                    return epic.issuesUnestimated
+                }).reduce( (result, item) => {
+                    return result + item;
+                }, 0);
                 
                 d3.select("#issuesTotal").text(backlogEpics.backlogTotalIssues);
                 d3.select("#issuesComplete").text(backlogEpics.backlogIssuesDone);
                 d3.select("#issuesInProgress").text(backlogEpics.backlogIssuesInProgress);
                 d3.select("#issuesToDo").text(backlogEpics.backlogIssuesToDo);
-                d3.select("#issuesToDoUnestimated").text("-");
+                d3.select("#issuesToDoUnestimated").text(unestimatedStories);
                 d3.select("#pointsTotal").text(backlogEpics.backlogTotalPoints);
                 d3.select("#pointsComplete").text(backlogEpics.backlogPointsDone);
                 d3.select("#pointsInProgress").text(backlogEpics.backlogPointsInProgress);
@@ -216,7 +247,7 @@
                     .group(epicTotalPointsPieGroup);                
 
                 epicPointsBarChart
-                    .height(400)
+                    .height(375)
                     .width(1400)
                     .x(d3.scaleOrdinal(epicPointsBarDimension)) // Need the empty val to offset the first value
                     .xUnits(dc.units.ordinal) // Tell Dc.js that we're using an ordinal x axis
