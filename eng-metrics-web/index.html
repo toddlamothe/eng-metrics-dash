@@ -1,17 +1,47 @@
-<html>
+<!doctype html>
+<html lang="en">
    <head>
       <title>USM Engineering Metrics Dash</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
       <link rel = "stylesheet" type = "text/css" href = "css/bootstrap.min.css">
       <link rel = "stylesheet" type = "text/css" href = "css/dc.css"/>
-      <script src = "js/d3.js"></script>
-      <script src = "js/crossfilter.js"></script>
-      <script src = "js/dc.js"></script>
-   </head>   
+    </head>   
    <body>
-      <div>
-         <div id="epicPointsPieChart"></div>
-         <div id="epicPointsBarChart"></div>
-      </div>
+    <div class="container-fluid">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="#">Engineering Metrics Dash</a>          
+            <ul class="navbar-nav mr-auto">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Project
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="#">Map Search</a>
+                    <a class="dropdown-item" href="#">Beacon</a>
+                </div>
+            </li>            
+            </ul>
+          </nav>
+
+          <div class="row">
+            <div class="col-sm">
+                <div id="epicPointsPieChart"></div>
+            </div>
+            <div class="col-sm">
+                <div id="epicPointsBarChart"></div>
+            </div>
+          </div>
+
+
+    </div>
+
+    <script src = "js/d3.js"></script>
+    <script src = "js/crossfilter.js"></script>
+    <script src = "js/dc.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
 
     <script language = "javascript">
         var epicPointsPieChart = dc.pieChart('#epicPointsPieChart');
@@ -27,19 +57,19 @@
                 var epicTotalPointsBarGroup = epicPointsBarDimension.group().reduceSum(function (epic) { return 0 + epic.totalPoints} );
 
                 epicPointsPieChart
-                    .width(800)
+                    .width(300)
                     .height(300)
-                    .label( epic => epic.key + " (" + epic.value, ")")
+                    .label( epic => epic.key + " (" + epic.value + ")")
                     .dimension(epicPointsPieDimension)
                     .group(epicTotalPointsPieGroup);                
 
                 epicPointsBarChart
-                    .width(768)
-                    .height(480)
+                    .width(600)
+                    .height(400)
                     .x(d3.scaleOrdinal(epicPointsBarDimension)) // Need the empty val to offset the first value
                     .xUnits(dc.units.ordinal) // Tell Dc.js that we're using an ordinal x axis
                     .brushOn(false)
-                    .yAxisLabel("This is the Y Axis!")
+                    .yAxisLabel("Story Points")
                     .dimension(epicPointsBarDimension)
                     .group(epicTotalPointsBarGroup);
 
@@ -48,6 +78,9 @@
                 console.log("Error: ", error);                
             })
       </script>
+
+
+
    </body>
 </html>
 
