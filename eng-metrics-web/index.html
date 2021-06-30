@@ -19,43 +19,29 @@
         d3.json("data/epics.json")
             .then( (backlogEpics) => {
                 var cx = crossfilter(backlogEpics.epics);
-                var epicDimension = cx.dimension( function(epic) { return epic.name});
-                var epicTotalPointsGroup = epicDimension.group().reduceSum(function (epic) { return 0 + epic.totalPoints} );
-                                            // runDimension.group().reduceSum(function(d) {return d.Speed * d.Run / 1000;});
-
-
-                epicPointsBarChart
-                    .width(768)
-                    .height(480)
-                    .x(d3.scaleOrdinal(epicDimension)) // Need the empty val to offset the first value
-                    .xUnits(dc.units.ordinal) // Tell Dc.js that we're using an ordinal x axis
-                    .brushOn(false)
-                    .yAxisLabel("This is the Y Axis!")
-                    .dimension(epicDimension)
-                    .group(epicTotalPointsGroup)
-                    .on('renderlet', function(chart) {
-                        chart.selectAll('rect').on("click", function(d) {
-                            console.log("click!", d);
-                        });
-                    });
-
-
-
-
-
+                // Pie chart
+                var epicPointsPieDimension = cx.dimension( function(epic) { return epic.name});
+                var epicTotalPointsPieGroup = epicPointsPieDimension.group().reduceSum(function (epic) { return 0 + epic.totalPoints} );
+                // Bar chart
+                var epicPointsBarDimension = cx.dimension( function(epic) { return epic.name});
+                var epicTotalPointsBarGroup = epicPointsBarDimension.group().reduceSum(function (epic) { return 0 + epic.totalPoints} );
 
                 epicPointsPieChart
                     .width(800)
                     .height(300)
                     .label( epic => epic.key + " (" + epic.value, ")")
-                    .dimension(epicDimension)
-                    .group(epicTotalPointsGroup)
-                    .on('renderlet', function(chart) {
-                        chart.selectAll('rect').on('click', function(d) {
-                            console.log('click!', d);
-                        });
-                    });
-                
+                    .dimension(epicPointsPieDimension)
+                    .group(epicTotalPointsPieGroup);                
+
+                epicPointsBarChart
+                    .width(768)
+                    .height(480)
+                    .x(d3.scaleOrdinal(epicPointsBarDimension)) // Need the empty val to offset the first value
+                    .xUnits(dc.units.ordinal) // Tell Dc.js that we're using an ordinal x axis
+                    .brushOn(false)
+                    .yAxisLabel("This is the Y Axis!")
+                    .dimension(epicPointsBarDimension)
+                    .group(epicTotalPointsBarGroup);
 
                 dc.renderAll();
             }, (error) => {
