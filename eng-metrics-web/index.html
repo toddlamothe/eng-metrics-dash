@@ -171,18 +171,6 @@
                 </div>
             </div>
 
-            <div class="row mb-2">
-                <div class="col-8">
-                    <div id="epicPointsBarChart"></div>
-                </div>
-            </div>
-
-            <div class="row mb-2">
-                <div class="col-4 text-align-center">
-                    <div id="epicPointsPieChart"></div>
-                </div>
-            </div>            
-
     </div>
 
     <script src = "js/d3.js"></script>
@@ -212,8 +200,6 @@
             window.location.href = "/index.html?backlog=23"
         }
 
-        var epicPointsPieChart = dc.pieChart('#epicPointsPieChart');
-        // var epicPointsBarChart = dc.barChart('#epicPointsBarChart');
         var epicPointsStackedBarChart = dc.barChart('#epicPointsStackedBarChart');
         var backlogEpicsUrl = "https://ausl4ri6y1.execute-api.us-east-1.amazonaws.com/test-tl/backlogs/" + backlogId + "/epics";
         
@@ -254,12 +240,6 @@
                 })
 
                 var cx = crossfilter(backlogEpics.epics);
-                // Pie chart
-                var epicPointsPieDimension = cx.dimension( function(epic) { return epic.name});
-                var epicTotalPointsPieGroup = epicPointsPieDimension.group().reduceSum(function (epic) { return 0 + epic.totalPoints} );
-                // Bar chart
-                // var epicPointsBarDimension = cx.dimension( function(epic) { return epic.name});
-                // var epicTotalPointsBarGroup = epicPointsBarDimension.group().reduceSum(function (epic) { return 0 + epic.totalPoints} );
                 // Stacked bar chart
                 var cx2 = crossfilter(storyStatusData);
                 var epicPointsStackedBarDimension = cx2.dimension( function(epic) { return epic.Name});
@@ -276,12 +256,6 @@
                     });     
                 
                 hideSpinner();
-                epicPointsPieChart
-                    .width(300)
-                    .height(300)
-                    .label( epic => epic.key + " (" + epic.value + ")")
-                    .dimension(epicPointsPieDimension)
-                    .group(epicTotalPointsPieGroup);
 
                 epicPointsStackedBarChart
                     .height(375)
@@ -292,22 +266,11 @@
                     .xUnits(dc.units.ordinal)
                     .yAxisLabel("Story Points");
 
-                // The first status was stacked in the chart command. Iterate through 
-                // remaining statuses and add stacks to the chart
+                // The first status was stacked in the chart command. Iterate 
+                // through remaining statuses and add stacks to the chart
                 for (let i=1;i<epicStatusArray.length;i++) {
                     epicPointsStackedBarChart.stack(stackedBarChartYdim, epicStatusArray[i], sel_stack(epicStatusArray[i]));
                 }
-
-
-                // epicPointsBarChart
-                //     .height(375)
-                //     .width(1400)
-                //     .x(d3.scaleOrdinal(epicPointsBarDimension)) // Need the empty val to offset the first value
-                //     .xUnits(dc.units.ordinal) // Tell Dc.js that we're using an ordinal x axis
-                //     .brushOn(false)
-                //     .yAxisLabel("Story Points")
-                //     .dimension(epicPointsBarDimension)
-                //     .group(epicTotalPointsBarGroup);
 
                 dc.renderAll();
             }, (error) => {
