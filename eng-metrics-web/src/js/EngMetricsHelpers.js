@@ -23,7 +23,8 @@ export function FormatEpicDataForBarChart(epicData) {
 
     // 3. Then, iterate through each status and for each one, 
     //    push that epic's status values onto the status array
-    const defaultSeries = [
+    const defaultSeries = 
+    [
         {
         name: 'Done',
         data: issuesDoneValues
@@ -38,7 +39,8 @@ export function FormatEpicDataForBarChart(epicData) {
         data: issuesUnestimatedValues
         }]
 
-    const defaultOptions = {
+    const defaultOptions = 
+    {
       chart: {
         type: 'bar',
         height: 350,

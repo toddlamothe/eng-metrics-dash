@@ -10,10 +10,9 @@ import {FormatEpicDataForBarChart} from '../js/EngMetricsHelpers';
 
  function Main() {
     var [rawBacklogEpics, setRawBacklogEpics] = useState('');
-    var [backlogEpics, setBacklogEpics] = useState('');
     var [chartOptionData, setChartOptionData] = useState({
-        "defaultOptions": null,
-        "defaultSeries" : null
+        "defaultOptions": blankOptions,
+        "defaultSeries" : blankSeries
     })
 
     // When the component loads, fetch raw backlog and epic data
@@ -28,10 +27,10 @@ import {FormatEpicDataForBarChart} from '../js/EngMetricsHelpers';
     // format it and make it available to the chart controls
     useEffect( () => {
         if (rawBacklogEpics) {
-            console.log("backlogEpics changed:", rawBacklogEpics);
-            console.log("")   
+            // console.log("backlogEpics changed:", rawBacklogEpics);
+            // console.log("")   
             var formattedChartOptionData =  FormatEpicDataForBarChart(rawBacklogEpics.epics);
-            console.log("formattedChartOptionData = ", formattedChartOptionData);
+            console.log("About to update formatted chart option data in main component and trigger chart re-render: ", formattedChartOptionData);
             setChartOptionData(formattedChartOptionData);
         }        
     }, [rawBacklogEpics]);
@@ -81,5 +80,71 @@ import {FormatEpicDataForBarChart} from '../js/EngMetricsHelpers';
         </div>
     )
 }
+
+
+const blankSeries = 
+    [
+        {
+        name: 'Done',
+        data: []
+        }, {
+        name: 'In Progress',
+        data: []
+        }, {
+        name: 'To Do',
+        data: []
+        }, {
+        name: 'Unestimated',
+        data: []
+        }]
+
+const blankOptions = 
+    {
+        chart: {
+            type: 'bar',
+            height: 350,
+            stacked: true,
+        },
+        plotOptions: {
+            bar: {
+            horizontal: true,
+            },
+        },
+        stroke: {
+            width: 1,
+            colors: ['#fff']
+        },
+        title: {
+            text: 'Epic Stories by Status'
+        },
+        xaxis: {
+            categories: [],
+            labels: {
+                formatter: function (val) {
+                    return val
+                }
+            }
+        },
+        yaxis: {
+            title: {
+                text: undefined
+            },
+        },
+        tooltip: {
+            y: {
+            formatter: function (val) {
+                return val
+            }
+            }
+        },
+        fill: {
+            opacity: 1
+        },
+        legend: {
+            position: 'top',
+            horizontalAlign: 'left',
+            offsetX: 40
+        }
+    };
 
 export default Main;
