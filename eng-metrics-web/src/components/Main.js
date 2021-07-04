@@ -6,7 +6,7 @@ import StackedBarChart from "./StackedBarChart";
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import {FormatEpicDataForBarChart} from '../js/EngMetricsHelpers';
+import {FormatEpicDataForBarChart, blankSeries, blankOptions, formatAsPercent} from '../js/EngMetricsHelpers';
 
  function Main() {
     var [rawBacklogEpics, setRawBacklogEpics] = useState('');
@@ -15,10 +15,21 @@ import {FormatEpicDataForBarChart} from '../js/EngMetricsHelpers';
         "defaultSeries" : blankSeries
     })
 
+    var [storiesPercentComplete, setStoriesPercentComplete] = useState('');
+    var [totalStories, setTotalStories] = useState('');
+    var [storiesComplete, setStoriesComplete] = useState('');
+    var [storiesInProgress, setStoriesInProgress] = useState('');
+    var [storiesToDo, setStoriesToDo] = useState('');
+    var [storiesUnestimated, setStoriesUnestimated] = useState('');
+    var [pointsPercentComplete, setPointsPercentComplete] = useState('');
+    var [totalPoints, setTotalPoints] = useState('');
+    var [pointsComplete, setPointsComplete] = useState('');
+    var [pointsInProgress, setPointsinProgress] = useState('');
+    var [pointsToDo, setPointsToDo] = useState('');
+
     // When the component loads, fetch raw backlog and epic data
     useEffect( () => {
         if (!rawBacklogEpics) {
-            console.log("about to getBacklogEpics");
             getBacklogEpics();
         }
     }, []);
@@ -27,11 +38,19 @@ import {FormatEpicDataForBarChart} from '../js/EngMetricsHelpers';
     // format it and make it available to the chart controls
     useEffect( () => {
         if (rawBacklogEpics) {
-            // console.log("backlogEpics changed:", rawBacklogEpics);
-            // console.log("")   
             var formattedChartOptionData =  FormatEpicDataForBarChart(rawBacklogEpics.epics);
-            console.log("About to update formatted chart option data in main component and trigger chart re-render: ", formattedChartOptionData);
             setChartOptionData(formattedChartOptionData);
+            setStoriesPercentComplete(formatAsPercent(rawBacklogEpics.backlogIssuesPercentComplete) + "%");
+            setPointsPercentComplete(formatAsPercent(rawBacklogEpics.backlogPointsPercentComplete) + "%");
+            setTotalStories(rawBacklogEpics.backlogTotalIssues);
+            setStoriesComplete(rawBacklogEpics.backlogIssuesDone);
+            setStoriesInProgress(rawBacklogEpics.backlogIssuesInProgress);
+            setStoriesToDo(rawBacklogEpics.backlogIssuesToDo);
+            // setStoriesUnestimated(rawBacklogEpics.);
+            setTotalPoints(rawBacklogEpics.backlogTotalPoints);
+            setPointsComplete(rawBacklogEpics.backlogPointsDone);
+            setPointsinProgress(rawBacklogEpics.backlogPointsInProgress);
+            setPointsToDo(rawBacklogEpics.backlogPointsToDo);
         }        
     }, [rawBacklogEpics]);
 
@@ -51,7 +70,6 @@ import {FormatEpicDataForBarChart} from '../js/EngMetricsHelpers';
                 return response.json()            
             })
             .then(data => {     
-                // console.log("data = ", data)
                 setRawBacklogEpics(data);
             });
     }     
@@ -59,16 +77,55 @@ import {FormatEpicDataForBarChart} from '../js/EngMetricsHelpers';
     return(
         <div className="app">
             <Header />
-            <Container>
+            <Container fluid>
                 <Row>
-                    <Col>
-                        <SingleMetricCard title="Total Stories % Complete" value="55%" />
+                    <Col md={6}>
+                        <SingleMetricCard width="5" title="Total Stories % Complete" value={storiesPercentComplete} />
+                    </Col>                    
+                    <Col md={6}>
+                        <SingleMetricCard title="Points % Complete" value={pointsPercentComplete} />
                     </Col>                    
                 </Row>
                 <Row>
-                    <Col>
-                        <SingleMetricCard title="Total Stories" value="12234" />
-                    </Col>                    
+                    <Col md={1}>
+                        <SingleMetricCard title="Total Stories" value={totalStories} />
+                    </Col>
+                    <Col md={1}>
+                        <SingleMetricCard title="Complete" value={storiesComplete} />
+                    </Col>
+                    <Col md={1}>
+                        <SingleMetricCard title="In Progress" value={storiesInProgress} />
+                    </Col>
+                    <Col md={1}>
+                        <SingleMetricCard title="To Do" value={storiesToDo} />
+                    </Col>
+                    <Col md={1}>
+                        <SingleMetricCard title="Unestimated" value={storiesUnestimated} />
+                    </Col>
+                    <Col md={1}>
+                        <SingleMetricCard title="" value="" />
+                    </Col>
+                    <Col md={1}>
+                        <SingleMetricCard title="Total Points" value={totalPoints} />
+                    </Col>
+                    <Col md={1}>
+                        <SingleMetricCard title="Complete" value={pointsComplete} />
+                    </Col>
+                    <Col md={1}>
+                        <SingleMetricCard title="In Progress" value={pointsInProgress} />
+                    </Col>
+                    <Col md={1}>
+                        <SingleMetricCard title="To Do" value={pointsToDo} />
+                    </Col>
+                    <Col md={1}>
+                        <SingleMetricCard title="" value="" />
+                    </Col>
+                    <Col md={1}>
+                        
+                    </Col>
+
+                    
+
                 </Row>
                 <Row>
                     <Col>
@@ -80,71 +137,5 @@ import {FormatEpicDataForBarChart} from '../js/EngMetricsHelpers';
         </div>
     )
 }
-
-
-const blankSeries = 
-    [
-        {
-        name: 'Done',
-        data: []
-        }, {
-        name: 'In Progress',
-        data: []
-        }, {
-        name: 'To Do',
-        data: []
-        }, {
-        name: 'Unestimated',
-        data: []
-        }]
-
-const blankOptions = 
-    {
-        chart: {
-            type: 'bar',
-            height: 350,
-            stacked: true,
-        },
-        plotOptions: {
-            bar: {
-            horizontal: true,
-            },
-        },
-        stroke: {
-            width: 1,
-            colors: ['#fff']
-        },
-        title: {
-            text: 'Epic Stories by Status'
-        },
-        xaxis: {
-            categories: [],
-            labels: {
-                formatter: function (val) {
-                    return val
-                }
-            }
-        },
-        yaxis: {
-            title: {
-                text: undefined
-            },
-        },
-        tooltip: {
-            y: {
-            formatter: function (val) {
-                return val
-            }
-            }
-        },
-        fill: {
-            opacity: 1
-        },
-        legend: {
-            position: 'top',
-            horizontalAlign: 'left',
-            offsetX: 40
-        }
-    };
 
 export default Main;
