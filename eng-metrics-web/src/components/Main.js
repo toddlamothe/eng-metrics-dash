@@ -1,10 +1,9 @@
 import React, {useState, useEffect} from "react";
 import Header from "./Header";
-import SingleMetricCard from "./SimgleMetricCard";
+import SingleMetricCard from "./SingleMetricCard";
 import StackedBarChart from "./StackedBarChart";
 import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+import {Row, Col } from "react-bootstrap";
 import {FormatEpicDataForBarChart, blankSeries, blankOptions, formatAsPercent} from '../js/EngMetricsHelpers';
 import '../assets/css/eng-metrics.css';
 
@@ -77,51 +76,51 @@ import '../assets/css/eng-metrics.css';
     return(
         <div className="app">
             <Header />
-            <Container fluid>
+            <Container fluid style={{ paddingLeft: 0, paddingRight: 0 }}>
                 <Row>
-                    <Col md={2}>
+                    <Col md={2} className="noPadding noMargin">
                         <SingleMetricCard width="5" title="Total Stories % Complete" value={storiesPercentComplete} />
                     </Col>
-                    <Col md={4}>
+                    <Col md={4} className="noPadding noMargin">
                         
                     </Col>
-                    <Col md={2}>
+                    <Col md={2} className="noPadding noMargin">
                         <SingleMetricCard title="Total Points % Complete" value={pointsPercentComplete} />
                     </Col>
-                    <Col md={4}>
+                    <Col md={4} className="noPadding noMargin">
                         
                     </Col>
                 </Row>
                 <Row className='mt-2'>
-                    <Col md={1}>
+                    <Col md={1} style={{ paddingLeft: 2, paddingRight: 2 }}>
                         <SingleMetricCard title="Total Stories" value={totalStories} />
                     </Col>
-                    <Col md={1}>
+                    <Col md={1} style={{ paddingLeft: 2, paddingRight: 2 }}>
                         <SingleMetricCard title="Complete" value={storiesComplete} />
                     </Col>
-                    <Col md={1}>
+                    <Col md={1} style={{ paddingLeft: 2, paddingRight: 2 }}>
                         <SingleMetricCard title="In Progress" value={storiesInProgress} />
                     </Col>
-                    <Col md={1}>
+                    <Col md={1} style={{ paddingLeft: 2, paddingRight: 2 }}>
                         <SingleMetricCard title="To Do" value={storiesToDo} />
                     </Col>
-                    <Col md={1}>
+                    <Col md={1} style={{ paddingLeft: 2, paddingRight: 2 }}>
                         <SingleMetricCard title="Unestimated" value={storiesUnestimated} />
                     </Col>
-                    <Col md={1}></Col>
-                    <Col md={1}>
+                    <Col md={1} style={{ paddingLeft: 2, paddingRight: 2 }}></Col>
+                    <Col md={1} style={{ paddingLeft: 0, paddingRight: 0 }}>
                         <SingleMetricCard title="Total Points" value={totalPoints} />
                     </Col>
-                    <Col md={1}>
+                    <Col md={1} style={{ paddingLeft: 2, paddingRight: 2 }}>
                         <SingleMetricCard title="Complete" value={pointsComplete} />
                     </Col>
-                    <Col md={1}>
+                    <Col md={1} style={{ paddingLeft: 2, paddingRight: 2 }}>
                         <SingleMetricCard title="In Progress" value={pointsInProgress} />
                     </Col>
-                    <Col md={1}>
+                    <Col md={1} style={{ paddingLeft: 2, paddingRight: 2 }}>
                         <SingleMetricCard title="To Do" value={pointsToDo} />
                     </Col>
-                    <Col md={2}></Col>
+                    <Col md={2} style={{ paddingLeft: 2, paddingRight: 2 }}></Col>
                 </Row>
                 <Row className='mt-2'>
                     <Col>
@@ -129,6 +128,7 @@ import '../assets/css/eng-metrics.css';
                     </Col>
                     
                 </Row>
+                
             </Container>
         </div>
     )
