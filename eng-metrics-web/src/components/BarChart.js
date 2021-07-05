@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from "react";
+import React, {useState} from "react";
 import Chart from "react-apexcharts";
 
 function BarChart(props) {

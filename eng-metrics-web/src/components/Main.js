@@ -1,12 +1,12 @@
 import React, {useState, useEffect} from "react";
 import Header from "./Header";
 import SingleMetricCard from "./SimgleMetricCard";
-import BarChart from "./BarChart";
 import StackedBarChart from "./StackedBarChart";
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import {FormatEpicDataForBarChart, blankSeries, blankOptions, formatAsPercent} from '../js/EngMetricsHelpers';
+import '../assets/css/eng-metrics.css';
 
  function Main() {
     var [rawBacklogEpics, setRawBacklogEpics] = useState('');
@@ -93,7 +93,7 @@ import {FormatEpicDataForBarChart, blankSeries, blankOptions, formatAsPercent} f
                     </Col>
                 </Row>
                 <Row className='mt-2'>
-                    <Col md={1} className='ml-0 mr-0'>
+                    <Col md={1}>
                         <SingleMetricCard title="Total Stories" value={totalStories} />
                     </Col>
                     <Col md={1}>
@@ -108,9 +108,7 @@ import {FormatEpicDataForBarChart, blankSeries, blankOptions, formatAsPercent} f
                     <Col md={1}>
                         <SingleMetricCard title="Unestimated" value={storiesUnestimated} />
                     </Col>
-                    <Col md={1}>
-                        <SingleMetricCard title="" value="" />
-                    </Col>
+                    <Col md={1}></Col>
                     <Col md={1}>
                         <SingleMetricCard title="Total Points" value={totalPoints} />
                     </Col>
@@ -123,13 +121,7 @@ import {FormatEpicDataForBarChart, blankSeries, blankOptions, formatAsPercent} f
                     <Col md={1}>
                         <SingleMetricCard title="To Do" value={pointsToDo} />
                     </Col>
-                    <Col md={1}>
-                        <SingleMetricCard title="" value="" />
-                    </Col>
-                    <Col md={1}>
-                        
-                    </Col>
-
+                    <Col md={2}></Col>
                 </Row>
                 <Row className='mt-2'>
                     <Col>

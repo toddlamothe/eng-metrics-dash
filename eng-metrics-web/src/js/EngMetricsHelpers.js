@@ -1,11 +1,7 @@
-const fetch = require('node-fetch');
-
 // Transform the raw json recieved from the API to a 
 // payload the ApexCharts stacked bar chart can handle
 export function FormatEpicDataForBarChart(epicData) {
-    // 1. Create an ordered array of possible statuses
-    const statusArray = ["To Do","In Progress","Done","Unestimated"];
-    // 2. Then create a separate array for each status
+    // Create a separate array for each status
     const epicNames = [];
     const issuesToDoValues = [];
     const issuesInProgressValues = [];
@@ -20,8 +16,8 @@ export function FormatEpicDataForBarChart(epicData) {
         issuesUnestimatedValues.push(epic.issuesUnestimated);
     })
 
-    // 3. Then, iterate through each status and for each one, 
-    //    push that epic's status values onto the status array
+    // Then, iterate through each status and for each one, 
+    // push that epic's status values onto the status array
     const defaultSeries = 
     [
         {

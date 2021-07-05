@@ -1,5 +1,4 @@
-import React, {useState, useEffect, useRef} from "react";
-import {Navbar, Nav, NavItem} from 'react-bootstrap';
+import {Navbar, Nav} from 'react-bootstrap';
 import Container from 'react-bootstrap/Container';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Image from 'react-bootstrap/Image';
@@ -32,8 +31,6 @@ function Header(props) {
                     </Navbar.Collapse>
                 </Container>
                 </Navbar>
-
-
         </div>
     )
 }
