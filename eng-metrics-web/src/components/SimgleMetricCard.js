@@ -4,7 +4,6 @@ import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
 
 function SingleMetricCard(props) {
-    console.log("props.width = ", props.width);
     return(
         <div>
             <Card>

@@ -79,15 +79,21 @@ import {FormatEpicDataForBarChart, blankSeries, blankOptions, formatAsPercent} f
             <Header />
             <Container fluid>
                 <Row>
-                    <Col md={6}>
+                    <Col md={2}>
                         <SingleMetricCard width="5" title="Total Stories % Complete" value={storiesPercentComplete} />
-                    </Col>                    
-                    <Col md={6}>
-                        <SingleMetricCard title="Points % Complete" value={pointsPercentComplete} />
-                    </Col>                    
+                    </Col>
+                    <Col md={4}>
+                        
+                    </Col>
+                    <Col md={2}>
+                        <SingleMetricCard title="Total Points % Complete" value={pointsPercentComplete} />
+                    </Col>
+                    <Col md={4}>
+                        
+                    </Col>
                 </Row>
-                <Row>
-                    <Col md={1}>
+                <Row className='mt-2'>
+                    <Col md={1} className='ml-0 mr-0'>
                         <SingleMetricCard title="Total Stories" value={totalStories} />
                     </Col>
                     <Col md={1}>
@@ -124,10 +130,8 @@ import {FormatEpicDataForBarChart, blankSeries, blankOptions, formatAsPercent} f
                         
                     </Col>
 
-                    
-
                 </Row>
-                <Row>
+                <Row className='mt-2'>
                     <Col>
                         <StackedBarChart defaultSeries={chartOptionData.defaultSeries} defaultOptions={chartOptionData.defaultOptions} />
                     </Col>
