@@ -6,8 +6,21 @@ import Container from 'react-bootstrap/Container';
 import {Row, Col } from "react-bootstrap";
 import {FormatEpicDataForBarChart, blankSeries, blankOptions, formatAsPercent} from '../js/EngMetricsHelpers';
 import '../assets/css/eng-metrics.css';
+import {useLocation} from 'react-router-dom';
+import queryString from 'query-string';
 
- function Main() {
+ function Main(props) {
+
+    var {search} = useLocation();
+    const queryStringValues = queryString.parse(search);
+    const [backlogId, setBacklogId] = useState(23);
+    const [projectName, setProjectName] = useState("Map Search");
+
+    if (queryStringValues.backlogId && (queryStringValues.backlogId !== backlogId)) {
+        setBacklogId(queryStringValues.backlogId)
+        setProjectName(queryStringValues.project);
+    }
+
     var [rawBacklogEpics, setRawBacklogEpics] = useState('');
     var [chartOptionData, setChartOptionData] = useState({
         "defaultOptions": blankOptions,
@@ -29,9 +42,10 @@ import '../assets/css/eng-metrics.css';
     // When the component loads, fetch raw backlog and epic data
     useEffect( () => {
         if (!rawBacklogEpics) {
-            getBacklogEpics();
+            // Pull backlog ID from the querystring
+            getBacklogEpics(backlogId || 23);
         }
-    }, []);
+    }, [backlogId]);
 
     // When the raw backlog and epic data changes, 
     // format it and make it available to the chart controls
@@ -45,7 +59,7 @@ import '../assets/css/eng-metrics.css';
             setStoriesComplete(rawBacklogEpics.backlogIssuesDone);
             setStoriesInProgress(rawBacklogEpics.backlogIssuesInProgress);
             setStoriesToDo(rawBacklogEpics.backlogIssuesToDo);
-            // setStoriesUnestimated(rawBacklogEpics.);
+            setStoriesUnestimated(rawBacklogEpics.backlogIssuesUnestimated);
             setTotalPoints(rawBacklogEpics.backlogTotalPoints);
             setPointsComplete(rawBacklogEpics.backlogPointsDone);
             setPointsinProgress(rawBacklogEpics.backlogPointsInProgress);
@@ -53,9 +67,9 @@ import '../assets/css/eng-metrics.css';
         }        
     }, [rawBacklogEpics]);
 
-    const getBacklogEpics = async () => {
+    const getBacklogEpics = async (backlogId) => {
         await fetch(
-            'https://ausl4ri6y1.execute-api.us-east-1.amazonaws.com/test-tl/backlogs/23/epics', {
+            'https://ausl4ri6y1.execute-api.us-east-1.amazonaws.com/test-tl/backlogs/' + backlogId + '/epics', {
             method: 'GET'
          })
             .then(response => {
@@ -76,6 +90,7 @@ import '../assets/css/eng-metrics.css';
     return(
         <div className="app">
             <Header />
+            <div className="alignLeft"><h1>Project Dashboard - {projectName}</h1></div>
             <Container fluid style={{ paddingLeft: 0, paddingRight: 0 }}>
                 <Row>
                     <Col md={2} className="noPadding noMargin">
@@ -123,7 +138,7 @@ import '../assets/css/eng-metrics.css';
                     <Col md={2} style={{ paddingLeft: 2, paddingRight: 2 }}></Col>
                 </Row>
                 <Row className='mt-2'>
-                    <Col>
+                    <Col md={8}>
                         <StackedBarChart defaultSeries={chartOptionData.defaultSeries} defaultOptions={chartOptionData.defaultOptions} />
                     </Col>                    
                 </Row>                

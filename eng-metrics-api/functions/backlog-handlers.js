@@ -55,7 +55,7 @@ module.exports.backlogEpics = async (event, context, callback) => {
     var epicArray, budgetReportingEpics = [], epicsWithStats = [];
     var backlogId = event.pathParameters.backlogId;
     var backlogTotalPoints=0, backlogPointsDone=0, backlogPointsInProgress=0, backlogPointsToDo=0;
-    var backlogTotalIssues=0, backlogIssuesDone=0, backlogIssuesInProgress=0, backlogIssuesToDo=0;
+    var backlogTotalIssues=0, backlogIssuesDone=0, backlogIssuesInProgress=0, backlogIssuesToDo=0, backlogIssuesUnestimated=0;
 
     backlogEpicsUri = "https://unionstmedia.atlassian.net/rest/agile/1.0/board/" + backlogId + "/epic";
 
@@ -152,6 +152,8 @@ module.exports.backlogEpics = async (event, context, callback) => {
             backlogIssuesDone+=epicDoneIssues;
             backlogIssuesInProgress+=epicInProgressIssues;
             backlogIssuesToDo+=epicToDoIssues;
+            backlogIssuesUnestimated+=epicUnestimatedIssues;
+            
 
             epicsWithStats.push({ 
                 "id" : epic.id,
@@ -185,6 +187,7 @@ module.exports.backlogEpics = async (event, context, callback) => {
         backlogIssuesDone : backlogIssuesDone,
         backlogIssuesInProgress : backlogIssuesInProgress,
         backlogIssuesToDo : backlogIssuesToDo,
+        backlogIssuesUnestimated : backlogIssuesUnestimated,
         backlogIssuesPercentComplete : backlogIssuesDone/backlogTotalIssues,
         epics: epicsWithStats
     }
