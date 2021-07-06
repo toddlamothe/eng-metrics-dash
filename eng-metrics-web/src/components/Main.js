@@ -6,8 +6,10 @@ import Container from 'react-bootstrap/Container';
 import {Row, Col } from "react-bootstrap";
 import {FormatEpicDataForBarChart, blankSeries, blankOptions, formatAsPercent} from '../js/EngMetricsHelpers';
 import '../assets/css/eng-metrics.css';
+import {useLocation} from 'react-router-dom';
 
- function Main() {
+ function Main(props) {
+    var location = useLocation();    
     var [rawBacklogEpics, setRawBacklogEpics] = useState('');
     var [chartOptionData, setChartOptionData] = useState({
         "defaultOptions": blankOptions,
@@ -30,8 +32,8 @@ import '../assets/css/eng-metrics.css';
     useEffect( () => {
         if (!rawBacklogEpics) {
             // Pull backlog ID from the querystring
-            
-            getBacklogEpics();
+            var backlogId = 23;
+            getBacklogEpics(backlogId);
         }
     }, []);
 
@@ -56,7 +58,6 @@ import '../assets/css/eng-metrics.css';
     }, [rawBacklogEpics]);
 
     const getBacklogEpics = async (backlogId) => {
-        backlogId = 23;
         await fetch(
             'https://ausl4ri6y1.execute-api.us-east-1.amazonaws.com/test-tl/backlogs/' + backlogId + '/epics', {
             method: 'GET'

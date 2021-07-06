@@ -3,6 +3,7 @@ import Container from 'react-bootstrap/Container';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Image from 'react-bootstrap/Image';
 import UsmLogo from '../assets/images/usm_logo.jpg';
+import { Link, Route } from "react-router-dom";
 
 function Header(props) {
     return(
@@ -24,8 +25,12 @@ function Header(props) {
                     <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
                         <NavDropdown title="Project" id="basic-nav-dropdown">
-                            <NavDropdown.Item href="#action/3.1">Map Search</NavDropdown.Item>
-                            <NavDropdown.Item href="#action/3.2">Beacon</NavDropdown.Item>
+                            <NavDropdown.Item>
+                                <Link to="/?backlogId=23&project=MapSearch">Map Search</Link>
+                            </NavDropdown.Item>
+                            <NavDropdown.Item>
+                                <Link to="/?backlogId=32&project=Beacon">Beacon</Link>
+                            </NavDropdown.Item>
                         </NavDropdown>
                     </Nav>
                     </Navbar.Collapse>
