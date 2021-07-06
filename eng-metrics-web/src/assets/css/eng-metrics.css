@@ -1,0 +1,29 @@
+.noPadding {
+    padding-left: 2;
+    padding-right: 2;
+}
+
+.noMargin {
+    margin-left: 2;
+    margin-right: 2;
+}
+
+div.cardHeaderBold {
+    font-size: 11pt;
+    font-weight: 900;
+}
+
+div.cardTextBold {
+    font-size: 22pt;
+    font-weight: 900;
+}
+
+div.cardHeaderNormal {
+    font-size:10pt;
+}
+
+div.cardTextNormal {
+    font-size: 11pt;
+    font-weight: 900;
+
+}
