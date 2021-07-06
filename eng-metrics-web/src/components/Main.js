@@ -29,6 +29,8 @@ import '../assets/css/eng-metrics.css';
     // When the component loads, fetch raw backlog and epic data
     useEffect( () => {
         if (!rawBacklogEpics) {
+            // Pull backlog ID from the querystring
+            
             getBacklogEpics();
         }
     }, []);
@@ -53,9 +55,10 @@ import '../assets/css/eng-metrics.css';
         }        
     }, [rawBacklogEpics]);
 
-    const getBacklogEpics = async () => {
+    const getBacklogEpics = async (backlogId) => {
+        backlogId = 23;
         await fetch(
-            'https://ausl4ri6y1.execute-api.us-east-1.amazonaws.com/test-tl/backlogs/23/epics', {
+            'https://ausl4ri6y1.execute-api.us-east-1.amazonaws.com/test-tl/backlogs/' + backlogId + '/epics', {
             method: 'GET'
          })
             .then(response => {
