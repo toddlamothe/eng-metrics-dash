@@ -79,13 +79,13 @@ import '../assets/css/eng-metrics.css';
             <Container fluid style={{ paddingLeft: 0, paddingRight: 0 }}>
                 <Row>
                     <Col md={2} className="noPadding noMargin">
-                        <SingleMetricCard width="5" title="Total Stories % Complete" value={storiesPercentComplete} />
+                        <SingleMetricCard size="large" title="Total Stories % Complete" value={storiesPercentComplete} />
                     </Col>
                     <Col md={4} className="noPadding noMargin">
                         
                     </Col>
                     <Col md={2} className="noPadding noMargin">
-                        <SingleMetricCard title="Total Points % Complete" value={pointsPercentComplete} />
+                        <SingleMetricCard  size="large" title="Total Points % Complete" value={pointsPercentComplete} />
                     </Col>
                     <Col md={4} className="noPadding noMargin">
                         
