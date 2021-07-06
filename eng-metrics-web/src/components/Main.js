@@ -125,10 +125,8 @@ import '../assets/css/eng-metrics.css';
                 <Row className='mt-2'>
                     <Col>
                         <StackedBarChart defaultSeries={chartOptionData.defaultSeries} defaultOptions={chartOptionData.defaultOptions} />
-                    </Col>
-                    
-                </Row>
-                
+                    </Col>                    
+                </Row>                
             </Container>
         </div>
     )
