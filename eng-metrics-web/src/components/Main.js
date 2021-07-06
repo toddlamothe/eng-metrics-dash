@@ -7,9 +7,20 @@ import {Row, Col } from "react-bootstrap";
 import {FormatEpicDataForBarChart, blankSeries, blankOptions, formatAsPercent} from '../js/EngMetricsHelpers';
 import '../assets/css/eng-metrics.css';
 import {useLocation} from 'react-router-dom';
+import queryString from 'query-string';
 
  function Main(props) {
-    var location = useLocation();    
+
+    var {search} = useLocation();
+    const queryStringValues = queryString.parse(search);
+    const [backlogId, setBacklogId] = useState(23);
+    const [projectName, setProjectName] = useState("Map Search");
+
+    if (queryStringValues.backlogId && (queryStringValues.backlogId !== backlogId)) {
+        setBacklogId(queryStringValues.backlogId)
+        setProjectName(queryStringValues.project);
+    }
+
     var [rawBacklogEpics, setRawBacklogEpics] = useState('');
     var [chartOptionData, setChartOptionData] = useState({
         "defaultOptions": blankOptions,
@@ -32,10 +43,9 @@ import {useLocation} from 'react-router-dom';
     useEffect( () => {
         if (!rawBacklogEpics) {
             // Pull backlog ID from the querystring
-            var backlogId = 23;
-            getBacklogEpics(backlogId);
+            getBacklogEpics(backlogId || 23);
         }
-    }, []);
+    }, [backlogId]);
 
     // When the raw backlog and epic data changes, 
     // format it and make it available to the chart controls
@@ -49,7 +59,7 @@ import {useLocation} from 'react-router-dom';
             setStoriesComplete(rawBacklogEpics.backlogIssuesDone);
             setStoriesInProgress(rawBacklogEpics.backlogIssuesInProgress);
             setStoriesToDo(rawBacklogEpics.backlogIssuesToDo);
-            // setStoriesUnestimated(rawBacklogEpics.);
+            setStoriesUnestimated(rawBacklogEpics.backlogIssuesUnestimated);
             setTotalPoints(rawBacklogEpics.backlogTotalPoints);
             setPointsComplete(rawBacklogEpics.backlogPointsDone);
             setPointsinProgress(rawBacklogEpics.backlogPointsInProgress);
@@ -80,6 +90,7 @@ import {useLocation} from 'react-router-dom';
     return(
         <div className="app">
             <Header />
+            <div className="alignLeft"><h1>Project Dashboard - {projectName}</h1></div>
             <Container fluid style={{ paddingLeft: 0, paddingRight: 0 }}>
                 <Row>
                     <Col md={2} className="noPadding noMargin">
@@ -127,7 +138,7 @@ import {useLocation} from 'react-router-dom';
                     <Col md={2} style={{ paddingLeft: 2, paddingRight: 2 }}></Col>
                 </Row>
                 <Row className='mt-2'>
-                    <Col>
+                    <Col md={8}>
                         <StackedBarChart defaultSeries={chartOptionData.defaultSeries} defaultOptions={chartOptionData.defaultOptions} />
                     </Col>                    
                 </Row>                

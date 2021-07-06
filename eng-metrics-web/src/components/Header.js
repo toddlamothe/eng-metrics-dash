@@ -3,7 +3,6 @@ import Container from 'react-bootstrap/Container';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Image from 'react-bootstrap/Image';
 import UsmLogo from '../assets/images/usm_logo.jpg';
-import { Link, Route } from "react-router-dom";
 
 function Header(props) {
     return(
@@ -12,24 +11,16 @@ function Header(props) {
                 <Container fluid>
                     <Navbar.Brand>
                     <Image src={UsmLogo} width={50} height={50} rounded className='mr-2 ml-2'/>
-                        {/* <img
-                            src={UsmLogo}
-                            
-                            width="40"
-                            height="40"                            
-                            className="d-inline-block align-top"
-                            alt="React Bootstrap logo"
-                        /> */}
                         <strong>Engineering Metrics Dash</strong>
                     </Navbar.Brand>
                     <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
                         <NavDropdown title="Project" id="basic-nav-dropdown">
-                            <NavDropdown.Item>
-                                <Link to="/?backlogId=23&project=MapSearch">Map Search</Link>
+                            <NavDropdown.Item href="/?backlogId=23&project=Map%20Search">
+                                Map Search
                             </NavDropdown.Item>
-                            <NavDropdown.Item>
-                                <Link to="/?backlogId=32&project=Beacon">Beacon</Link>
+                            <NavDropdown.Item href="/?backlogId=32&project=Beacon">
+                                Beacon
                             </NavDropdown.Item>
                         </NavDropdown>
                     </Nav>
