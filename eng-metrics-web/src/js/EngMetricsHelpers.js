@@ -9,7 +9,7 @@ export function FormatEpicDataForBarChart(epicData) {
     const issuesUnestimatedValues = [];
     // 2. Create an ordered array of epics
     epicData.forEach( epic => {
-        epicNames.push(epic.name)
+        epicNames.push(epic.name);
         issuesToDoValues.push(epic.issuesToDo);
         issuesInProgressValues.push(epic.issuesInProgress);
         issuesDoneValues.push(epic.issuesDone);
@@ -90,7 +90,7 @@ export function FormatEpicDataForBarChart(epicData) {
     })
 };
 
-export const blankSeries = 
+export const stackedBarChartBlankSeries = 
     [
         {
         name: 'Done',
@@ -106,7 +106,7 @@ export const blankSeries =
         data: []
         }]
 
-export const blankOptions = 
+export const stackedBarChartBlankOptions = 
     {
         chart: {
             type: 'bar',
@@ -154,6 +154,61 @@ export const blankOptions =
             offsetX: 40
         }
     };
+
+    export function FormatEpicDataForPieChart(epicData) {
+      const epicNamesArray = [];
+      const epicTotalPointsArray = [];
+      epicData.forEach( epic => {
+        epicNamesArray.push(epic.name);
+        epicTotalPointsArray.push(epic.totalPoints);
+      });
+      const chartSeries = epicTotalPointsArray;
+
+      const chartOptions = {
+        chart: {
+          width: 380,
+          type: 'pie',
+        },
+        labels: epicNamesArray,
+        responsive: [{
+          breakpoint: 480,
+          options: {
+            chart: {
+              width: 200
+            },
+            legend: {
+              position: 'bottom'
+            }
+          }
+        }]
+      };
+
+      return ({
+        options: chartOptions,
+        series: chartSeries
+      })
+    }
+
+    export const pieChartBlankOptions = {
+      chart: {
+        width: 380,
+        type: 'pie',
+      },
+      labels: [],
+      responsive: [{
+        breakpoint: 480,
+        options: {
+          chart: {
+            width: 200
+          },
+          legend: {
+            position: 'bottom'
+          }
+        }
+      }]
+    };
+
+    export const pieChartBlankSeries = [];
 
     export function formatAsPercent(rawValue) {
       return Math.round((rawValue + 0) * 100)

@@ -2,9 +2,10 @@ import React, {useState, useEffect} from "react";
 import Header from "./Header";
 import SingleMetricCard from "./SingleMetricCard";
 import StackedBarChart from "./StackedBarChart";
+import PieChart from "./PieChart";
 import Container from 'react-bootstrap/Container';
 import {Row, Col, Spinner} from "react-bootstrap";
-import {FormatEpicDataForBarChart, blankSeries, blankOptions, formatAsPercent} from '../js/EngMetricsHelpers';
+import {FormatEpicDataForBarChart, stackedBarChartBlankSeries, stackedBarChartBlankOptions, pieChartBlankOptions, pieChartBlankSeries, formatAsPercent, FormatEpicDataForPieChart} from '../js/EngMetricsHelpers';
 import '../assets/css/eng-metrics.css';
 import {useLocation} from 'react-router-dom';
 import queryString from 'query-string';
@@ -27,9 +28,14 @@ import queryString from 'query-string';
     const [spinnerVisibleStyle, setSpinnerVisibleStyle] = useState({ visibility: "" });
 
     var [rawBacklogEpics, setRawBacklogEpics] = useState('');
-    var [chartOptionData, setChartOptionData] = useState({
-        "defaultOptions": blankOptions,
-        "defaultSeries" : blankSeries
+    var [stackedBarChartOptionData, setStackedBarChartOptionData] = useState({
+        "defaultOptions": stackedBarChartBlankOptions,
+        "defaultSeries" : stackedBarChartBlankSeries
+    })
+
+    var [pieChartOptionData, setPieChartOptionData] = useState( {
+        "options" : stackedBarChartBlankOptions,
+        "series" : stackedBarChartBlankSeries
     })
 
     var [storiesPercentComplete, setStoriesPercentComplete] = useState('');
@@ -59,8 +65,10 @@ import queryString from 'query-string';
     useEffect( () => {
         showSpinner();
         if (rawBacklogEpics) {
-            var formattedChartOptionData =  FormatEpicDataForBarChart(rawBacklogEpics.epics);
-            setChartOptionData(formattedChartOptionData);
+            var formattedStackedBarChartOptionData =  FormatEpicDataForBarChart(rawBacklogEpics.epics);
+            setStackedBarChartOptionData(formattedStackedBarChartOptionData);
+            var formattedPieCharOptionData = FormatEpicDataForPieChart(rawBacklogEpics.epics);
+            setPieChartOptionData(formattedPieCharOptionData);
             setStoriesPercentComplete(formatAsPercent(rawBacklogEpics.backlogIssuesPercentComplete) + "%");
             setPointsPercentComplete(formatAsPercent(rawBacklogEpics.backlogPointsPercentComplete) + "%");
             setTotalStories(rawBacklogEpics.backlogTotalIssues);
@@ -161,8 +169,11 @@ import queryString from 'query-string';
                 </Row>
                 <Row className='mt-2'>
                     <Col md={8}>
-                        <StackedBarChart defaultSeries={chartOptionData.defaultSeries} defaultOptions={chartOptionData.defaultOptions} />
-                    </Col>                    
+                        <StackedBarChart defaultSeries={stackedBarChartOptionData.defaultSeries} defaultOptions={stackedBarChartOptionData.defaultOptions} />
+                    </Col>   
+                    <Col md={4}>
+                        <PieChart options={pieChartOptionData.options} series={pieChartOptionData.series} type="pie" />
+                    </Col>                 
                 </Row>                
             </Container>
         </div>
