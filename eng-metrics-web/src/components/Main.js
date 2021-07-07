@@ -3,7 +3,7 @@ import Header from "./Header";
 import SingleMetricCard from "./SingleMetricCard";
 import StackedBarChart from "./StackedBarChart";
 import Container from 'react-bootstrap/Container';
-import {Row, Col } from "react-bootstrap";
+import {Row, Col, Spinner} from "react-bootstrap";
 import {FormatEpicDataForBarChart, blankSeries, blankOptions, formatAsPercent} from '../js/EngMetricsHelpers';
 import '../assets/css/eng-metrics.css';
 import {useLocation} from 'react-router-dom';
@@ -12,6 +12,9 @@ import queryString from 'query-string';
  function Main(props) {
 
     var {search} = useLocation();
+    const spinnerStyle = { position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)" };
+    const [spinnerVisible, setSpinnerVisible] = useState(true);
+
     const queryStringValues = queryString.parse(search);
     const [backlogId, setBacklogId] = useState(23);
     const [projectName, setProjectName] = useState("Map Search");
@@ -20,6 +23,8 @@ import queryString from 'query-string';
         setBacklogId(queryStringValues.backlogId)
         setProjectName(queryStringValues.project);
     }
+
+    const [spinnerVisibleStyle, setSpinnerVisibleStyle] = useState({ visibility: "" });
 
     var [rawBacklogEpics, setRawBacklogEpics] = useState('');
     var [chartOptionData, setChartOptionData] = useState({
@@ -43,13 +48,16 @@ import queryString from 'query-string';
     useEffect( () => {
         if (!rawBacklogEpics) {
             // Pull backlog ID from the querystring
+            showSpinner();
             getBacklogEpics(backlogId || 23);
+            hideSpinner();
         }
     }, [backlogId]);
 
     // When the raw backlog and epic data changes, 
     // format it and make it available to the chart controls
     useEffect( () => {
+        showSpinner();
         if (rawBacklogEpics) {
             var formattedChartOptionData =  FormatEpicDataForBarChart(rawBacklogEpics.epics);
             setChartOptionData(formattedChartOptionData);
@@ -65,6 +73,7 @@ import queryString from 'query-string';
             setPointsinProgress(rawBacklogEpics.backlogPointsInProgress);
             setPointsToDo(rawBacklogEpics.backlogPointsToDo);
         }        
+        hideSpinner();
     }, [rawBacklogEpics]);
 
     const getBacklogEpics = async (backlogId) => {
@@ -85,10 +94,23 @@ import queryString from 'query-string';
             .then(data => {     
                 setRawBacklogEpics(data);
             });
-    }     
+    }
+
+    function showSpinner() {
+        console.log("showSpinner")
+        setSpinnerVisible(true);
+    }
+
+    function hideSpinner() {
+        console.log("hideSpinner")
+        setSpinnerVisible(false);
+    }
 
     return(
         <div className="app">
+            <div style={spinnerStyle}>                
+                {spinnerVisible && <Spinner animation="border" variant="primary" role="status" />}
+            </div>
             <Header />
             <div className="alignLeft"><h1>Project Dashboard - {projectName}</h1></div>
             <Container fluid style={{ paddingLeft: 0, paddingRight: 0 }}>
