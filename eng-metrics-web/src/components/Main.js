@@ -2,9 +2,10 @@ import React, {useState, useEffect} from "react";
 import Header from "./Header";
 import SingleMetricCard from "./SingleMetricCard";
 import StackedBarChart from "./StackedBarChart";
+import PieChart from "./PieChart";
 import Container from 'react-bootstrap/Container';
-import {Row, Col } from "react-bootstrap";
-import {FormatEpicDataForBarChart, blankSeries, blankOptions, formatAsPercent} from '../js/EngMetricsHelpers';
+import {Row, Col, Spinner} from "react-bootstrap";
+import {FormatEpicDataForBarChart, stackedBarChartBlankSeries, stackedBarChartBlankOptions, pieChartBlankOptions, pieChartBlankSeries, formatAsPercent, FormatEpicDataForPieChart} from '../js/EngMetricsHelpers';
 import '../assets/css/eng-metrics.css';
 import {useLocation} from 'react-router-dom';
 import queryString from 'query-string';
@@ -12,6 +13,9 @@ import queryString from 'query-string';
  function Main(props) {
 
     var {search} = useLocation();
+    const spinnerStyle = { position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)" };
+    const [spinnerVisible, setSpinnerVisible] = useState(true);
+    
     const queryStringValues = queryString.parse(search);
     const [backlogId, setBacklogId] = useState(23);
     const [projectName, setProjectName] = useState("Map Search");
@@ -22,9 +26,14 @@ import queryString from 'query-string';
     }
 
     var [rawBacklogEpics, setRawBacklogEpics] = useState('');
-    var [chartOptionData, setChartOptionData] = useState({
-        "defaultOptions": blankOptions,
-        "defaultSeries" : blankSeries
+    var [stackedBarChartOptionData, setStackedBarChartOptionData] = useState({
+        "defaultOptions": stackedBarChartBlankOptions,
+        "defaultSeries" : stackedBarChartBlankSeries
+    })
+
+    var [pieChartOptionData, setPieChartOptionData] = useState( {
+        "options" : stackedBarChartBlankOptions,
+        "series" : stackedBarChartBlankSeries
     })
 
     var [storiesPercentComplete, setStoriesPercentComplete] = useState('');
@@ -51,8 +60,10 @@ import queryString from 'query-string';
     // format it and make it available to the chart controls
     useEffect( () => {
         if (rawBacklogEpics) {
-            var formattedChartOptionData =  FormatEpicDataForBarChart(rawBacklogEpics.epics);
-            setChartOptionData(formattedChartOptionData);
+            var formattedStackedBarChartOptionData =  FormatEpicDataForBarChart(rawBacklogEpics.epics);
+            setStackedBarChartOptionData(formattedStackedBarChartOptionData);
+            var formattedPieCharOptionData = FormatEpicDataForPieChart(rawBacklogEpics.epics);
+            setPieChartOptionData(formattedPieCharOptionData);
             setStoriesPercentComplete(formatAsPercent(rawBacklogEpics.backlogIssuesPercentComplete) + "%");
             setPointsPercentComplete(formatAsPercent(rawBacklogEpics.backlogPointsPercentComplete) + "%");
             setTotalStories(rawBacklogEpics.backlogTotalIssues);
@@ -64,10 +75,12 @@ import queryString from 'query-string';
             setPointsComplete(rawBacklogEpics.backlogPointsDone);
             setPointsinProgress(rawBacklogEpics.backlogPointsInProgress);
             setPointsToDo(rawBacklogEpics.backlogPointsToDo);
-        }        
+        }
     }, [rawBacklogEpics]);
 
     const getBacklogEpics = async (backlogId) => {
+        console.log("showSpinner");
+        showSpinner();
         await fetch(
             'https://ausl4ri6y1.execute-api.us-east-1.amazonaws.com/test-tl/backlogs/' + backlogId + '/epics', {
             method: 'GET'
@@ -80,15 +93,28 @@ import queryString from 'query-string';
                     };
                     return JSON.stringify(responseMessage);
                 }
+                console.log("hideSpinner");
+                hideSpinner();
                 return response.json()            
             })
             .then(data => {     
                 setRawBacklogEpics(data);
             });
-    }     
+    }
+
+    function showSpinner() {        
+        setSpinnerVisible(true);
+    }
+
+    function hideSpinner() {        
+        setSpinnerVisible(false);
+    }
 
     return(
         <div className="app">
+            <div style={spinnerStyle}>                
+                {spinnerVisible && <Spinner animation="border" variant="primary" role="status" />}
+            </div>
             <Header />
             <div className="alignLeft"><h1>Project Dashboard - {projectName}</h1></div>
             <Container fluid style={{ paddingLeft: 0, paddingRight: 0 }}>
@@ -137,10 +163,13 @@ import queryString from 'query-string';
                     </Col>
                     <Col md={2} style={{ paddingLeft: 2, paddingRight: 2 }}></Col>
                 </Row>
-                <Row className='mt-2'>
+                <Row className='mt-3'>
                     <Col md={8}>
-                        <StackedBarChart defaultSeries={chartOptionData.defaultSeries} defaultOptions={chartOptionData.defaultOptions} />
-                    </Col>                    
+                        <StackedBarChart defaultSeries={stackedBarChartOptionData.defaultSeries} defaultOptions={stackedBarChartOptionData.defaultOptions} />
+                    </Col>   
+                    <Col md={4}>
+                        <PieChart options={pieChartOptionData.options} series={pieChartOptionData.series} type="pie" />
+                    </Col>                 
                 </Row>                
             </Container>
         </div>

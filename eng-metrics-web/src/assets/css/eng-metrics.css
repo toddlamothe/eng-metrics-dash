@@ -8,6 +8,17 @@
     margin-right: 2;
 }
 
+div.navNoPadding {
+    padding-left: 0;
+    padding-right: 0;    
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: -5px;
+    margin-right: -20px;
+    margin-left: -25px;
+    margin-bottom: -5px;
+}
+
 div.cardHeaderBold {
     font-size: 11pt;
     font-weight: 900;
@@ -15,7 +26,7 @@ div.cardHeaderBold {
 
 div.cardTextBold {
     font-size: 22pt;
-    font-weight: 900;
+    font-weight: 900;    
 }
 
 div.cardHeaderNormal {
