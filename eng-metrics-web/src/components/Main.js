@@ -167,7 +167,7 @@ import queryString from 'query-string';
                     </Col>
                     <Col md={2} style={{ paddingLeft: 2, paddingRight: 2 }}></Col>
                 </Row>
-                <Row className='mt-2'>
+                <Row className='mt-3'>
                     <Col md={8}>
                         <StackedBarChart defaultSeries={stackedBarChartOptionData.defaultSeries} defaultOptions={stackedBarChartOptionData.defaultOptions} />
                     </Col>   

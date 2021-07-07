@@ -169,6 +169,9 @@ export const stackedBarChartBlankOptions =
           width: 380,
           type: 'pie',
         },
+        title: {
+          text: 'Epic Story Points'
+      },
         labels: epicNamesArray,
         responsive: [{
           breakpoint: 480,
