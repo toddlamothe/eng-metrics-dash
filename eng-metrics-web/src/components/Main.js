@@ -15,7 +15,7 @@ import queryString from 'query-string';
     var {search} = useLocation();
     const spinnerStyle = { position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)" };
     const [spinnerVisible, setSpinnerVisible] = useState(true);
-
+    
     const queryStringValues = queryString.parse(search);
     const [backlogId, setBacklogId] = useState(23);
     const [projectName, setProjectName] = useState("Map Search");
@@ -24,8 +24,6 @@ import queryString from 'query-string';
         setBacklogId(queryStringValues.backlogId)
         setProjectName(queryStringValues.project);
     }
-
-    const [spinnerVisibleStyle, setSpinnerVisibleStyle] = useState({ visibility: "" });
 
     var [rawBacklogEpics, setRawBacklogEpics] = useState('');
     var [stackedBarChartOptionData, setStackedBarChartOptionData] = useState({
@@ -54,16 +52,13 @@ import queryString from 'query-string';
     useEffect( () => {
         if (!rawBacklogEpics) {
             // Pull backlog ID from the querystring
-            showSpinner();
             getBacklogEpics(backlogId || 23);
-            hideSpinner();
         }
     }, [backlogId]);
 
     // When the raw backlog and epic data changes, 
     // format it and make it available to the chart controls
     useEffect( () => {
-        showSpinner();
         if (rawBacklogEpics) {
             var formattedStackedBarChartOptionData =  FormatEpicDataForBarChart(rawBacklogEpics.epics);
             setStackedBarChartOptionData(formattedStackedBarChartOptionData);
@@ -80,11 +75,12 @@ import queryString from 'query-string';
             setPointsComplete(rawBacklogEpics.backlogPointsDone);
             setPointsinProgress(rawBacklogEpics.backlogPointsInProgress);
             setPointsToDo(rawBacklogEpics.backlogPointsToDo);
-        }        
-        hideSpinner();
+        }
     }, [rawBacklogEpics]);
 
     const getBacklogEpics = async (backlogId) => {
+        console.log("showSpinner");
+        showSpinner();
         await fetch(
             'https://ausl4ri6y1.execute-api.us-east-1.amazonaws.com/test-tl/backlogs/' + backlogId + '/epics', {
             method: 'GET'
@@ -97,6 +93,8 @@ import queryString from 'query-string';
                     };
                     return JSON.stringify(responseMessage);
                 }
+                console.log("hideSpinner");
+                hideSpinner();
                 return response.json()            
             })
             .then(data => {     
@@ -104,13 +102,11 @@ import queryString from 'query-string';
             });
     }
 
-    function showSpinner() {
-        console.log("showSpinner")
+    function showSpinner() {        
         setSpinnerVisible(true);
     }
 
-    function hideSpinner() {
-        console.log("hideSpinner")
+    function hideSpinner() {        
         setSpinnerVisible(false);
     }
 
