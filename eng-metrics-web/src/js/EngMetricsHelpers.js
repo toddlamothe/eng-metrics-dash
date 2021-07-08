@@ -42,11 +42,7 @@ export function FormatEpicDataForBarChart(epicData) {
         stacked: true,
         width: "100%"
       },
-      
-        
-          colors: ['#00b300', '#ffc000', '#ff8000', '#111111'],
-        
-      
+      colors: ['#00b300', '#ffc000', '#ff8000', '#111111'],
       plotOptions: {
         bar: {
           horizontal: true,
@@ -170,25 +166,31 @@ export const stackedBarChartBlankOptions =
       const chartSeries = epicTotalPointsArray;
 
       const chartOptions = {
-        chart: {
-          width: 380,
-          type: 'pie',
-        },
         title: {
           text: 'Epic Story Points'
-      },
+        },
         labels: epicNamesArray,
-        responsive: [{
-          breakpoint: 480,
-          options: {
-            chart: {
-              width: 200
-            },
-            legend: {
-              position: 'bottom'
-            }
+        legend: {
+          position: "top"
+        },
+
+        plotOptions: {
+          pie: {
+            customScale: 1
           }
-        }]
+        }
+
+        // responsive: [{
+        //   breakpoint: 480,
+        //   options: {
+        //     chart: {
+        //       width: 300
+        //     },
+        //     legend: {
+        //       position: 'top'
+        //     }
+        //   }
+        // }]
       };
 
       return ({
@@ -207,7 +209,7 @@ export const stackedBarChartBlankOptions =
         breakpoint: 480,
         options: {
           chart: {
-            width: 200
+            width: 300
           },
           legend: {
             position: 'bottom'

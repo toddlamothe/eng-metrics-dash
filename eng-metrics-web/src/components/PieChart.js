@@ -6,7 +6,7 @@ function PieChart(props) {
         <div className="mixed-chart">
             <Chart
                 options={props.options}
-                series={props.series}
+                series={props.series}                
                 type="pie"                 
             />
         </div>
