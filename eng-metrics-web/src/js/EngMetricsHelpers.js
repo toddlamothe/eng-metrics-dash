@@ -208,5 +208,5 @@ export const stackedBarChartBlankOptions =
     export const pieChartBlankSeries = [];
 
     export function formatAsPercent(rawValue) {
-      return Math.round((rawValue + 0) * 100)
+      return parseFloat( (rawValue + 0) * 100 ).toFixed(2);
     }
