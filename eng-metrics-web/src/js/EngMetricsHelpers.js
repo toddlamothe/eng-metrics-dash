@@ -173,24 +173,11 @@ export const stackedBarChartBlankOptions =
         legend: {
           position: "top"
         },
-
         plotOptions: {
           pie: {
             customScale: 1
           }
         }
-
-        // responsive: [{
-        //   breakpoint: 480,
-        //   options: {
-        //     chart: {
-        //       width: 300
-        //     },
-        //     legend: {
-        //       position: 'top'
-        //     }
-        //   }
-        // }]
       };
 
       return ({
