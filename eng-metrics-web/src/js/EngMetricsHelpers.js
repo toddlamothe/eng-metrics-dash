@@ -42,6 +42,11 @@ export function FormatEpicDataForBarChart(epicData) {
         stacked: true,
         width: "100%"
       },
+      
+        
+          colors: ['#00b300', '#ffc000', '#ff8000', '#111111'],
+        
+      
       plotOptions: {
         bar: {
           horizontal: true,

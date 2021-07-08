@@ -6,14 +6,13 @@ import PieChart from "./PieChart";
 import Container from 'react-bootstrap/Container';
 import {Row, Col, Spinner} from "react-bootstrap";
 import {FormatEpicDataForBarChart, stackedBarChartBlankSeries, stackedBarChartBlankOptions, pieChartBlankOptions, pieChartBlankSeries, formatAsPercent, FormatEpicDataForPieChart} from '../js/EngMetricsHelpers';
-import '../assets/css/eng-metrics.css';
 import {useLocation} from 'react-router-dom';
 import queryString from 'query-string';
+import '../assets/css/eng-metrics.css';
 
  function Main(props) {
-
     var {search} = useLocation();
-    const spinnerStyle = { position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)" };
+    // const spinnerStyle = { position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)" };
     const [spinnerVisible, setSpinnerVisible] = useState(true);
     
     const queryStringValues = queryString.parse(search);
@@ -32,8 +31,8 @@ import queryString from 'query-string';
     })
 
     var [pieChartOptionData, setPieChartOptionData] = useState( {
-        "options" : stackedBarChartBlankOptions,
-        "series" : stackedBarChartBlankSeries
+        "options" : pieChartBlankOptions,
+        "series" : pieChartBlankSeries
     })
 
     var [storiesPercentComplete, setStoriesPercentComplete] = useState('');
@@ -79,7 +78,6 @@ import queryString from 'query-string';
     }, [rawBacklogEpics]);
 
     const getBacklogEpics = async (backlogId) => {
-        console.log("showSpinner");
         showSpinner();
         await fetch(
             'https://ausl4ri6y1.execute-api.us-east-1.amazonaws.com/test-tl/backlogs/' + backlogId + '/epics', {
@@ -93,7 +91,6 @@ import queryString from 'query-string';
                     };
                     return JSON.stringify(responseMessage);
                 }
-                console.log("hideSpinner");
                 hideSpinner();
                 return response.json()            
             })
@@ -112,7 +109,7 @@ import queryString from 'query-string';
 
     return(
         <div className="app">
-            <div style={spinnerStyle}>                
+            <div className="spinnerControl">
                 {spinnerVisible && <Spinner animation="border" variant="primary" role="status" />}
             </div>
             <Header />

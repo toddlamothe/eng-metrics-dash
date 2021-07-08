@@ -16,7 +16,7 @@ function Header(props) {
                     </Navbar.Brand>
                     <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
-                        <NavDropdown title="Project" id="basic-nav-dropdown">
+                        <NavDropdown title="Select Project" id="basic-nav-dropdown">
                             <NavDropdown.Item href="/?backlogId=23&project=Map%20Search">
                                 Map Search
                             </NavDropdown.Item>
