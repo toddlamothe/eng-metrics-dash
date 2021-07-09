@@ -14,7 +14,9 @@
   "dependencies": {
     "google-spreadsheet": "^3.1.15",
     "googleapis": "^39.2.0",
+    "mysql": "^2.18.1",
     "node-fetch": "^2.6.1",
+    "save": "^2.4.0",
     "serverless-api-gateway-caching": "^1.7.2"
   }
 }

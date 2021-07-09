@@ -45,6 +45,9 @@ functions:
             path: /backlogs/{backlogId}/epics/{epicId}/epicIssues
             method: get
             cors: true
+  etl-backlog-epics:
+    handler: functions/etl-handlers.etlBacklogEpics
+    timeout: 20
   export-backlog-epic-google-sheet:
       handler: functions/google-doc-handlers.exportBacklogEpicsToGoogleSheet
       timeout: 20
