@@ -1,4 +1,5 @@
 const fetch = require('node-fetch');
+let mysql = require("mysql");
 
 module.exports.backlogs = async (event, context, callback) => {
     await fetch(
