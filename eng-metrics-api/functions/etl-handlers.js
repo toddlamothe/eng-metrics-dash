@@ -59,6 +59,7 @@ module.exports.etlBacklogEpics = async (event, context, callback) => {
                     for (const epic of backlog.epics) {
                         insertStatement = "INSERT INTO epic VALUES (" + 
                             "UUID(), " +
+                            "'" + backlogUuid + "', " +
                             epic.id + ", " + 
                             "'" + epic.key + "', " + 
                             "'" + epic.name + "', " + 
@@ -73,8 +74,7 @@ module.exports.etlBacklogEpics = async (event, context, callback) => {
                             epic.issuesDone + ", " + 
                             epic.issuesUnestimated + ", " + 
                             epic.issuesPercentComplete + ", " + 
-                            "now()" + ", " +
-                            "'" + backlogUuid + "'" +
+                            "now()" +
                             ")";
                             
                         connection.query(insertStatement, function(err, results, fields) {

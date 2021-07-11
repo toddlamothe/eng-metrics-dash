@@ -40,9 +40,108 @@ module.exports.backlogs = async (event, context, callback) => {
         });
 };
 
+module.exports.backlogEpics = async (event, context, callback) => {
+    var connection;
+    try {
+        if (!event.pathParameters.backlogId) {
+            const responseMessage = {
+                statusCode: 500,
+                body: "Backlog IDs not provided"
+            };
+            callback(JSON.stringify(responseMessage));
+            return;
+        }
+
+        connection = openDbConnection();
+        var backlogSelectStatement;
+        backlogSelectStatement = "select * from backlog where backlog_id=" + event.pathParameters.backlogId + " order by created_dttm desc limit 1";
+        connection.query(backlogSelectStatement, (backlogErr, backlogResults, backlogFields) => {
+            if (backlogErr) {
+                console.log(backlogErr.message);
+            }
+            var backlogEpicsResponseObject = JSON.parse(JSON.stringify(backlogResults[0]));
+            var formattedBacklogEpicsResponseObject = formatBacklogObject(backlogEpicsResponseObject)
+            formattedBacklogEpicsResponseObject.epics = [];
+
+            var backlogEpicsSelectStatement = "select epic.* from backlog, epic where epic.backlog_uuid = backlog.uuid and backlog.uuid = '" + backlogEpicsResponseObject.uuid + "'";
+            connection.query(backlogEpicsSelectStatement, function(epicErr, epicResults, epicFields) {
+                if (epicErr) {
+                    console.log(epicErr.message);
+                }
+                for (const epic of epicResults) {
+                    formattedBacklogEpic = formatEpicObject(JSON.parse(JSON.stringify(epic)));
+                    formattedBacklogEpicsResponseObject.epics.push(formattedBacklogEpic)
+                }
+
+                closeDbConnection(connection);
+    
+                const responseMessage = {
+                    "isBase64Encoded": false,
+                    "statusCode": 200,
+                    "headers": {
+                        "Access-Control-Allow-Origin" : "*",
+                        "Access-Control-Allow-Credentials" : "true"
+                    },
+                    "body": JSON.stringify(formattedBacklogEpicsResponseObject)
+                }            
+                callback(null, responseMessage);
+            
+
+            })
+
+        });            
+
+    } catch (error) {
+        console.log(error);
+        closeDbConnection(connection);            
+        callback(error);
+    }
+}
+
+function formatBacklogObject(backlogObject) {
+    return {
+        "id" : backlogObject.backlog_id,
+        "name" : backlogObject.name,
+        "epicCount": backlogObject.epic_count,
+        "backlogTotalPoints": backlogObject.total_points,
+        "backlogPointsDone": backlogObject.points_done,
+        "backlogPointsInProgress": backlogObject.points_in_progress,
+        "backlogPointsToDo": backlogObject.points_to_do,
+        "backlogPointsPercentComplete": backlogObject.points_percent_complete,
+        "backlogTotalIssues": backlogObject.total_issues,
+        "backlogIssuesDone": backlogObject.issues_done,
+        "backlogIssuesInProgress": backlogObject.issues_in_progress,
+        "backlogIssuesToDo": backlogObject.issues_to_do,
+        "backlogIssuesUnestimated": backlogObject.issues_unestimated,
+        "backlogIssuesPercentComplete": backlogObject.issues_percent_complete,
+        "updatedDttm" : backlogObject.created_dttm
+    }
+}
+
+function formatEpicObject(epicObject) {
+    return {
+        "id" : epicObject.epic_id,
+        "key" : epicObject.key,
+        "name" : epicObject.name,
+        "totalPoints": epicObject.total_points,
+        "pointsDone": epicObject.points_done,
+        "pointsInProgress": epicObject.points_in_progress,
+        "pointsToDo": epicObject.points_to_do,
+        "pointsPercentComplete": epicObject.points_percent_complete,
+        "totalIssues": epicObject.total_issues,
+        "issuesDone": epicObject.issues_done,
+        "issuesInProgress": epicObject.issues_in_progress,
+        "issuesToDo": epicObject.issues_to_do,
+        "issuesUnestimated": epicObject.issues_unestimated,
+        "issuesPercentComplete": epicObject.issues_percent_complete,
+        "updatedDttm" : epicObject.created_dttm        
+    }
+}
+
+
 // Get all epics for the backlog containing the "Budget-Reporting" tag
 // Then tally the total points, stories done/in progress/to do
-module.exports.backlogEpics = async (event, context, callback) => {
+module.exports.backlogEpicsOLD = async (event, context, callback) => {
     if (!event.pathParameters.backlogId) {
         const responseMessage = {
             statusCode: 500,
@@ -252,6 +351,34 @@ module.exports.epicIssues = async (event, context, callback) => {
         });
 };
 
+function openDbConnection() {
+    let connection = mysql.createConnection({
+        host: 'eng-metrics.cgwxrjuo6oyd.us-east-1.rds.amazonaws.com',
+        user: process.env.DB_USER,
+        password: process.env.DB_PASS,
+        database: 'eng_metrics'
+    });  
+
+    connection.connect(function(err) {
+        if (err) {
+          return console.error('error: ' + err.message);
+        }
+      
+        console.log('Connected to the MySQL server.');
+      });
+    
+    return connection;
+}
+
+function closeDbConnection(connection) {
+    connection.end(function(err) {
+        if (err) {
+          return console.log('error:' + err.message);
+        }
+        console.log('Close the database connection.');
+      });    
+}
+
 // module.exports.epicIssues({pathParameters: { backlogId: 23, epicId : "A20-2137"}}, null, (error, response) => console.log(response))
-// module.exports.backlogEpics({pathParameters: { backlogId: 23}}, null, (error, response) => console.log(response))
+module.exports.backlogEpics({pathParameters: { backlogId: 23}}, null, (error, response) => console.log(response))
 // module.exports.backlogs({}, null, (error, response) => console.log(response))
