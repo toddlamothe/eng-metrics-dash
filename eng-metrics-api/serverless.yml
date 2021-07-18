@@ -18,13 +18,6 @@ custom:
   region: "us-east-1"
 
 functions:
-  backlogs:
-    handler: functions/backlog-handlers.backlogs
-    events:
-      - http:
-         path: /backlogs
-         method: get
-         cors: true
   backlog-epics:
     handler: functions/backlog-handlers.backlogEpics
     timeout: 20
@@ -38,16 +31,3 @@ functions:
             ttlInSeconds: 3600
             cacheKeyParameters:
               - name: request.path.backlogId
-  epic-issues:
-    handler: functions/backlog-handlers.epicIssues
-    events:
-        - http:
-            path: /backlogs/{backlogId}/epics/{epicId}/epicIssues
-            method: get
-            cors: true
-  etl-backlog-epics:
-    handler: functions/etl-handlers.etlBacklogEpics
-    timeout: 20
-  export-backlog-epic-google-sheet:
-      handler: functions/google-doc-handlers.exportBacklogEpicsToGoogleSheet
-      timeout: 20
