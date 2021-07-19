@@ -1,103 +1,100 @@
-let mysql = require("mysql");
 const fetch = require('node-fetch');
+const mysql = require('mysql2/promise');
+
+const config = {
+    db: {
+        host: 'eng-metrics.cgwxrjuo6oyd.us-east-1.rds.amazonaws.com',
+        user: process.env.DB_USER,
+        password: process.env.DB_PASS,
+        database: 'eng_metrics',
+        waitForConnections: true,
+        connectionLimit: 5,
+        queueLimit: 0,
+        debug: false
+    },
+    listPerPage: 10,
+};
+  
+async function query(pool, sql, params) {
+    const [rows, fields] = await pool.execute(sql, params);
+    return rows;
+}
 
 module.exports.etlBacklogEpics = async (event, context, callback) => {
-    // This is bad.
-    hardCodedBacklogIdNames = {
-        23 : "Map Search",
-        32 : "Beacon"
-    }
 
-    if (!event.backlogIds) {
+    if (!event.backlogId) {
         const responseMessage = {
             statusCode: 500,
-            body: "Backlog IDs not provided"
+            body: "Backlog ID not provided"
         };
         callback(JSON.stringify(responseMessage));
         return;
     }
 
-    // Open database connection
-    let connection = openDbConnection();
+    backlogId = event.backlogId;
+    backlogName = event.backlogName;
+
+    // Opening and closing a conneciton pool on every call is probably bad technique
+    const pool = mysql.createPool(config.db);        
     var insertStatement;
 
-    for (const backlogId of event.backlogIds) {
-        // Get backlog and epic data for specified ID
-        try {
-            await backlogEpics(
-                {"pathParameters" : {"backlogId" : backlogId}},
-                null,
-                (errorMessage, responseMessage) => {
-                    // Insert backlog data into the database
-                    backlog = JSON.parse(responseMessage.body);
-                    backlogUuid = uuidv4();
-                    insertStatement = "INSERT INTO backlog VALUES (" + 
-                        "'" + backlogUuid + "', " +
-                        backlogId + ", " + 
-                        "'" + hardCodedBacklogIdNames[backlogId] + "', " + 
-                        backlog.epicCount + ", " + 
-                        backlog.backlogTotalPoints + ", " + 
-                        backlog.backlogPointsDone + ", " + 
-                        backlog.backlogPointsInProgress + ", " + 
-                        backlog.backlogPointsToDo + ", " + 
-                        backlog.backlogPointsPercentComplete + ", " + 
-                        backlog.backlogTotalIssues + ", " + 
-                        backlog.backlogIssuesDone + ", " + 
-                        backlog.backlogIssuesInProgress + ", " + 
-                        backlog.backlogIssuesToDo + ", " + 
-                        backlog.backlogIssuesUnestimated + ", " + 
-                        backlog.backlogIssuesPercentComplete + ", " + 
-                        "now()" +
-                        ")";
-    
-                    connection.query(insertStatement, function(err, results, fields) {
-                        if (err) {
-                            console.log(err.message);
-                        }
-                    });
+    await backlogEpics(
+        {"pathParameters" : {"backlogId" : backlogId}},
+        null,
+        async (errorMessage, responseMessage) => {
+            // Insert backlog data into the database
+            backlog = JSON.parse(responseMessage.body);
+            backlogUuid = uuidv4();
+            insertStatement = "INSERT INTO backlog VALUES (" + 
+                "'" + backlogUuid + "', " +
+                backlogId + ", " + 
+                "'" + backlogName + "', " + 
+                backlog.epicCount + ", " + 
+                backlog.backlogTotalPoints + ", " + 
+                backlog.backlogPointsDone + ", " + 
+                backlog.backlogPointsInProgress + ", " + 
+                backlog.backlogPointsToDo + ", " + 
+                backlog.backlogPointsPercentComplete + ", " + 
+                backlog.backlogTotalIssues + ", " + 
+                backlog.backlogIssuesDone + ", " + 
+                backlog.backlogIssuesInProgress + ", " + 
+                backlog.backlogIssuesToDo + ", " + 
+                backlog.backlogIssuesUnestimated + ", " + 
+                backlog.backlogIssuesPercentComplete + ", " + 
+                "now()" +
+                ")";
 
-                    for (const epic of backlog.epics) {
-                        insertStatement = "INSERT INTO epic VALUES (" + 
-                            "UUID(), " +
-                            "'" + backlogUuid + "', " +
-                            epic.id + ", " + 
-                            "'" + epic.key + "', " + 
-                            "'" + epic.name + "', " + 
-                            epic.totalPoints + ", " + 
-                            epic.pointsDone + ", " + 
-                            epic.pointsInProgress + ", " + 
-                            epic.pointsToDo + ", " + 
-                            epic.pointsPercentComplete + ", " + 
-                            epic.totalIssues + ", " + 
-                            epic.issuesToDo + ", " + 
-                            epic.issuesInProgress + ", " + 
-                            epic.issuesDone + ", " + 
-                            epic.issuesUnestimated + ", " + 
-                            epic.issuesPercentComplete + ", " + 
-                            "now()" +
-                            ")";
-                            
-                        connection.query(insertStatement, function(err, results, fields) {
-                            if (err) {
-                                console.log(err.message);
-                            }
-                        });
-                    }
+                const backlogEtlResults = await query(pool, insertStatement);
 
-                })               
-        } catch (error) {
-            // Close database connection
-            closeDbConnection(connection);            
-        }
-    }
+            for (const epic of backlog.epics) {
+                insertStatement = "INSERT INTO epic VALUES (" + 
+                    "UUID(), " +
+                    "'" + backlogUuid + "', " +
+                    epic.id + ", " + 
+                    "'" + epic.key + "', " + 
+                    "'" + epic.name + "', " + 
+                    epic.totalPoints + ", " + 
+                    epic.pointsDone + ", " + 
+                    epic.pointsInProgress + ", " + 
+                    epic.pointsToDo + ", " + 
+                    epic.pointsPercentComplete + ", " + 
+                    epic.totalIssues + ", " + 
+                    epic.issuesToDo + ", " + 
+                    epic.issuesInProgress + ", " + 
+                    epic.issuesDone + ", " + 
+                    epic.issuesUnestimated + ", " + 
+                    epic.issuesPercentComplete + ", " + 
+                    "now()" +
+                    ")";
+                    
+                const epicEtlResults = await query(pool, insertStatement);
+            }
 
-    // Close database connection
-    closeDbConnection(connection);
+            pool.end();
+            callback(null, null);
+    })
 
-    // For each backlog ID provided, fetch backlog and epic data from 
-    // Atlassian API and store it in a relational RDS database
 
-    callback(null, event.backlogIds);
 }
 
 function uuidv4() {
@@ -106,34 +103,6 @@ function uuidv4() {
       return v.toString(16);
     });
   }
-
-function openDbConnection() {
-    let connection = mysql.createConnection({
-        host: 'eng-metrics.cgwxrjuo6oyd.us-east-1.rds.amazonaws.com',
-        user: process.env.DB_USER,
-        password: process.env.DB_PASS,
-        database: 'eng_metrics'
-    });  
-
-    connection.connect(function(err) {
-        if (err) {
-          return console.error('error: ' + err.message);
-        }
-      
-        console.log('Connected to the MySQL server.');
-      });
-    
-    return connection;
-}
-
-function closeDbConnection(connection) {
-    connection.end(function(err) {
-        if (err) {
-          return console.log('error:' + err.message);
-        }
-        console.log('Close the database connection.');
-      });    
-}
 
 async function backlogEpics (event, context, callback) {
     if (!event.pathParameters.backlogId) {
@@ -339,11 +308,13 @@ async function epicIssues(event, context, callback) {
                     "Access-Control-Allow-Credentials" : "true"
                 },
                 "body": JSON.stringify(responseBody)
-            }            
+            }
             callback(null, responseMessage);
         }).catch((error) => {
             callback(Error(error));
         });
 };
 
-module.exports.etlBacklogEpics({backlogIds: [23, 32]}, null, (error, response) => console.log(response));
+// module.exports.etlBacklogEpics({backlogId: 32, backlogName: "Beacon"}, null, (error, response) => {
+//     module.exports.etlBacklogEpics({backlogId: 23, backlogName: "Map Search"}, null, (error, response) => console.log(response))
+// });
