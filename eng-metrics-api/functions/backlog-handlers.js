@@ -20,49 +20,50 @@ async function query(pool, sql, params) {
 }
 
 module.exports.backlogEpics = async (event, context, callback) => {
-        // Opening and closing a conneciton pool on every call is probably bad technique
-        const pool = mysql.createPool(config.db);        
+    // Opening and closing a conneciton pool on every call is probably bad technique
+    const pool = mysql.createPool(config.db);        
 
-        try {
-            const backlogSelectStatement = "select * from backlog where backlog_id=" + event.pathParameters.backlogId + " order by created_dttm desc limit 1";    
-            const backlogResults = await query(pool, backlogSelectStatement);
-            var backlogEpicsResponseObject = JSON.parse(JSON.stringify(backlogResults[0]));
-            var formattedBacklogEpicsResponseObject = formatBacklogObject(backlogEpicsResponseObject)
-            formattedBacklogEpicsResponseObject.epics = [];
-            console.log("formattedBacklogEpicsResponseObject = ", formattedBacklogEpicsResponseObject);
-    
-            var backlogEpicsSelectStatement = "select epic.* from backlog, epic where epic.backlog_uuid = backlog.uuid and backlog.uuid = '" + backlogEpicsResponseObject.uuid + "'";
-            const epicResults = await query(pool, backlogEpicsSelectStatement);
-            for (const epic of epicResults) {
-                formattedBacklogEpic = formatEpicObject(JSON.parse(JSON.stringify(epic)));
-                formattedBacklogEpicsResponseObject.epics.push(formattedBacklogEpic)
-            }
+    try {
+        const backlogSelectStatement = "select * from backlog where backlog_id=" + event.pathParameters.backlogId + " order by created_dttm desc limit 1";    
+        const backlogResults = await query(pool, backlogSelectStatement);
+        var backlogEpicsResponseObject = JSON.parse(JSON.stringify(backlogResults[0]));
+        var formattedBacklogEpicsResponseObject = formatBacklogObject(backlogEpicsResponseObject)
+        formattedBacklogEpicsResponseObject.epics = [];
+        console.log("formattedBacklogEpicsResponseObject = ", formattedBacklogEpicsResponseObject);
 
-            const responseMessage = {
-                "isBase64Encoded": false,
-                "statusCode": 200,
-                "headers": {
-                    "Access-Control-Allow-Origin" : "*",
-                    "Access-Control-Allow-Credentials" : "true"
-                },
-                "body": JSON.stringify(formattedBacklogEpicsResponseObject)
-            }
-            callback(null, responseMessage);
-
-            pool.end();
-    
-            callback(null, {
-                statusCode: 200, 
-                body: "Success"
-            });	            
-        } catch (error) {
-            pool.end();
-
-            callback(null, {
-                statusCode: 200, 
-                body: error
-            });	            
+        var backlogEpicsSelectStatement = "select epic.* from backlog, epic where epic.backlog_uuid = backlog.uuid and backlog.uuid = '" + backlogEpicsResponseObject.uuid + "'";
+        const epicResults = await query(pool, backlogEpicsSelectStatement);
+        for (const epic of epicResults) {
+            formattedBacklogEpic = formatEpicObject(JSON.parse(JSON.stringify(epic)));
+            formattedBacklogEpicsResponseObject.epics.push(formattedBacklogEpic)
         }
+
+        const responseMessage = {
+            "isBase64Encoded": false,
+            "statusCode": 200,
+            "headers": {
+                "Access-Control-Allow-Origin" : "*",
+                "Access-Control-Allow-Credentials" : "true"
+            },
+            "body": JSON.stringify(formattedBacklogEpicsResponseObject)
+        }
+        callback(null, responseMessage);
+
+        pool.end();
+
+        callback(null, {
+            statusCode: 200, 
+            body: "Success"
+        });	            
+    } catch (error) {
+        pool.end();
+
+        console.log(error);
+        callback(null, {
+            statusCode: 200, 
+            body: error
+        });	            
+    }
 }
 
 function formatBacklogObject(backlogObject) {
