@@ -9,6 +9,7 @@ export function FormatEpicDataForBarChart(epicData) {
     const issuesUnestimatedValues = [];
     // 2. Create an ordered array of epics
     epicData.forEach( epic => {
+        console.log(epic.name, ": to do: ", epic.issuesToDo, ", in progeress: ", epic.issuesInProgress, ", done: ", epic.issuesDone );
         epicNames.push(epic.name);
         issuesToDoValues.push(epic.issuesToDo);
         issuesInProgressValues.push(epic.issuesInProgress);
@@ -33,7 +34,7 @@ export function FormatEpicDataForBarChart(epicData) {
         name: 'Unestimated',
         data: issuesUnestimatedValues
         }]
-
+        console.log("defaultSeries = ", defaultSeries);
     const defaultOptions = 
     {
       chart: {

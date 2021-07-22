@@ -28,6 +28,6 @@ functions:
           cors: true
           caching:
             enabled: true
-            ttlInSeconds: 3600
+            ttlInSeconds: 10
             cacheKeyParameters:
               - name: request.path.backlogId

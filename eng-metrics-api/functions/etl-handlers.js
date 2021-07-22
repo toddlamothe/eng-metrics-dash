@@ -97,14 +97,13 @@ module.exports.etlBacklogEpics = async (event, context, callback) => {
                     epic.pointsToDo + ", " + 
                     epic.pointsPercentComplete + ", " + 
                     epic.totalIssues + ", " + 
-                    epic.issuesToDo + ", " + 
-                    epic.issuesInProgress + ", " + 
                     epic.issuesDone + ", " + 
+                    epic.issuesInProgress + ", " + 
+                    epic.issuesToDo + ", " + 
                     epic.issuesUnestimated + ", " + 
                     epic.issuesPercentComplete + ", " + 
                     "now()" +
                     ")";
-                console.log(insertStatement);
                 const epicEtlResults = await query(pool, insertStatement);
             }
 
@@ -194,7 +193,7 @@ async function backlogEpics (event, context, callback) {
         var epicTotalIssues=0, epicDoneIssues=0, epicInProgressIssues=0, epicToDoIssues=0, epicUnestimatedIssues=0;
         var epicTotalPoints=0, epicDonePoints=0, epicInProgressPoints=0, epicToDoPoints=0;
 
-        await epicIssues({pathParameters: { backlogId: 23, epicId : epic.id}}, null, (error, response) => {
+        await epicIssues({pathParameters: {epicId : epic.id}}, null, (error, response) => {
             // Tally up stats for this epic
             allEpicIssues = JSON.parse(response.body).issues;
             allEpicIssues.forEach(issue => {
@@ -206,21 +205,27 @@ async function backlogEpics (event, context, callback) {
                 } 
                 else {
                     storyPoints = 0;
-                    epicUnestimatedIssues++;
                 }
-                switch(issue.fields.status.name) {
-                    case "Done":
-                        epicDoneIssues++;
-                        epicDonePoints+=storyPoints;
-                        break;
-                    case "In Progress":
-                        epicInProgressIssues++;
-                        epicInProgressPoints+=storyPoints;
-                        break;
-                    case "To Do":
-                        epicToDoIssues++;
-                        epicToDoPoints+=storyPoints;
-                        break;
+
+                // Only count as unestimated if it's a user story
+                if (issue.fields.issuetype && issue.fields.issuetype.name && issue.fields.issuetype.name==="Story" && storyPoints===0) {
+                    epicUnestimatedIssues++;
+                } else {
+                    // The issue is not an unestimated user story, categorize it
+                    switch(issue.fields.status.name) {
+                        case "Done":
+                            epicDoneIssues++;
+                            epicDonePoints+=storyPoints;
+                            break;
+                        case "In Progress":
+                            epicInProgressIssues++;
+                            epicInProgressPoints+=storyPoints;
+                            break;
+                        case "To Do":
+                            epicToDoIssues++;
+                            epicToDoPoints+=storyPoints;
+                            break;
+                    }
                 }
             });
 
@@ -287,10 +292,10 @@ async function backlogEpics (event, context, callback) {
 }
 
 async function epicIssues(event, context, callback) {
-    if (!event.pathParameters.backlogId || !event.pathParameters.epicId) {
+    if (!event.pathParameters.epicId) {
         const responseMessage = {
             statusCode: 500,
-            body: "Backlog ID and epic ID required"
+            body: "Epic ID required"
         };
         callback(JSON.stringify(responseMessage));
     }
@@ -338,8 +343,8 @@ async function epicIssues(event, context, callback) {
 // });
 
 
-// module.exports.etlBacklogEpics({backlogId: 23, backlogName: "Map Search"}, null, (error, response) => {
-//     console.log(response);
-// })
+module.exports.etlBacklogEpics({backlogId: 32, backlogName: "Map Search"}, null, (error, response) => {
+    console.log(response);
+})
 
 // testMysql2Connection();

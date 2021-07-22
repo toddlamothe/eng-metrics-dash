@@ -94,7 +94,8 @@ import '../assets/css/eng-metrics.css';
                 hideSpinner();
                 return response.json()            
             })
-            .then(data => {     
+            .then(data => {
+                console.log("data = ", data);
                 setRawBacklogEpics(data);
             });
     }
