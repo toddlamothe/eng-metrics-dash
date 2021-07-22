@@ -20,6 +20,24 @@ async function query(pool, sql, params) {
     return rows;
 }
 
+testMysql2Connection = async () => {
+    const connection = await mysql.createConnection( {
+        host: 'eng-metrics.cgwxrjuo6oyd.us-east-1.rds.amazonaws.com',
+        user: process.env.DB_USER,
+        password: process.env.DB_PASS,
+        database: 'eng_metrics'
+    });
+
+
+    const [rows, fields] = await connection.query(
+        'SELECT * FROM backlog'
+      );
+      console.log("rows = ", rows);
+
+    connection.end()
+
+}
+
 module.exports.etlBacklogEpics = async (event, context, callback) => {
 
     if (!event.backlogId) {
@@ -64,7 +82,7 @@ module.exports.etlBacklogEpics = async (event, context, callback) => {
                 "now()" +
                 ")";
 
-                const backlogEtlResults = await query(pool, insertStatement);
+            const backlogEtlResults = await query(pool, insertStatement);
 
             for (const epic of backlog.epics) {
                 insertStatement = "INSERT INTO epic VALUES (" + 
@@ -86,7 +104,7 @@ module.exports.etlBacklogEpics = async (event, context, callback) => {
                     epic.issuesPercentComplete + ", " + 
                     "now()" +
                     ")";
-                    
+                console.log(insertStatement);
                 const epicEtlResults = await query(pool, insertStatement);
             }
 
@@ -120,7 +138,7 @@ async function backlogEpics (event, context, callback) {
     var backlogTotalPoints=0, backlogPointsDone=0, backlogPointsInProgress=0, backlogPointsToDo=0;
     var backlogTotalIssues=0, backlogIssuesDone=0, backlogIssuesInProgress=0, backlogIssuesToDo=0, backlogIssuesUnestimated=0;
 
-    backlogEpicsUri = "https://unionstmedia.atlassian.net/rest/agile/1.0/board/" + backlogId + "/epic";
+    backlogEpicsUri = "https://unionstmedia.atlassian.net/rest/agile/1.0/board/" + backlogId + "/epic?maxResults=1000";
     // Fetch epics
     await fetch(
         backlogEpicsUri, {
@@ -277,7 +295,7 @@ async function epicIssues(event, context, callback) {
         callback(JSON.stringify(responseMessage));
     }
 
-    var epicIssuesUri = "https://unionstmedia.atlassian.net/rest/agile/1.0/epic/" + event.pathParameters.epicId + "/issue";
+    var epicIssuesUri = "https://unionstmedia.atlassian.net/rest/agile/1.0/epic/" + event.pathParameters.epicId + "/issue?maxResults=1000";
     await fetch(
         epicIssuesUri, {
         method: 'GET',
@@ -318,3 +336,10 @@ async function epicIssues(event, context, callback) {
 // module.exports.etlBacklogEpics({backlogId: 32, backlogName: "Beacon"}, null, (error, response) => {
 //     module.exports.etlBacklogEpics({backlogId: 23, backlogName: "Map Search"}, null, (error, response) => console.log(response))
 // });
+
+
+// module.exports.etlBacklogEpics({backlogId: 23, backlogName: "Map Search"}, null, (error, response) => {
+//     console.log(response);
+// })
+
+// testMysql2Connection();
