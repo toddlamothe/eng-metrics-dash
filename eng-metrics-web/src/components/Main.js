@@ -12,7 +12,6 @@ import '../assets/css/eng-metrics.css';
 
  function Main(props) {
     var {search} = useLocation();
-    // const spinnerStyle = { position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)" };
     const [spinnerVisible, setSpinnerVisible] = useState(true);
     
     const queryStringValues = queryString.parse(search);
@@ -94,7 +93,7 @@ import '../assets/css/eng-metrics.css';
                 hideSpinner();
                 return response.json()            
             })
-            .then(data => {     
+            .then(data => {
                 setRawBacklogEpics(data);
             });
     }

@@ -14,11 +14,6 @@ const config = {
     },
     listPerPage: 10,
 };
-  
-async function query(pool, sql, params) {
-    const [rows, fields] = await pool.execute(sql, params);
-    return rows;
-}
 
 module.exports.etlBacklogEpics = async (event, context, callback) => {
 
@@ -31,12 +26,16 @@ module.exports.etlBacklogEpics = async (event, context, callback) => {
         return;
     }
 
-    backlogId = event.backlogId;
-    backlogName = event.backlogName;
-
-    // Opening and closing a conneciton pool on every call is probably bad technique
-    const pool = mysql.createPool(config.db);        
+    const backlogId = event.backlogId;
+    const backlogName = event.backlogName;
     var insertStatement;
+
+    const connection = await mysql.createConnection( {
+        host: 'eng-metrics.cgwxrjuo6oyd.us-east-1.rds.amazonaws.com',
+        user: process.env.DB_USER,
+        password: process.env.DB_PASS,
+        database: 'eng_metrics'
+    });
 
     await backlogEpics(
         {"pathParameters" : {"backlogId" : backlogId}},
@@ -64,8 +63,8 @@ module.exports.etlBacklogEpics = async (event, context, callback) => {
                 "now()" +
                 ")";
 
-                const backlogEtlResults = await query(pool, insertStatement);
-
+            const [backlogInsertRows, backlogInsertFields] = await connection.query(insertStatement);
+            
             for (const epic of backlog.epics) {
                 insertStatement = "INSERT INTO epic VALUES (" + 
                     "UUID(), " +
@@ -79,21 +78,21 @@ module.exports.etlBacklogEpics = async (event, context, callback) => {
                     epic.pointsToDo + ", " + 
                     epic.pointsPercentComplete + ", " + 
                     epic.totalIssues + ", " + 
-                    epic.issuesToDo + ", " + 
-                    epic.issuesInProgress + ", " + 
                     epic.issuesDone + ", " + 
+                    epic.issuesInProgress + ", " + 
+                    epic.issuesToDo + ", " + 
                     epic.issuesUnestimated + ", " + 
                     epic.issuesPercentComplete + ", " + 
                     "now()" +
                     ")";
-                    
-                const epicEtlResults = await query(pool, insertStatement);
+                
+                    const [epicInsertRows, epicInsertFields] = await connection.query(insertStatement);                    
             }
 
-            pool.end();
+            connection.end()
+            // pool.end();
             callback(null, null);
     })
-
 
 }
 
@@ -120,7 +119,7 @@ async function backlogEpics (event, context, callback) {
     var backlogTotalPoints=0, backlogPointsDone=0, backlogPointsInProgress=0, backlogPointsToDo=0;
     var backlogTotalIssues=0, backlogIssuesDone=0, backlogIssuesInProgress=0, backlogIssuesToDo=0, backlogIssuesUnestimated=0;
 
-    backlogEpicsUri = "https://unionstmedia.atlassian.net/rest/agile/1.0/board/" + backlogId + "/epic";
+    backlogEpicsUri = "https://unionstmedia.atlassian.net/rest/agile/1.0/board/" + backlogId + "/epic?maxResults=1000";
     // Fetch epics
     await fetch(
         backlogEpicsUri, {
@@ -176,7 +175,7 @@ async function backlogEpics (event, context, callback) {
         var epicTotalIssues=0, epicDoneIssues=0, epicInProgressIssues=0, epicToDoIssues=0, epicUnestimatedIssues=0;
         var epicTotalPoints=0, epicDonePoints=0, epicInProgressPoints=0, epicToDoPoints=0;
 
-        await epicIssues({pathParameters: { backlogId: 23, epicId : epic.id}}, null, (error, response) => {
+        await epicIssues({pathParameters: {epicId : epic.id}}, null, (error, response) => {
             // Tally up stats for this epic
             allEpicIssues = JSON.parse(response.body).issues;
             allEpicIssues.forEach(issue => {
@@ -188,21 +187,27 @@ async function backlogEpics (event, context, callback) {
                 } 
                 else {
                     storyPoints = 0;
-                    epicUnestimatedIssues++;
                 }
-                switch(issue.fields.status.name) {
-                    case "Done":
-                        epicDoneIssues++;
-                        epicDonePoints+=storyPoints;
-                        break;
-                    case "In Progress":
-                        epicInProgressIssues++;
-                        epicInProgressPoints+=storyPoints;
-                        break;
-                    case "To Do":
-                        epicToDoIssues++;
-                        epicToDoPoints+=storyPoints;
-                        break;
+
+                // Only count as unestimated if it's a user story
+                if (issue.fields.issuetype && issue.fields.issuetype.name && issue.fields.issuetype.name==="Story" && storyPoints===0) {
+                    epicUnestimatedIssues++;
+                } else {
+                    // The issue is not an unestimated user story, categorize it
+                    switch(issue.fields.status.name) {
+                        case "Done":
+                            epicDoneIssues++;
+                            epicDonePoints+=storyPoints;
+                            break;
+                        case "In Progress":
+                            epicInProgressIssues++;
+                            epicInProgressPoints+=storyPoints;
+                            break;
+                        case "To Do":
+                            epicToDoIssues++;
+                            epicToDoPoints+=storyPoints;
+                            break;
+                    }
                 }
             });
 
@@ -269,15 +274,15 @@ async function backlogEpics (event, context, callback) {
 }
 
 async function epicIssues(event, context, callback) {
-    if (!event.pathParameters.backlogId || !event.pathParameters.epicId) {
+    if (!event.pathParameters.epicId) {
         const responseMessage = {
             statusCode: 500,
-            body: "Backlog ID and epic ID required"
+            body: "Epic ID required"
         };
         callback(JSON.stringify(responseMessage));
     }
 
-    var epicIssuesUri = "https://unionstmedia.atlassian.net/rest/agile/1.0/epic/" + event.pathParameters.epicId + "/issue";
+    var epicIssuesUri = "https://unionstmedia.atlassian.net/rest/agile/1.0/epic/" + event.pathParameters.epicId + "/issue?maxResults=1000";
     await fetch(
         epicIssuesUri, {
         method: 'GET',
@@ -315,6 +320,10 @@ async function epicIssues(event, context, callback) {
         });
 };
 
+// module.exports.etlBacklogEpics({backlogId: 23, backlogName: "Map Search"}, null, (error, response) => {
+//     console.log(response);
+// })
+
 // module.exports.etlBacklogEpics({backlogId: 32, backlogName: "Beacon"}, null, (error, response) => {
-//     module.exports.etlBacklogEpics({backlogId: 23, backlogName: "Map Search"}, null, (error, response) => console.log(response))
-// });
+//     console.log(response);
+// })

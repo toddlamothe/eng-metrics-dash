@@ -33,7 +33,7 @@ export function FormatEpicDataForBarChart(epicData) {
         name: 'Unestimated',
         data: issuesUnestimatedValues
         }]
-
+        
     const defaultOptions = 
     {
       chart: {
