@@ -13,27 +13,27 @@ const config = {
     },
     listPerPage: 10,
 };
-  
-async function query(pool, sql, params) {
-    const [rows, fields] = await pool.execute(sql, params);
-    return rows;
-}
 
 module.exports.backlogEpics = async (event, context, callback) => {
     // Opening and closing a conneciton pool on every call is probably bad technique
-    const pool = mysql.createPool(config.db);        
+    const connection = await mysql.createConnection( {
+        host: 'eng-metrics.cgwxrjuo6oyd.us-east-1.rds.amazonaws.com',
+        user: process.env.DB_USER,
+        password: process.env.DB_PASS,
+        database: 'eng_metrics'
+    });
 
     try {
         const backlogSelectStatement = "select * from backlog where backlog_id=" + event.pathParameters.backlogId + " order by created_dttm desc limit 1";    
-        const backlogResults = await query(pool, backlogSelectStatement);
-        var backlogEpicsResponseObject = JSON.parse(JSON.stringify(backlogResults[0]));
+        const [backlogRows, backlogFields] = await connection.query(backlogSelectStatement);
+        var backlogEpicsResponseObject = JSON.parse(JSON.stringify(backlogRows[0]));
         var formattedBacklogEpicsResponseObject = formatBacklogObject(backlogEpicsResponseObject)
         formattedBacklogEpicsResponseObject.epics = [];
         console.log("formattedBacklogEpicsResponseObject = ", formattedBacklogEpicsResponseObject);
 
         var backlogEpicsSelectStatement = "select epic.* from backlog, epic where epic.backlog_uuid = backlog.uuid and backlog.uuid = '" + backlogEpicsResponseObject.uuid + "'";
-        const epicResults = await query(pool, backlogEpicsSelectStatement);
-        for (const epic of epicResults) {
+        const [epicRows, epicFields] = await connection.query(backlogEpicsSelectStatement);
+        for (const epic of epicRows) {
             formattedBacklogEpic = formatEpicObject(JSON.parse(JSON.stringify(epic)));
             formattedBacklogEpicsResponseObject.epics.push(formattedBacklogEpic)
         }
@@ -49,7 +49,7 @@ module.exports.backlogEpics = async (event, context, callback) => {
         }
         callback(null, responseMessage);
 
-        pool.end();
+        connection.end()
 
         callback(null, {
             statusCode: 200, 
@@ -107,4 +107,4 @@ function formatEpicObject(epicObject) {
     }
 }
 
-// module.exports.backlogEpics({pathParameters: { backlogId: 23}}, {}, (error, response) => console.log(response))
+// module.exports.backlogEpics({pathParameters: { backlogId: 32}}, {}, (error, response) => console.log(response))
