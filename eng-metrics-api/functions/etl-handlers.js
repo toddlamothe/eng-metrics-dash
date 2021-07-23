@@ -14,29 +14,6 @@ const config = {
     },
     listPerPage: 10,
 };
-  
-async function query(pool, sql, params) {
-    const [rows, fields] = await pool.execute(sql, params);
-    return rows;
-}
-
-testMysql2Connection = async () => {
-    const connection = await mysql.createConnection( {
-        host: 'eng-metrics.cgwxrjuo6oyd.us-east-1.rds.amazonaws.com',
-        user: process.env.DB_USER,
-        password: process.env.DB_PASS,
-        database: 'eng_metrics'
-    });
-
-
-    const [rows, fields] = await connection.query(
-        'SELECT * FROM backlog'
-      );
-      console.log("rows = ", rows);
-
-    connection.end()
-
-}
 
 module.exports.etlBacklogEpics = async (event, context, callback) => {
 
@@ -49,12 +26,16 @@ module.exports.etlBacklogEpics = async (event, context, callback) => {
         return;
     }
 
-    backlogId = event.backlogId;
-    backlogName = event.backlogName;
-
-    // Opening and closing a conneciton pool on every call is probably bad technique
-    const pool = mysql.createPool(config.db);        
+    const backlogId = event.backlogId;
+    const backlogName = event.backlogName;
     var insertStatement;
+
+    const connection = await mysql.createConnection( {
+        host: 'eng-metrics.cgwxrjuo6oyd.us-east-1.rds.amazonaws.com',
+        user: process.env.DB_USER,
+        password: process.env.DB_PASS,
+        database: 'eng_metrics'
+    });
 
     await backlogEpics(
         {"pathParameters" : {"backlogId" : backlogId}},
@@ -82,8 +63,8 @@ module.exports.etlBacklogEpics = async (event, context, callback) => {
                 "now()" +
                 ")";
 
-            const backlogEtlResults = await query(pool, insertStatement);
-
+            const [backlogInsertRows, backlogInsertFields] = await connection.query(insertStatement);
+            
             for (const epic of backlog.epics) {
                 insertStatement = "INSERT INTO epic VALUES (" + 
                     "UUID(), " +
@@ -104,13 +85,14 @@ module.exports.etlBacklogEpics = async (event, context, callback) => {
                     epic.issuesPercentComplete + ", " + 
                     "now()" +
                     ")";
-                const epicEtlResults = await query(pool, insertStatement);
+                
+                    const [epicInsertRows, epicInsertFields] = await connection.query(insertStatement);                    
             }
 
-            pool.end();
+            connection.end()
+            // pool.end();
             callback(null, null);
     })
-
 
 }
 
@@ -338,13 +320,10 @@ async function epicIssues(event, context, callback) {
         });
 };
 
+// module.exports.etlBacklogEpics({backlogId: 23, backlogName: "Map Search"}, null, (error, response) => {
+//     console.log(response);
+// })
+
 // module.exports.etlBacklogEpics({backlogId: 32, backlogName: "Beacon"}, null, (error, response) => {
-//     module.exports.etlBacklogEpics({backlogId: 23, backlogName: "Map Search"}, null, (error, response) => console.log(response))
-// });
-
-
-module.exports.etlBacklogEpics({backlogId: 32, backlogName: "Map Search"}, null, (error, response) => {
-    console.log(response);
-})
-
-// testMysql2Connection();
+//     console.log(response);
+// })
