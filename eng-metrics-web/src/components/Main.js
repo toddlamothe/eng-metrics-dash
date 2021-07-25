@@ -79,7 +79,7 @@ import '../assets/css/eng-metrics.css';
     const getBacklogEpics = async (backlogId) => {
         showSpinner();
         await fetch(
-            'https://ausl4ri6y1.execute-api.us-east-1.amazonaws.com/test-tl/backlogs/' + backlogId + '/epics', {
+            'https://ha4mv8svsk.execute-api.us-east-1.amazonaws.com/test-tl/backlogs/' + backlogId + '/epics', {
             method: 'GET'
          })
             .then(response => {

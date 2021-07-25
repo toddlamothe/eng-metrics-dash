@@ -31,3 +31,44 @@ functions:
             ttlInSeconds: 10
             cacheKeyParameters:
               - name: request.path.backlogId
+  etl-backlog-epics:
+      handler: functions/etl-handlers.etlBacklogEpics
+      timeout: 30
+      events:
+        - schedule: 
+            rate: cron(35 11 * * ? *)
+            inputTransformer:
+              inputTemplate:
+                '{"backlogId": 23, "backlogName": "Map Search"}'
+        - schedule: 
+            rate: cron(40 11 * * ? *)
+            inputTransformer:
+              inputTemplate:
+                '{"backlogId": 32, "backlogName": "Beacon"}'
+
+            # input:
+            #     backlogId: 23
+            #     backlogName: "Map Search"
+
+            # rate: cron(0 12 * * ? *)
+            # enabled: true
+            # inputTransformer:
+            #   inputPathsMap:
+            #     backlogId: "23"
+            #     backlogName: "Map Search"
+            #   inputTemplate: '{"backlogId": <backlogId>, "backlogName": <backlogName>}'
+
+              # - schedule: 
+            #     rate: cron(0 1 ? * 5 *)
+            #     enabled: true
+            #     inputTransformer:
+            #       inputPathsMap:
+            #         backlogId: "32"
+            #         backlogName: "Beacon"
+            #       inputTemplate: '{"backlogId": <backlogId>, "backlogName": <backlogName>}'
+
+# THIS ONE WORKS
+# cron(0 1 ? * 5 *)
+
+# THIS DOES NOT
+# cron(0 1 ? * SUN *)
