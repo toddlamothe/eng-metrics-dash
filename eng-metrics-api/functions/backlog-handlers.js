@@ -20,7 +20,7 @@ module.exports.backlogEpics = async (event, context, callback) => {
         host: 'eng-metrics.cgwxrjuo6oyd.us-east-1.rds.amazonaws.com',
         user: process.env.DB_USER,
         password: process.env.DB_PASS,
-        database: 'eng_metrics'
+        database: 'eng_metrics',
     });
 
     try {
