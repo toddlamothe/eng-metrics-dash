@@ -1,26 +1,12 @@
 const mysql = require('mysql2/promise');
 
-const config = {
-    db: {
-        host: 'eng-metrics.cgwxrjuo6oyd.us-east-1.rds.amazonaws.com',
-        user: process.env.DB_USER,
-        password: process.env.DB_PASS,
-        database: 'eng_metrics',
-        waitForConnections: true,
-        connectionLimit: 5,
-        queueLimit: 0,
-        debug: false
-    },
-    listPerPage: 10,
-};
-
 module.exports.backlogEpics = async (event, context, callback) => {
     // Opening and closing a conneciton pool on every call is probably bad technique
     const connection = await mysql.createConnection( {
         host: 'eng-metrics.cgwxrjuo6oyd.us-east-1.rds.amazonaws.com',
         user: process.env.DB_USER,
         password: process.env.DB_PASS,
-        database: 'eng_metrics',
+        database: 'eng_metrics'
     });
 
     try {

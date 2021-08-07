@@ -31,15 +31,14 @@ module.exports.etlBacklogEpics = async (event, context, callback) => {
     var insertStatement = "";
     var insertArray = [];
 
-    console.log("About to fetch epics from API...");
+    console.log("Fetching epics from Atlassian API...");
     await backlogEpics(
         {"pathParameters" : {"backlogId" : backlogId}},
         null,
         async (errorMessage, responseMessage) => {
-            // Insert backlog data into the database
+            // Create backlog data insert statement
             backlog = JSON.parse(responseMessage.body);
-            // console.log("1. backlog = ", backlog);
-            console.log("backlog returned from atlassian api: ", backlog);
+            console.log("Backlog returned from atlassian api: ", backlog);
             backlogUuid = uuidv4();
 
             insertStatement = "INSERT INTO backlog VALUES (" + 
@@ -109,8 +108,6 @@ module.exports.etlBacklogEpics = async (event, context, callback) => {
 
     connection.end()
     callback(null, null);
-
-
 }
 
 function uuidv4() {
