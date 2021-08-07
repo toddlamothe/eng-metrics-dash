@@ -16,7 +16,7 @@ const config = {
 };
 
 module.exports.etlBacklogEpics = async (event, context, callback) => {
-
+    console.log("Begin etl execution");
     if (!event.backlogId) {
         const responseMessage = {
             statusCode: 500,
@@ -28,22 +28,19 @@ module.exports.etlBacklogEpics = async (event, context, callback) => {
 
     const backlogId = event.backlogId;
     const backlogName = event.backlogName;
-    var insertStatement;
+    var insertStatement = "";
+    var insertArray = [];
 
-    const connection = await mysql.createConnection( {
-        host: 'eng-metrics.cgwxrjuo6oyd.us-east-1.rds.amazonaws.com',
-        user: process.env.DB_USER,
-        password: process.env.DB_PASS,
-        database: 'eng_metrics'
-    });
-
+    console.log("Fetching epics from Atlassian API...");
     await backlogEpics(
         {"pathParameters" : {"backlogId" : backlogId}},
         null,
         async (errorMessage, responseMessage) => {
-            // Insert backlog data into the database
+            // Create backlog data insert statement
             backlog = JSON.parse(responseMessage.body);
+            console.log("Backlog returned from atlassian api: ", backlog);
             backlogUuid = uuidv4();
+
             insertStatement = "INSERT INTO backlog VALUES (" + 
                 "'" + backlogUuid + "', " +
                 backlogId + ", " + 
@@ -61,10 +58,11 @@ module.exports.etlBacklogEpics = async (event, context, callback) => {
                 backlog.backlogIssuesUnestimated + ", " + 
                 backlog.backlogIssuesPercentComplete + ", " + 
                 "now()" +
-                ")";
+                ");";
 
-            const [backlogInsertRows, backlogInsertFields] = await connection.query(insertStatement);
-            
+            insertArray.push(insertStatement);
+
+            var epicInserts;
             for (const epic of backlog.epics) {
                 insertStatement = "INSERT INTO epic VALUES (" + 
                     "UUID(), " +
@@ -84,16 +82,32 @@ module.exports.etlBacklogEpics = async (event, context, callback) => {
                     epic.issuesUnestimated + ", " + 
                     epic.issuesPercentComplete + ", " + 
                     "now()" +
-                    ")";
-                
-                    const [epicInsertRows, epicInsertFields] = await connection.query(insertStatement);                    
-            }
+                    ");";
 
-            connection.end()
-            // pool.end();
-            callback(null, null);
+                insertArray.push(insertStatement);                
+            };
     })
 
+
+    // Execute all insert statements at once without nesting async/awaits, as the
+    // database connection seems to drop when nesting calls
+    console.log("Connecting to database...");
+    var connection = await mysql.createConnection( {
+        host: 'eng-metrics.cgwxrjuo6oyd.us-east-1.rds.amazonaws.com',
+        user: process.env.DB_USER,
+        password: process.env.DB_PASS,
+        database: 'eng_metrics',
+        debug: true
+    }); 
+    console.log("Database connected.");
+
+    var selectRows, selectFields
+    for(var x=0;x<insertArray.length;x++) {
+        [selectRows, selectFields] = await connection.query(insertArray[x]);
+    }
+
+    connection.end()
+    callback(null, null);
 }
 
 function uuidv4() {
