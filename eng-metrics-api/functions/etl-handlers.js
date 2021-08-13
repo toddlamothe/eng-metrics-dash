@@ -1,20 +1,6 @@
 const fetch = require('node-fetch');
 const mysql = require('mysql2/promise');
 
-const config = {
-    db: {
-        host: 'eng-metrics.cgwxrjuo6oyd.us-east-1.rds.amazonaws.com',
-        user: process.env.DB_USER,
-        password: process.env.DB_PASS,
-        database: 'eng_metrics',
-        waitForConnections: true,
-        connectionLimit: 5,
-        queueLimit: 0,
-        debug: false
-    },
-    listPerPage: 10,
-};
-
 module.exports.etlBacklogEpics = async (event, context, callback) => {
     console.log("Begin etl execution");
     if (!event.backlogId) {
@@ -38,7 +24,6 @@ module.exports.etlBacklogEpics = async (event, context, callback) => {
         async (errorMessage, responseMessage) => {
             // Create backlog data insert statement
             backlog = JSON.parse(responseMessage.body);
-            console.log("Backlog returned from atlassian api: ", backlog);
             backlogUuid = uuidv4();
 
             insertStatement = "INSERT INTO backlog VALUES (" + 
@@ -97,7 +82,7 @@ module.exports.etlBacklogEpics = async (event, context, callback) => {
         user: process.env.DB_USER,
         password: process.env.DB_PASS,
         database: 'eng_metrics',
-        debug: true
+        debug: false
     }); 
     console.log("Database connected.");
 
@@ -150,7 +135,8 @@ async function backlogEpics (event, context, callback) {
             return { 
                 "id" : element.id,
                 "key" : element.key,
-                "name" : element.name
+                "name" : element.name,
+                "fields" : element.fields
             }
         })
     }).catch((error) => {
@@ -158,9 +144,8 @@ async function backlogEpics (event, context, callback) {
         callback(Error(error));
     });
 
-    // Only include the epic if it was labeled with the budget reporting tag
     for (const epic of epicArray) {
-        epicLabelsUri = "https://unionstmedia.atlassian.net/rest/agile/1.0/issue/" + epic.key + "?fields=labels"
+        epicLabelsUri = "https://unionstmedia.atlassian.net/rest/agile/1.0/issue/" + epic.key;
         await fetch(
             epicLabelsUri, {
                 method: 'GET',
@@ -171,9 +156,10 @@ async function backlogEpics (event, context, callback) {
                 return response.json()            
             })
             .then(data => {
+                // Only include the epic if it was labeled with the budget reporting tag
                 if (data.fields.labels && data.fields.labels[0] && data.fields.labels[0] == budgetReportingTag) {
                     // Include this budget reporting epic
-                    budgetReportingEpics.push(epic);
+                    budgetReportingEpics.push(data);
                 }
                 
             }).catch((error) => {
@@ -236,12 +222,18 @@ async function backlogEpics (event, context, callback) {
             backlogIssuesInProgress+=epicInProgressIssues;
             backlogIssuesToDo+=epicToDoIssues;
             backlogIssuesUnestimated+=epicUnestimatedIssues;
-            
+
+            // If points were estimated at the epic level, 
+            // use that value instead of the issue sum total
+            if (epic.fields.customfield_10035) {
+                epicTotalPoints = epic.fields.customfield_10035;
+                epic.fields.customfield_10003 = epic.fields.customfield_10003;
+            }
 
             epicsWithStats.push({ 
                 "id" : epic.id,
                 "key" : epic.key,
-                "name" : epic.name,
+                "name" : epic.fields.customfield_10003,
                 "totalPoints" : epicTotalPoints,
                 "pointsToDo" : epicToDoPoints,
                 "pointsInProgress" : epicInProgressPoints,
@@ -338,6 +330,6 @@ async function epicIssues(event, context, callback) {
 //     console.log(response);
 // })
 
-// module.exports.etlBacklogEpics({backlogId: 32, backlogName: "Beacon"}, null, (error, response) => {
-//     console.log(response);
-// })
+module.exports.etlBacklogEpics({backlogId: 32, backlogName: "Beacon"}, null, (error, response) => {
+    console.log(response);
+})
