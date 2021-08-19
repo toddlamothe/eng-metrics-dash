@@ -57,7 +57,7 @@ import '../assets/css/eng-metrics.css';
     // When the raw backlog and epic data changes, 
     // format it and make it available to the chart controls
     useEffect( () => {
-        if (rawBacklogEpics) {
+        if (rawBacklogEpics && rawBacklogEpics.epics) {
             var formattedStackedBarChartOptionData =  FormatEpicDataForBarChart(rawBacklogEpics.epics);
             setStackedBarChartOptionData(formattedStackedBarChartOptionData);
             var formattedPieCharOptionData = FormatEpicDataForPieChart(rawBacklogEpics.epics);
@@ -78,9 +78,14 @@ import '../assets/css/eng-metrics.css';
 
     const getBacklogEpics = async (backlogId) => {
         showSpinner();
+        console.log('https://ha4mv8svsk.execute-api.us-east-1.amazonaws.com/test-tl/backlogs/' + backlogId + '/epics');
         await fetch(
             'https://ha4mv8svsk.execute-api.us-east-1.amazonaws.com/test-tl/backlogs/' + backlogId + '/epics', {
-            method: 'GET'
+            method: 'GET',
+            mode: 'cors',
+            headers: {
+                'x-api-key': 'PI9U8B6hNg3Kb80alaGgx4JqzWpd7Sjn14O1234b'
+            }
          })
             .then(response => {
                 if (!response.ok) {
@@ -94,6 +99,7 @@ import '../assets/css/eng-metrics.css';
                 return response.json()            
             })
             .then(data => {
+                console.log("data = ", data);
                 setRawBacklogEpics(data);
             });
     }
