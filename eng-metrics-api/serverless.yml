@@ -10,8 +10,15 @@ provider:
   apiGateway:
     apiKeys:
       - name: engMetricsApiKey
-        value: ${env:ENG_METRICS_API_KEY}      
-
+        value: ${env:ENG_METRICS_API_KEY}
+    usagePlan:
+      quota:
+        limit: 5000
+        offset: 1
+        period: MONTH
+      throttle:
+        burstLimit: 200
+        rateLimit: 100
 plugins:
   - serverless-api-gateway-caching
 
