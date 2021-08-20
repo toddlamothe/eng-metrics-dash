@@ -7,6 +7,48 @@ module.exports.uuidv4 = () => {
     });
 }
 
+module.exports.backlogVelocity = async (backlogId) => {
+    if (!backlogId) {
+        // Throw an error
+    }
+
+    backlogVelocitysUri = "https://unionstmedia.atlassian.net/rest/greenhopper/1.0/rapid/charts/velocity?rapidViewId=" + backlogId;
+    // Fetch epics
+    await fetch(
+        backlogVelocitysUri, {
+        method: 'GET',
+        headers: {
+            Authorization: process.env.ATLASSIAN_API_KEY,
+        }
+     })
+     .then(response => {
+        return response.json()            
+    })
+    .then(data => {
+        // console.log("velocity data = ", data)
+        var backlogSprintVelocities = data.sprints.map( (sprint) => {
+            sprintVelocity = {
+                "id" : sprint.id,
+                "name": sprint.name, 
+                "state": sprint.state,
+                "goal": sprint.goal
+            }
+
+            var velocityStats = data.velocityStatEntries[sprint.id];
+            if (velocityStats) {
+                sprintVelocity.estimated = velocityStats.estimated;
+                sprintVelocity.completed = velocityStats.completed;
+            }
+
+            return (sprintVelocity)
+        })
+
+        console.log("backlogSprintVelocities = ", backlogSprintVelocities);
+        return(backlogSprintVelocities);
+    })
+
+}
+
 module.exports.backlogEpics = async (event, context, callback) => {
     if (!event.pathParameters.backlogId) {
         const responseMessage = {

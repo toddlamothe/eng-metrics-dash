@@ -95,9 +95,28 @@ module.exports.etlBacklogEpics = async (event, context, callback) => {
     callback(null, null);
 }
 
-module.exports.etlBacklogEpics({backlogId: 23, backlogName: "Map Search"}, null, (error, response) => {
-    console.log(response);
-})
+module.exports.etlVelocity = async (event, context, callback) => {
+    console.log("Begin etl execution");
+    if (!event.backlogId) {
+        const responseMessage = {
+            statusCode: 500,
+            body: "Backlog ID not provided"
+        };
+        callback(JSON.stringify(responseMessage));
+        return;
+    }
+
+    // 1: Fetch velocities for specified backlog
+    await helpers.backlogVelocity(event.backlogId)
+    // 2: Add any new velocities to the database
+    callback(null, "done");
+}
+
+module.exports.etlVelocity({backlogId : 23}, null, (error, results) => console.log("results:", results));
+
+// module.exports.etlBacklogEpics({backlogId: 23, backlogName: "Map Search"}, null, (error, response) => {
+//     console.log(response);
+// })
 
 // module.exports.etlBacklogEpics({backlogId: 32, backlogName: "Beacon"}, null, (error, response) => {
 //     console.log(response);
