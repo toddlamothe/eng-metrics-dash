@@ -84,7 +84,7 @@ module.exports.etlBacklogEpics = async (event, context, callback) => {
         database: 'eng_metrics',
         debug: false
     }); 
-    console.log("Database connected.");
+    console.log("Database connected");
 
     var selectRows, selectFields
     for(var x=0;x<insertArray.length;x++) {
@@ -106,13 +106,75 @@ module.exports.etlVelocity = async (event, context, callback) => {
         return;
     }
 
-    // 1: Fetch velocities for specified backlog
-    await helpers.backlogVelocity(event.backlogId)
-    // 2: Add any new velocities to the database
+    var apiSprintVelocities;
+    var insertArray = [];
+
+    // Fetch velocities for the specified backlog
+    await helpers.backlogVelocity(event.backlogId, (backlogVelocities) => {
+        apiSprintVelocities = backlogVelocities;
+    });
+
+    console.log("Connecting to database...");
+    var connection = await mysql.createConnection( {
+        host: 'eng-metrics.cgwxrjuo6oyd.us-east-1.rds.amazonaws.com',
+        user: process.env.DB_USER,
+        password: process.env.DB_PASS,
+        database: 'eng_metrics',
+        debug: false
+    }); 
+    console.log("Database connected");
+
+    // Add any new velocities to the database
+    const [dbSprintVelocities, fields] = await connection.query('SELECT * FROM velocity WHERE backlog_id = ' + event.backlogId);
+
+    // Create a key/value hash from the recordset
+    var dbSprintVelocitiesHash = {};
+    for (let x=0;x<dbSprintVelocities.length;x++) {
+        var dbSprintVelocity = dbSprintVelocities[x];
+        dbSprintVelocitiesHash[dbSprintVelocity.sprint_id] = dbSprintVelocity;
+    };
+
+    // Create insert statements for new sprints
+    var insertStatement;
+    apiSprintVelocities.map( (apiSprint) => {
+        // If this sprint is not in the database, add an insert statement for it
+        if (!dbSprintVelocitiesHash[apiSprint.id]) {
+            // Sprint is not in the database. Add insert statement
+            insertStatement = "INSERT INTO velocity VALUES (" + 
+                event.backlogId + ", " + 
+                apiSprint.id + ", " + 
+                "'" + apiSprint.name + "', " + 
+                "'" + apiSprint.state + "', " + 
+                "'" + apiSprint.goal + "', " + 
+                apiSprint.estimated + ", " + 
+                apiSprint.completed + ", " + 
+                "now()" +
+                ")";
+            console.log(insertStatement);
+            insertArray.push(insertStatement);
+        }
+    })
+
+    try {
+        // Execute insert statements
+        var insertRows, insertFields;
+        console.log("Inserting sprints: ", insertArray);
+        for(var x=0;x<insertArray.length;x++) {
+            [insertRows, insertFields] = await connection.query(insertArray[x]);
+        };
+
+    } catch (error) {
+        console.error("Error inserting backlog velocities: ", error);
+        console.log(insertArray);
+    } finally {
+        connection.end()
+        console.log("Database disconnected");
+    }
+    
     callback(null, "done");
 }
 
-module.exports.etlVelocity({backlogId : 23}, null, (error, results) => console.log("results:", results));
+module.exports.etlVelocity({backlogId : 23}, null, (error, results) => console.log(results));
 
 // module.exports.etlBacklogEpics({backlogId: 23, backlogName: "Map Search"}, null, (error, response) => {
 //     console.log(response);

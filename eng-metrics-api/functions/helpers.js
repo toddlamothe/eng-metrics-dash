@@ -7,12 +7,13 @@ module.exports.uuidv4 = () => {
     });
 }
 
-module.exports.backlogVelocity = async (backlogId) => {
+module.exports.backlogVelocity = async (backlogId, callback) => {
     if (!backlogId) {
         // Throw an error
     }
 
-    backlogVelocitysUri = "https://unionstmedia.atlassian.net/rest/greenhopper/1.0/rapid/charts/velocity?rapidViewId=" + backlogId;
+    var backlogVelocitysUri = "https://unionstmedia.atlassian.net/rest/greenhopper/1.0/rapid/charts/velocity?rapidViewId=" + backlogId;
+    var backlogSprintVelocities;
     // Fetch epics
     await fetch(
         backlogVelocitysUri, {
@@ -25,7 +26,7 @@ module.exports.backlogVelocity = async (backlogId) => {
         return response.json()            
     })
     .then(data => {
-        // console.log("velocity data = ", data)
+        console.log(".data");
         var backlogSprintVelocities = data.sprints.map( (sprint) => {
             sprintVelocity = {
                 "id" : sprint.id,
@@ -34,18 +35,19 @@ module.exports.backlogVelocity = async (backlogId) => {
                 "goal": sprint.goal
             }
 
-            var velocityStats = data.velocityStatEntries[sprint.id];
+            velocityStats = data.velocityStatEntries[sprint.id];
             if (velocityStats) {
-                sprintVelocity.estimated = velocityStats.estimated;
-                sprintVelocity.completed = velocityStats.completed;
+                sprintVelocity.estimated = velocityStats.estimated.value;
+                sprintVelocity.completed = velocityStats.completed.value;
             }
 
             return (sprintVelocity)
         })
+        // console.log("backlogSprintVelocities etc function: ", backlogSprintVelocities);
+        callback(backlogSprintVelocities);
 
-        console.log("backlogSprintVelocities = ", backlogSprintVelocities);
-        return(backlogSprintVelocities);
-    })
+    });
+
 
 }
 
