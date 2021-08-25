@@ -7,7 +7,57 @@ module.exports.uuidv4 = () => {
     });
 }
 
-module.exports.backlogVelocity = async (backlogId, callback) => {
+module.exports.backlogSprintVeloHistory = async (backlogId, callback) => {
+    if (!backlogId) {
+        // Throw an error
+    }
+
+    var backlogSprintsUri = "https://unionstmedia.atlassian.net/rest/agile/1.0/board/" + backlogId + "/sprint?startAt=0&maxResults=250";
+    var backlogSprints = [];
+    var backlogSprintCount;
+
+    // Fetch sprints
+    await fetch(
+        backlogSprintsUri, {
+        method: 'GET',
+        headers: {
+            Authorization: process.env.ATLASSIAN_API_KEY,
+        }
+     })
+     .then(response => {
+        return response.json()            
+    })
+    .then(data => {
+        backlogSprintCount = data.values.length;
+        backlogSprints = data.values;
+    })
+
+    if (backlogSprintCount === 50) {
+        // Fetch more sprints cuz the Atlassian API ignores maxResults and will only return 50
+        backlogSprintsUri = "https://unionstmedia.atlassian.net/rest/agile/1.0/board/" + backlogId + "/sprint?startAt=50&maxResults=250";
+        // Fetch sprints
+        await fetch(
+            backlogSprintsUri, {
+            method: 'GET',
+            headers: {
+                Authorization: process.env.ATLASSIAN_API_KEY,
+            }
+        })
+        .then(response => {
+            return response.json()            
+        })
+        .then(data => {
+            if(data.values.length > 0) {
+                backlogSprintCount += data.values.length;
+                backlogSprints = backlogSprints.concat(data.values);
+            }            
+        })
+        console.log("backlogSprints = ", backlogSprints);
+        console.log("backlogSprints.length = ", backlogSprints.length);
+    }
+}
+
+module.exports.backlogVeloHistory = async (backlogId, callback) => {
     if (!backlogId) {
         // Throw an error
     }
@@ -26,7 +76,6 @@ module.exports.backlogVelocity = async (backlogId, callback) => {
         return response.json()            
     })
     .then(data => {
-        console.log(".data");
         var backlogSprintVelocities = data.sprints.map( (sprint) => {
             sprintVelocity = {
                 "id" : sprint.id,
@@ -47,8 +96,6 @@ module.exports.backlogVelocity = async (backlogId, callback) => {
         callback(backlogSprintVelocities);
 
     });
-
-
 }
 
 module.exports.backlogEpics = async (event, context, callback) => {
@@ -274,3 +321,5 @@ async function epicIssues(event, context, callback) {
             callback(Error(error));
         });
 };
+
+module.exports.backlogSprintVeloHistory(23, () => console.log("end."));

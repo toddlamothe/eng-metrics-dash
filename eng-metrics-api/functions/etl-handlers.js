@@ -110,7 +110,7 @@ module.exports.etlVelocity = async (event, context, callback) => {
     var insertArray = [];
 
     // Fetch velocities for the specified backlog
-    await helpers.backlogVelocity(event.backlogId, (backlogVelocities) => {
+    await helpers.backlogVeloHistory(event.backlogId, (backlogVelocities) => {
         apiSprintVelocities = backlogVelocities;
     });
 
@@ -148,7 +148,7 @@ module.exports.etlVelocity = async (event, context, callback) => {
                 "'" + apiSprint.goal + "', " + 
                 apiSprint.estimated + ", " + 
                 apiSprint.completed + ", " + 
-                "now()" +
+                "now(), now(), now()" +
                 ")";
             console.log(insertStatement);
             insertArray.push(insertStatement);
