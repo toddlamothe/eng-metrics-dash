@@ -7,9 +7,11 @@ module.exports.uuidv4 = () => {
     });
 }
 
-// Gather and return all sprints for the given backlog including name, goal, velocity and dates
-// Sprint data is fetched from the Atlassian API and transformed. Due to the design of the Atlassian
-// API, multiple API calls are made - one to fetch sprint velocity data and another for sprint start/end dates
+/* 
+Gather and return all sprints for the given backlog including name, goal, velocity and dates
+Sprint data is fetched from the Atlassian API and transformed. Due to the design of the Atlassian
+API, multiple API calls are made - one to fetch sprint velocity data and another for sprint start/end dates
+*/
 module.exports.sprintVeloHistory = async (backlogId, callback) => {
     if (!backlogId) {
         // Throw an error
@@ -60,11 +62,9 @@ module.exports.sprintVeloHistory = async (backlogId, callback) => {
         for (let x=0;x<backlogSprintVelocities.length;x++) {
             backlogSprint = backlogSprintVelocities[x];
             backlogSprint.estimated = backlogSprintVelocitiesHash[backlogSprint.id] ? backlogSprintVelocitiesHash[backlogSprint.id].estimated : 0;
-            backlogSprint.completed = backlogSprintVelocitiesHash[backlogSprint.id] ? backlogSprintVelocitiesHash[backlogSprint.id].completed : 0;
-            
+            backlogSprint.completed = backlogSprintVelocitiesHash[backlogSprint.id] ? backlogSprintVelocitiesHash[backlogSprint.id].completed : 0;            
         }
-
-    })
+    });
 
     callback(backlogSprintVelocities);
 }
@@ -116,8 +116,6 @@ module.exports.sprintHistory = async (backlogId, callback) => {
                 backlogSprints = backlogSprints.concat(data.values);
             }            
         })
-        console.log("backlogSprints = ", backlogSprints);
-        console.log("backlogSprints.length = ", backlogSprints.length);
         callback(backlogSprints);
     }
 }
