@@ -110,7 +110,7 @@ module.exports.etlVelocity = async (event, context, callback) => {
     var insertArray = [];
 
     // Fetch velocities for the specified backlog
-    await helpers.backlogVeloHistory(event.backlogId, (backlogVelocities) => {
+    await helpers.sprintVeloHistory(event.backlogId, (backlogVelocities) => {
         apiSprintVelocities = backlogVelocities;
     });
 
@@ -137,18 +137,21 @@ module.exports.etlVelocity = async (event, context, callback) => {
     // Create insert statements for new sprints
     var insertStatement;
     apiSprintVelocities.map( (apiSprint) => {
-        // If this sprint is not in the database, add an insert statement for it
-        if (!dbSprintVelocitiesHash[apiSprint.id]) {
+        // If this is a closed sprint and is not in the
+        // database, add an insert statement for it
+        if (!dbSprintVelocitiesHash[apiSprint.id] && apiSprint.state==='closed') {
             // Sprint is not in the database. Add insert statement
             insertStatement = "INSERT INTO velocity VALUES (" + 
                 event.backlogId + ", " + 
                 apiSprint.id + ", " + 
                 "'" + apiSprint.name + "', " + 
                 "'" + apiSprint.state + "', " + 
-                "'" + apiSprint.goal + "', " + 
+                "\"" + apiSprint.goal + "\", " + 
                 apiSprint.estimated + ", " + 
                 apiSprint.completed + ", " + 
-                "now(), now(), now()" +
+                "now(), " +
+                "'" + apiSprint.startDate + "', " +
+                "'" + apiSprint.endDate + "'" +
                 ")";
             console.log(insertStatement);
             insertArray.push(insertStatement);
@@ -174,7 +177,7 @@ module.exports.etlVelocity = async (event, context, callback) => {
     callback(null, "done");
 }
 
-module.exports.etlVelocity({backlogId : 23}, null, (error, results) => console.log(results));
+module.exports.etlVelocity({backlogId : 32}, null, (error, results) => console.log(results));
 
 // module.exports.etlBacklogEpics({backlogId: 23, backlogName: "Map Search"}, null, (error, response) => {
 //     console.log(response);

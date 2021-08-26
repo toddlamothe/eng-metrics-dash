@@ -7,7 +7,69 @@ module.exports.uuidv4 = () => {
     });
 }
 
-module.exports.backlogSprintVeloHistory = async (backlogId, callback) => {
+// Gather and return all sprints for the given backlog including name, goal, velocity and dates
+// Sprint data is fetched from the Atlassian API and transformed. Due to the design of the Atlassian
+// API, multiple API calls are made - one to fetch sprint velocity data and another for sprint start/end dates
+module.exports.sprintVeloHistory = async (backlogId, callback) => {
+    if (!backlogId) {
+        // Throw an error
+    }
+
+    var backlogVelocitysUri = "https://unionstmedia.atlassian.net/rest/greenhopper/1.0/rapid/charts/velocity?rapidViewId=" + backlogId;
+    var backlogSprintVelocitiesHash = {};
+    var backlogSprintVelocities;
+    // Fetch sprint velocity data. Note this endpoint only returns the most 
+    // recent 7 sprints worth of data, which is awesome
+    await fetch(
+        backlogVelocitysUri, {
+        method: 'GET',
+        headers: {
+            Authorization: process.env.ATLASSIAN_API_KEY,
+        }
+     })
+     .then(response => {
+        return response.json()            
+    })
+    .then(data => {
+        for (let x=0;x<data.sprints.length;x++) {
+            var sprint = data.sprints[x];
+            var sprintVelocity = {
+                "id" : sprint.id,
+                "name": sprint.name, 
+                "state": sprint.state,
+                "goal": sprint.goal
+            };
+
+            velocityStats = data.velocityStatEntries[sprint.id];
+            if (velocityStats) {
+                sprintVelocity.estimated = velocityStats.estimated.value;
+                sprintVelocity.completed = velocityStats.completed.value;
+            };
+
+            backlogSprintVelocitiesHash[sprint.id] = sprintVelocity;
+        }
+    });
+
+    // Now fetch sprint start/end dates
+    await module.exports.sprintHistory(backlogId, (sprintHistoryWithDates) => {
+        console.log("sprintHistoryWithDates.length = ", sprintHistoryWithDates.length);
+        // For each sprint in the sprint history, add the sprint start/end date to 
+        // the object that already contains sprint id, name and velo
+        backlogSprintVelocities = sprintHistoryWithDates;
+
+        for (let x=0;x<backlogSprintVelocities.length;x++) {
+            backlogSprint = backlogSprintVelocities[x];
+            backlogSprint.estimated = backlogSprintVelocitiesHash[backlogSprint.id] ? backlogSprintVelocitiesHash[backlogSprint.id].estimated : 0;
+            backlogSprint.completed = backlogSprintVelocitiesHash[backlogSprint.id] ? backlogSprintVelocitiesHash[backlogSprint.id].completed : 0;
+            
+        }
+
+    })
+
+    callback(backlogSprintVelocities);
+}
+
+module.exports.sprintHistory = async (backlogId, callback) => {
     if (!backlogId) {
         // Throw an error
     }
@@ -49,53 +111,15 @@ module.exports.backlogSprintVeloHistory = async (backlogId, callback) => {
         .then(data => {
             if(data.values.length > 0) {
                 backlogSprintCount += data.values.length;
+                // Append the next set of sprints onto the original 50
+                // Note: this won't work if the backlog has more than 100 sprints
                 backlogSprints = backlogSprints.concat(data.values);
             }            
         })
         console.log("backlogSprints = ", backlogSprints);
         console.log("backlogSprints.length = ", backlogSprints.length);
+        callback(backlogSprints);
     }
-}
-
-module.exports.backlogVeloHistory = async (backlogId, callback) => {
-    if (!backlogId) {
-        // Throw an error
-    }
-
-    var backlogVelocitysUri = "https://unionstmedia.atlassian.net/rest/greenhopper/1.0/rapid/charts/velocity?rapidViewId=" + backlogId;
-    var backlogSprintVelocities;
-    // Fetch epics
-    await fetch(
-        backlogVelocitysUri, {
-        method: 'GET',
-        headers: {
-            Authorization: process.env.ATLASSIAN_API_KEY,
-        }
-     })
-     .then(response => {
-        return response.json()            
-    })
-    .then(data => {
-        var backlogSprintVelocities = data.sprints.map( (sprint) => {
-            sprintVelocity = {
-                "id" : sprint.id,
-                "name": sprint.name, 
-                "state": sprint.state,
-                "goal": sprint.goal
-            }
-
-            velocityStats = data.velocityStatEntries[sprint.id];
-            if (velocityStats) {
-                sprintVelocity.estimated = velocityStats.estimated.value;
-                sprintVelocity.completed = velocityStats.completed.value;
-            }
-
-            return (sprintVelocity)
-        })
-        // console.log("backlogSprintVelocities etc function: ", backlogSprintVelocities);
-        callback(backlogSprintVelocities);
-
-    });
 }
 
 module.exports.backlogEpics = async (event, context, callback) => {
@@ -322,4 +346,5 @@ async function epicIssues(event, context, callback) {
         });
 };
 
-module.exports.backlogSprintVeloHistory(23, () => console.log("end."));
+// module.exports.sprintHistory(23, () => console.log("end."));
+module.exports.sprintVeloHistory(32, () => console.log("end."));
