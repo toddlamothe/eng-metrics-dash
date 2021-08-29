@@ -63,16 +63,6 @@ module.exports.backlogSprints = async (event, context, callback) => {
         const sprintSelectStatement = "select * from velocity where (points_estimated>0 or points_done > 0) AND backlog_id=" + event.pathParameters.backlogId + " ORDER BY end_date DESC";
         const [sprintRows, sprintFields] = await connection.query(sprintSelectStatement);
         var sprintResponseObject = JSON.parse(JSON.stringify(sprintRows));
-        // var formattedSprintResponseObject = formatBacklogObject(backlogEpicsResponseObject)
-        // formattedBacklogEpicsResponseObject.epics = [];
-        // console.log("formattedBacklogEpicsResponseObject = ", formattedBacklogEpicsResponseObject);
-
-        // var backlogEpicsSelectStatement = "select epic.* from backlog, epic where epic.backlog_uuid = backlog.uuid and backlog.uuid = '" + backlogEpicsResponseObject.uuid + "'";
-        // const [epicRows, epicFields] = await connection.query(backlogEpicsSelectStatement);
-        // for (const epic of epicRows) {
-        //     formattedBacklogEpic = formatEpicObject(JSON.parse(JSON.stringify(epic)));
-        //     formattedBacklogEpicsResponseObject.epics.push(formattedBacklogEpic)
-        // }
 
         connection.end()
 
