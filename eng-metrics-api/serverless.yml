@@ -43,6 +43,20 @@ functions:
             ttlInSeconds: 10
             cacheKeyParameters:
               - name: request.path.backlogId
+  backlog-sprints:
+    handler: functions/backlog-handlers.backlogSprints
+    timeout: 20
+    events:
+      - http:
+          path: /backlogs/{backlogId}/sprints
+          method: get
+          cors: true
+          private: true
+          caching:
+            enabled: true
+            ttlInSeconds: 10
+            cacheKeyParameters:
+              - name: request.path.backlogId    
   etl-backlog-epics:
       handler: functions/etl-handlers.etlBacklogEpics
       timeout: 30

@@ -1,7 +1,7 @@
 const mysql = require('mysql2/promise');
 
 module.exports.backlogEpics = async (event, context, callback) => {
-    // Opening and closing a conneciton pool on every call is probably bad technique
+    // Opening and closing a conneciton on every call is probably bad technique
     const connection = await mysql.createConnection( {
         host: 'eng-metrics.cgwxrjuo6oyd.us-east-1.rds.amazonaws.com',
         user: process.env.DB_USER,
@@ -42,8 +42,6 @@ module.exports.backlogEpics = async (event, context, callback) => {
             body: "Success"
         });	            
     } catch (error) {
-        pool.end();
-
         console.log(error);
         callback(null, {
             statusCode: 200, 
@@ -51,6 +49,53 @@ module.exports.backlogEpics = async (event, context, callback) => {
         });	            
     }
 }
+
+module.exports.backlogSprints = async (event, context, callback) => {
+    // Opening and closing a conneciton on every call is probably bad technique
+    const connection = await mysql.createConnection( {
+        host: 'eng-metrics.cgwxrjuo6oyd.us-east-1.rds.amazonaws.com',
+        user: process.env.DB_USER,
+        password: process.env.DB_PASS,
+        database: 'eng_metrics'
+    });
+
+    try {
+        const sprintSelectStatement = "select * from velocity where (points_estimated>0 or points_done > 0) AND backlog_id=" + event.pathParameters.backlogId + " ORDER BY end_date DESC";
+        const [sprintRows, sprintFields] = await connection.query(sprintSelectStatement);
+        var sprintResponseObject = JSON.parse(JSON.stringify(sprintRows));
+        // var formattedSprintResponseObject = formatBacklogObject(backlogEpicsResponseObject)
+        // formattedBacklogEpicsResponseObject.epics = [];
+        // console.log("formattedBacklogEpicsResponseObject = ", formattedBacklogEpicsResponseObject);
+
+        // var backlogEpicsSelectStatement = "select epic.* from backlog, epic where epic.backlog_uuid = backlog.uuid and backlog.uuid = '" + backlogEpicsResponseObject.uuid + "'";
+        // const [epicRows, epicFields] = await connection.query(backlogEpicsSelectStatement);
+        // for (const epic of epicRows) {
+        //     formattedBacklogEpic = formatEpicObject(JSON.parse(JSON.stringify(epic)));
+        //     formattedBacklogEpicsResponseObject.epics.push(formattedBacklogEpic)
+        // }
+
+        connection.end()
+
+        const responseMessage = {
+            "isBase64Encoded": false,
+            "statusCode": 200,
+            "headers": {
+                "Access-Control-Allow-Origin" : "*",
+                "Access-Control-Allow-Credentials" : "true"
+            },
+            "body": JSON.stringify(sprintResponseObject)
+        }
+        callback(null, responseMessage);
+
+    } catch (error) {
+        console.log(error);
+        connection.end()
+        callback(null, {
+            statusCode: 200, 
+            body: error
+        });	            
+    }
+};
 
 function formatBacklogObject(backlogObject) {
     return {
@@ -94,3 +139,4 @@ function formatEpicObject(epicObject) {
 }
 
 // module.exports.backlogEpics({pathParameters: { backlogId: 32}}, {}, (error, response) => console.log(response))
+// module.exports.backlogSprints({pathParameters: { backlogId: 23}}, {}, (error, response) => console.log(response))
