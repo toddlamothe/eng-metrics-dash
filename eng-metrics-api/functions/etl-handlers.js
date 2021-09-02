@@ -177,7 +177,7 @@ module.exports.etlVelocity = async (event, context, callback) => {
     callback(null, "done");
 }
 
-module.exports.etlVelocity({backlogId : 32}, null, (error, results) => console.log(results));
+// module.exports.etlVelocity({backlogId : 23}, null, (error, results) => console.log(results));
 
 // module.exports.etlBacklogEpics({backlogId: 23, backlogName: "Map Search"}, null, (error, response) => {
 //     console.log(response);
