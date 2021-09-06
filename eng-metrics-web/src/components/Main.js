@@ -2,10 +2,11 @@ import React, {useState, useEffect} from "react";
 import Header from "./Header";
 import SingleMetricCard from "./SingleMetricCard";
 import StackedBarChart from "./StackedBarChart";
+import VerticalBarChart from "./VerticalBarChart";
 import PieChart from "./PieChart";
 import Container from 'react-bootstrap/Container';
 import {Row, Col, Spinner} from "react-bootstrap";
-import {FormatEpicDataForBarChart, stackedBarChartBlankSeries, stackedBarChartBlankOptions, pieChartBlankOptions, pieChartBlankSeries, formatAsPercent, FormatEpicDataForPieChart} from '../js/EngMetricsHelpers';
+import {FormatEpicDataForBarChart, stackedBarChartBlankSeries, stackedBarChartBlankOptions, pieChartBlankOptions, pieChartBlankSeries, formatAsPercent, FormatEpicDataForPieChart, velocityChartBlankOptions, velocityChartBlankSeries} from '../js/EngMetricsHelpers';
 import {useLocation} from 'react-router-dom';
 import queryString from 'query-string';
 import '../assets/css/eng-metrics.css';
@@ -27,6 +28,11 @@ import '../assets/css/eng-metrics.css';
     var [stackedBarChartOptionData, setStackedBarChartOptionData] = useState({
         "defaultOptions": stackedBarChartBlankOptions,
         "defaultSeries" : stackedBarChartBlankSeries
+    })
+
+    var [velocityBarChartOptionData, setVelocityBarChartOptionData] = useState( {
+        "defaultOptions": velocityChartBlankOptions,
+        "defaultSeries" : velocityChartBlankSeries
     })
 
     var [pieChartOptionData, setPieChartOptionData] = useState( {
@@ -173,6 +179,14 @@ import '../assets/css/eng-metrics.css';
                         <PieChart options={pieChartOptionData.options} series={pieChartOptionData.series} type="pie" />
                     </Col>                 
                 </Row>                
+                <Row className='mt-3'>
+                    <Col md={2}></Col>
+                    <Col md={8}>
+                        <VerticalBarChart defaultSeries={velocityBarChartOptionData.defaultSeries} defaultOptions={velocityBarChartOptionData.defaultOptions} />
+                    </Col>   
+                    <Col md={2}></Col>
+                </Row>                
+
             </Container>
         </div>
     )

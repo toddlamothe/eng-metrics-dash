@@ -156,57 +156,306 @@ export const stackedBarChartBlankOptions =
         }
     };
 
-    export function FormatEpicDataForPieChart(epicData) {
-      const epicNamesArray = [];
-      const epicTotalPointsArray = [];
-      epicData.forEach( epic => {
-        epicNamesArray.push(epic.name);
-        epicTotalPointsArray.push(epic.totalPoints);
-      });
-      const chartSeries = epicTotalPointsArray;
+export function FormatEpicDataForPieChart(epicData) {
+  const epicNamesArray = [];
+  const epicTotalPointsArray = [];
+  epicData.forEach( epic => {
+    epicNamesArray.push(epic.name);
+    epicTotalPointsArray.push(epic.totalPoints);
+  });
+  const chartSeries = epicTotalPointsArray;
 
-      const chartOptions = {
-        title: {
-          text: 'Epic Story Points'
-        },
-        labels: epicNamesArray,
-        legend: {
-          position: "top"
-        },
-        plotOptions: {
-          pie: {
-            customScale: 1
-          }
-        }
-      };
-
-      return ({
-        options: chartOptions,
-        series: chartSeries
-      })
+  const chartOptions = {
+    title: {
+      text: 'Epic Story Points'
+    },
+    labels: epicNamesArray,
+    legend: {
+      position: "top"
+    },
+    plotOptions: {
+      pie: {
+        customScale: 1
+      }
     }
+  };
 
-    export const pieChartBlankOptions = {
+  return ({
+    options: chartOptions,
+    series: chartSeries
+  })
+}
+
+export const pieChartBlankOptions = {
+  chart: {
+    width: 380,
+    type: 'pie',
+  },
+  labels: [],
+  responsive: [{
+    breakpoint: 480,
+    options: {
       chart: {
-        width: 380,
-        type: 'pie',
+        width: 300
       },
-      labels: [],
-      responsive: [{
-        breakpoint: 480,
-        options: {
-          chart: {
-            width: 300
-          },
-          legend: {
-            position: 'bottom'
-          }
-        }
-      }]
-    };
-
-    export const pieChartBlankSeries = [];
-
-    export function formatAsPercent(rawValue) {
-      return parseFloat( (rawValue + 0) * 100 ).toFixed(2);
+      legend: {
+        position: 'bottom'
+      }
     }
+  }]
+};
+
+export const pieChartBlankSeries = [];
+
+export function formatAsPercent(rawValue) {
+  return parseFloat( (rawValue + 0) * 100 ).toFixed(2);
+}
+
+
+export function FormatSprintDataForBarChart(sprintData) {
+  const sampleChartOptions = {
+    series: [
+      {
+        name: "Actual",
+        data: [
+          {
+            x: "2011",
+            y: 1292,
+            goals: [
+              {
+                name: "Expected",
+                value: 1400,
+                strokeWidth: 5,
+                strokeColor: "#775DD0"
+              }
+            ]
+          },
+          {
+            x: "2012",
+            y: 4432,
+            goals: [
+              {
+                name: "Expected",
+                value: 5400,
+                strokeWidth: 5,
+                strokeColor: "#775DD0"
+              }
+            ]
+          },
+          {
+            x: "2013",
+            y: 5423,
+            goals: [
+              {
+                name: "Expected",
+                value: 5200,
+                strokeWidth: 5,
+                strokeColor: "#775DD0"
+              }
+            ]
+          },
+          {
+            x: "2014",
+            y: 6653,
+            goals: [
+              {
+                name: "Expected",
+                value: 6500,
+                strokeWidth: 5,
+                strokeColor: "#775DD0"
+              }
+            ]
+          },
+          {
+            x: "2015",
+            y: 8133,
+            goals: [
+              {
+                name: "Expected",
+                value: 6600,
+                strokeWidth: 5,
+                strokeColor: "#775DD0"
+              }
+            ]
+          },
+          {
+            x: "2016",
+            y: 7132,
+            goals: [
+              {
+                name: "Expected",
+                value: 7500,
+                strokeWidth: 5,
+                strokeColor: "#775DD0"
+              }
+            ]
+          },
+          {
+            x: "2017",
+            y: 7332,
+            goals: [
+              {
+                name: "Expected",
+                value: 8700,
+                strokeWidth: 5,
+                strokeColor: "#775DD0"
+              }
+            ]
+          },
+          {
+            x: "2018",
+            y: 6553,
+            goals: [
+              {
+                name: "Expected",
+                value: 7300,
+                strokeWidth: 5,
+                strokeColor: "#775DD0"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    chart: {
+      height: 350,
+      type: "bar"
+    },
+    plotOptions: {
+      bar: {
+        columnWidth: "60%"
+      }
+    },
+    colors: ["#00E396"],
+    dataLabels: {
+      enabled: false
+    },
+    legend: {
+      show: true,
+      showForSingleSeries: true,
+      customLegendItems: ["Actual", "Expected"],
+      markers: {
+        fillColors: ["#00E396", "#775DD0"]
+      }
+    }
+  }
+  
+  
+  return ({
+    "defaultSeries": sampleChartOptions.series,
+    "defaultOptions": sampleChartOptions.plotOptions
+  })
+}
+
+export const velocityChartBlankOptions = {
+  bar: {
+    columnWidth: "60%"
+  },
+  title: {
+    text: 'Velocity'
+  }
+};
+
+export const velocityChartBlankSeries = [
+  {
+    name: "Actual",
+    data: [
+      {
+        x: "2011",
+        y: 1292,
+        goals: [
+          {
+            name: "Expected",
+            value: 1400,
+            strokeWidth: 5,
+            strokeColor: "#775DD0"
+          }
+        ]
+      },
+      {
+        x: "2012",
+        y: 4432,
+        goals: [
+          {
+            name: "Expected",
+            value: 5400,
+            strokeWidth: 5,
+            strokeColor: "#775DD0"
+          }
+        ]
+      },
+      {
+        x: "2013",
+        y: 5423,
+        goals: [
+          {
+            name: "Expected",
+            value: 5200,
+            strokeWidth: 5,
+            strokeColor: "#775DD0"
+          }
+        ]
+      },
+      {
+        x: "2014",
+        y: 6653,
+        goals: [
+          {
+            name: "Expected",
+            value: 6500,
+            strokeWidth: 5,
+            strokeColor: "#775DD0"
+          }
+        ]
+      },
+      {
+        x: "2015",
+        y: 8133,
+        goals: [
+          {
+            name: "Expected",
+            value: 6600,
+            strokeWidth: 5,
+            strokeColor: "#775DD0"
+          }
+        ]
+      },
+      {
+        x: "2016",
+        y: 7132,
+        goals: [
+          {
+            name: "Expected",
+            value: 7500,
+            strokeWidth: 5,
+            strokeColor: "#775DD0"
+          }
+        ]
+      },
+      {
+        x: "2017",
+        y: 7332,
+        goals: [
+          {
+            name: "Expected",
+            value: 8700,
+            strokeWidth: 5,
+            strokeColor: "#775DD0"
+          }
+        ]
+      },
+      {
+        x: "2018",
+        y: 6553,
+        goals: [
+          {
+            name: "Expected",
+            value: 7300,
+            strokeWidth: 5,
+            strokeColor: "#775DD0"
+          }
+        ]
+      }
+    ]
+  }
+];
