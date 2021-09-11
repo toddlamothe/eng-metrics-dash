@@ -60,7 +60,7 @@ module.exports.backlogSprints = async (event, context, callback) => {
     });
 
     try {
-        const sprintSelectStatement = "select * from velocity where (points_estimated>0 or points_done > 0) AND backlog_id=" + event.pathParameters.backlogId + " ORDER BY end_date DESC";
+        const sprintSelectStatement = "select * from velocity where (points_estimated>0 or points_done > 0) AND backlog_id=" + event.pathParameters.backlogId + " ORDER BY end_date ASC";
         const [sprintRows, sprintFields] = await connection.query(sprintSelectStatement);
         var sprintResponseObject = JSON.parse(JSON.stringify(sprintRows));
 

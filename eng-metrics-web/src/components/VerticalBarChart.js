@@ -9,6 +9,7 @@ function VerticalBarChart(props) {
                 series={props.defaultSeries}
                 type="bar"
                 width="100%"
+                height="600px"
             />
         </div>
     )
