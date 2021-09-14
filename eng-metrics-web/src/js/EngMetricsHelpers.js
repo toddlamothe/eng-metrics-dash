@@ -18,7 +18,7 @@ export function FormatEpicDataForBarChart(epicData) {
 
     // Then, iterate through each status and for each one, 
     // push that epic's status values onto the status array
-    const defaultSeries = 
+    const series = 
     [
         {
         name: 'Done',
@@ -34,7 +34,7 @@ export function FormatEpicDataForBarChart(epicData) {
         data: issuesUnestimatedValues
         }]
         
-    const defaultOptions = 
+    const options = 
     {
       chart: {
         type: 'bar',
@@ -86,8 +86,8 @@ export function FormatEpicDataForBarChart(epicData) {
     };
     
     return ({
-        "defaultSeries": defaultSeries,
-        "defaultOptions": defaultOptions
+        "defaultSeries": series,
+        "defaultOptions": options
     })
 };
 
@@ -112,19 +112,17 @@ export function FormatVelocityDataForBarChart(velocityData) {
   series[0].data = velocityData.map( (sprint) => {
     return {
       x: sprint.end_date.slice(0,10),
-      y: sprint.points_done,
+      y: sprint.total_points,
       goals: [
         {
           name: "Estimated",
-          value: sprint.points_estimated,
+          value: sprint.total_points_estimated,
           strokeWidth: 5,
           strokeColor: "#775DD0"
         }
       ]
     }
   })
-
-  // console.log("chart series data: ", JSON.stringify(series));
 
   return ({
     "series": series,
@@ -251,142 +249,6 @@ export const pieChartBlankSeries = [];
 export function formatAsPercent(rawValue) {
   return parseFloat( (rawValue + 0) * 100 ).toFixed(2);
 }
-
-
-// export function FormatSprintDataForBarChart(sprintData) {
-//   const sampleChartOptions = {
-//     series: [
-//       {
-//         name: "Actual",
-//         data: [
-//           {
-//             x: "2011",
-//             y: 1292,
-//             goals: [
-//               {
-//                 name: "Expected",
-//                 value: 1400,
-//                 strokeWidth: 5,
-//                 strokeColor: "#775DD0"
-//               }
-//             ]
-//           },
-//           {
-//             x: "2012",
-//             y: 4432,
-//             goals: [
-//               {
-//                 name: "Expected",
-//                 value: 5400,
-//                 strokeWidth: 5,
-//                 strokeColor: "#775DD0"
-//               }
-//             ]
-//           },
-//           {
-//             x: "2013",
-//             y: 5423,
-//             goals: [
-//               {
-//                 name: "Expected",
-//                 value: 5200,
-//                 strokeWidth: 5,
-//                 strokeColor: "#775DD0"
-//               }
-//             ]
-//           },
-//           {
-//             x: "2014",
-//             y: 6653,
-//             goals: [
-//               {
-//                 name: "Expected",
-//                 value: 6500,
-//                 strokeWidth: 5,
-//                 strokeColor: "#775DD0"
-//               }
-//             ]
-//           },
-//           {
-//             x: "2015",
-//             y: 8133,
-//             goals: [
-//               {
-//                 name: "Expected",
-//                 value: 6600,
-//                 strokeWidth: 5,
-//                 strokeColor: "#775DD0"
-//               }
-//             ]
-//           },
-//           {
-//             x: "2016",
-//             y: 7132,
-//             goals: [
-//               {
-//                 name: "Expected",
-//                 value: 7500,
-//                 strokeWidth: 5,
-//                 strokeColor: "#775DD0"
-//               }
-//             ]
-//           },
-//           {
-//             x: "2017",
-//             y: 7332,
-//             goals: [
-//               {
-//                 name: "Expected",
-//                 value: 8700,
-//                 strokeWidth: 5,
-//                 strokeColor: "#775DD0"
-//               }
-//             ]
-//           },
-//           {
-//             x: "2018",
-//             y: 6553,
-//             goals: [
-//               {
-//                 name: "Expected",
-//                 value: 7300,
-//                 strokeWidth: 5,
-//                 strokeColor: "#775DD0"
-//               }
-//             ]
-//           }
-//         ]
-//       }
-//     ],
-//     chart: {
-//       height: 350,
-//       type: "bar"
-//     },
-//     plotOptions: {
-//       bar: {
-//         columnWidth: "60%"
-//       }
-//     },
-//     colors: ["#00E396"],
-//     dataLabels: {
-//       enabled: false
-//     },
-//     legend: {
-//       show: true,
-//       showForSingleSeries: true,
-//       customLegendItems: ["Actual", "Expected"],
-//       markers: {
-//         fillColors: ["#00E396", "#775DD0"]
-//       }
-//     }
-//   }
-  
-  
-//   return ({
-//     "defaultSeries": sampleChartOptions.series,
-//     "defaultOptions": sampleChartOptions.plotOptions
-//   })
-// }
 
 export const velocityChartBlankOptions = {
   bar: {

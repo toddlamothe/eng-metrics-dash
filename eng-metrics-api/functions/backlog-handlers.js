@@ -50,6 +50,46 @@ module.exports.backlogEpics = async (event, context, callback) => {
     }
 }
 
+// Return a list of sprints, combining point totals for sprints that have the same
+// end date, to gain a picture of total work completed by multiple teams during that sprint
+module.exports.backlogVelocity = async(event, context, callback) => {
+    // Opening and closing a conneciton on every call is probably bad technique
+    const connection = await mysql.createConnection( {
+        host: 'eng-metrics.cgwxrjuo6oyd.us-east-1.rds.amazonaws.com',
+        user: process.env.DB_USER,
+        password: process.env.DB_PASS,
+        database: 'eng_metrics'
+    });
+
+    try {
+        const veloSelectStatement = "select end_date, sum(points_done) as total_points, sum(points_estimated) as total_points_estimated from velocity where backlog_id=" + event.pathParameters.backlogId + " and points_done>0 group by end_date order by end_date ASC;"
+        const [sprintRows, sprintFields] = await connection.query(veloSelectStatement);
+        var sprintResponseObject = JSON.parse(JSON.stringify(sprintRows));
+
+        connection.end()
+
+        const responseMessage = {
+            "isBase64Encoded": false,
+            "statusCode": 200,
+            "headers": {
+                "Access-Control-Allow-Origin" : "*",
+                "Access-Control-Allow-Credentials" : "true"
+            },
+            "body": JSON.stringify(sprintResponseObject)
+        }
+        callback(null, responseMessage);
+
+    } catch (error) {
+        console.log(error);
+        connection.end()
+        callback(null, {
+            statusCode: 200, 
+            body: error
+        });	            
+    }
+}
+
+// Return a complete list of backlog sprints and sprint statistics
 module.exports.backlogSprints = async (event, context, callback) => {
     // Opening and closing a conneciton on every call is probably bad technique
     const connection = await mysql.createConnection( {
@@ -130,3 +170,4 @@ function formatEpicObject(epicObject) {
 
 // module.exports.backlogEpics({pathParameters: { backlogId: 32}}, {}, (error, response) => console.log(response))
 // module.exports.backlogSprints({pathParameters: { backlogId: 23}}, {}, (error, response) => console.log(response))
+module.exports.backlogVelocity({pathParameters: { backlogId: 23}}, {}, (error, response) => console.log(response))

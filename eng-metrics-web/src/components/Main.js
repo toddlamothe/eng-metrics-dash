@@ -95,10 +95,10 @@ import '../assets/css/eng-metrics.css';
         }        
     }, [rawBacklogVelocities]);
 
-    const getBacklogVelocities = async (backlogId) => {
+    const getBacklogVelocities = async(backlogId) => {
         showSpinner();
         await fetch(
-            'https://ha4mv8svsk.execute-api.us-east-1.amazonaws.com/test-tl/backlogs/' + backlogId + '/sprints', {
+            'https://ha4mv8svsk.execute-api.us-east-1.amazonaws.com/test-tl/backlogs/' + backlogId + '/velocity', {
             method: 'GET',
             mode: 'cors',
             headers: {
@@ -119,7 +119,7 @@ import '../assets/css/eng-metrics.css';
             .then(data => {
                 setRawBacklogVelocities(data);
             });
-    }
+    };
 
     const getBacklogEpics = async (backlogId) => {
         showSpinner();
