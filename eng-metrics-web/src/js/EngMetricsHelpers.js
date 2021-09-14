@@ -18,7 +18,7 @@ export function FormatEpicDataForBarChart(epicData) {
 
     // Then, iterate through each status and for each one, 
     // push that epic's status values onto the status array
-    const defaultSeries = 
+    const series = 
     [
         {
         name: 'Done',
@@ -34,7 +34,7 @@ export function FormatEpicDataForBarChart(epicData) {
         data: issuesUnestimatedValues
         }]
         
-    const defaultOptions = 
+    const options = 
     {
       chart: {
         type: 'bar',
@@ -86,10 +86,49 @@ export function FormatEpicDataForBarChart(epicData) {
     };
     
     return ({
-        "defaultSeries": defaultSeries,
-        "defaultOptions": defaultOptions
+        "defaultSeries": series,
+        "defaultOptions": options
     })
 };
+
+// Transform the raw json recieved from the API to a 
+// payload the ApexCharts velocity bar chart can handle
+export function FormatVelocityDataForBarChart(velocityData) {
+  var options = {
+    bar: {
+      columnWidth: "80%"
+    },
+    title: {
+      text: 'Velocity'
+    }
+  };
+
+  var series = [
+    {
+      name: "Completed"
+    }
+  ];
+
+  series[0].data = velocityData.map( (sprint) => {
+    return {
+      x: sprint.end_date.slice(0,10),
+      y: sprint.total_points,
+      goals: [
+        {
+          name: "Estimated",
+          value: sprint.total_points_estimated,
+          strokeWidth: 5,
+          strokeColor: "#775DD0"
+        }
+      ]
+    }
+  })
+
+  return ({
+    "series": series,
+    "options": options
+  });
+}
 
 export const stackedBarChartBlankSeries = 
     [
@@ -156,57 +195,73 @@ export const stackedBarChartBlankOptions =
         }
     };
 
-    export function FormatEpicDataForPieChart(epicData) {
-      const epicNamesArray = [];
-      const epicTotalPointsArray = [];
-      epicData.forEach( epic => {
-        epicNamesArray.push(epic.name);
-        epicTotalPointsArray.push(epic.totalPoints);
-      });
-      const chartSeries = epicTotalPointsArray;
+export function FormatEpicDataForPieChart(epicData) {
+  const epicNamesArray = [];
+  const epicTotalPointsArray = [];
+  epicData.forEach( epic => {
+    epicNamesArray.push(epic.name);
+    epicTotalPointsArray.push(epic.totalPoints);
+  });
+  const chartSeries = epicTotalPointsArray;
 
-      const chartOptions = {
-        title: {
-          text: 'Epic Story Points'
-        },
-        labels: epicNamesArray,
-        legend: {
-          position: "top"
-        },
-        plotOptions: {
-          pie: {
-            customScale: 1
-          }
-        }
-      };
-
-      return ({
-        options: chartOptions,
-        series: chartSeries
-      })
+  const chartOptions = {
+    title: {
+      text: 'Epic Story Points'
+    },
+    labels: epicNamesArray,
+    legend: {
+      position: "top"
+    },
+    plotOptions: {
+      pie: {
+        customScale: 1
+      }
     }
+  };
 
-    export const pieChartBlankOptions = {
+  return ({
+    options: chartOptions,
+    series: chartSeries
+  })
+}
+
+export const pieChartBlankOptions = {
+  chart: {
+    width: 380,
+    type: 'pie',
+  },
+  labels: [],
+  responsive: [{
+    breakpoint: 480,
+    options: {
       chart: {
-        width: 380,
-        type: 'pie',
+        width: 300
       },
-      labels: [],
-      responsive: [{
-        breakpoint: 480,
-        options: {
-          chart: {
-            width: 300
-          },
-          legend: {
-            position: 'bottom'
-          }
-        }
-      }]
-    };
-
-    export const pieChartBlankSeries = [];
-
-    export function formatAsPercent(rawValue) {
-      return parseFloat( (rawValue + 0) * 100 ).toFixed(2);
+      legend: {
+        position: 'bottom'
+      }
     }
+  }]
+};
+
+export const pieChartBlankSeries = [];
+
+export function formatAsPercent(rawValue) {
+  return parseFloat( (rawValue + 0) * 100 ).toFixed(2);
+}
+
+export const velocityChartBlankOptions = {
+  bar: {
+    columnWidth: "60%"
+  },
+  title: {
+    text: 'Velocity'
+  }
+};
+
+export const velocityChartBlankSeries = [
+  {
+    name: "Actual",
+    data: []
+    }
+  ];

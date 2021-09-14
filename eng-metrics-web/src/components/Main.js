@@ -2,10 +2,11 @@ import React, {useState, useEffect} from "react";
 import Header from "./Header";
 import SingleMetricCard from "./SingleMetricCard";
 import StackedBarChart from "./StackedBarChart";
+import VerticalBarChart from "./VerticalBarChart";
 import PieChart from "./PieChart";
 import Container from 'react-bootstrap/Container';
 import {Row, Col, Spinner} from "react-bootstrap";
-import {FormatEpicDataForBarChart, stackedBarChartBlankSeries, stackedBarChartBlankOptions, pieChartBlankOptions, pieChartBlankSeries, formatAsPercent, FormatEpicDataForPieChart} from '../js/EngMetricsHelpers';
+import {FormatEpicDataForBarChart, FormatVelocityDataForBarChart, stackedBarChartBlankSeries, stackedBarChartBlankOptions, pieChartBlankOptions, pieChartBlankSeries, formatAsPercent, FormatEpicDataForPieChart, velocityChartBlankOptions, velocityChartBlankSeries, getBacklogVelocities} from '../js/EngMetricsHelpers';
 import {useLocation} from 'react-router-dom';
 import queryString from 'query-string';
 import '../assets/css/eng-metrics.css';
@@ -29,6 +30,12 @@ import '../assets/css/eng-metrics.css';
         "defaultSeries" : stackedBarChartBlankSeries
     })
 
+    var [rawBacklogVelocities, setRawBacklogVelocities] = useState('');
+    var [velocityBarChartOptionData, setVelocityBarChartOptionData] = useState( {
+        "options": velocityChartBlankOptions,
+        "series" : velocityChartBlankSeries
+    })
+
     var [pieChartOptionData, setPieChartOptionData] = useState( {
         "options" : pieChartBlankOptions,
         "series" : pieChartBlankSeries
@@ -49,8 +56,12 @@ import '../assets/css/eng-metrics.css';
     // When the component loads, fetch raw backlog and epic data
     useEffect( () => {
         if (!rawBacklogEpics) {
-            // Pull backlog ID from the querystring
             getBacklogEpics(backlogId || 23);
+        }
+
+        if (!rawBacklogVelocities) {
+            console.log("getBacklogVelocities");
+            getBacklogVelocities(backlogId || 23);
         }
     }, [backlogId]);
 
@@ -76,9 +87,42 @@ import '../assets/css/eng-metrics.css';
         }
     }, [rawBacklogEpics]);
 
+    // When backlog velocities change, format and make it available to chart controls
+    useEffect( () => {
+        if (rawBacklogVelocities) {
+            var formattedVelocityBarChartOptionData =  FormatVelocityDataForBarChart(rawBacklogVelocities);
+            setVelocityBarChartOptionData(formattedVelocityBarChartOptionData);
+        }        
+    }, [rawBacklogVelocities]);
+
+    const getBacklogVelocities = async(backlogId) => {
+        showSpinner();
+        await fetch(
+            'https://ha4mv8svsk.execute-api.us-east-1.amazonaws.com/test-tl/backlogs/' + backlogId + '/velocity', {
+            method: 'GET',
+            mode: 'cors',
+            headers: {
+                'x-api-key': 'PI9U8B6hNg3Kb80alaGgx4JqzWpd7Sjn14O1234b'
+            }
+         })
+            .then(response => {
+                if (!response.ok) {
+                    const responseMessage = {
+                        statusCode: response.status,
+                        body: response.statusText
+                    };
+                    return JSON.stringify(responseMessage);
+                }
+                hideSpinner();
+                return response.json()            
+            })
+            .then(data => {
+                setRawBacklogVelocities(data);
+            });
+    };
+
     const getBacklogEpics = async (backlogId) => {
         showSpinner();
-        console.log('https://ha4mv8svsk.execute-api.us-east-1.amazonaws.com/test-tl/backlogs/' + backlogId + '/epics');
         await fetch(
             'https://ha4mv8svsk.execute-api.us-east-1.amazonaws.com/test-tl/backlogs/' + backlogId + '/epics', {
             method: 'GET',
@@ -99,7 +143,6 @@ import '../assets/css/eng-metrics.css';
                 return response.json()            
             })
             .then(data => {
-                console.log("data = ", data);
                 setRawBacklogEpics(data);
             });
     }
@@ -173,6 +216,14 @@ import '../assets/css/eng-metrics.css';
                         <PieChart options={pieChartOptionData.options} series={pieChartOptionData.series} type="pie" />
                     </Col>                 
                 </Row>                
+                <Row className='mt-3'>
+                    <Col md={1}></Col>
+                    <Col md={10}>
+                        <VerticalBarChart defaultSeries={velocityBarChartOptionData.series} defaultOptions={velocityBarChartOptionData.options} />
+                    </Col>   
+                    <Col md={1}></Col>
+                </Row>                
+
             </Container>
         </div>
     )
