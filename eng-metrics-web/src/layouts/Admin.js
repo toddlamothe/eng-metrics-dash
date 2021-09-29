@@ -4,16 +4,10 @@ import { useLocation, Route, Switch, Redirect } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
 import Container from "@material-ui/core/Container";
-import FormControl from "@material-ui/core/FormControl";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import InputLabel from "@material-ui/core/InputLabel";
-import OutlinedInput from "@material-ui/core/OutlinedInput";
-import Search from "@material-ui/icons/Search";
 // core components
 import AdminNavbar from "components/Navbars/AdminNavbar.js";
 import AdminFooter from "components/Footers/AdminFooter.js";
 import Sidebar from "components/Sidebar/Sidebar.js";
-// import NavbarDropdown from "components/Dropdowns/NavbarDropdown.js";
 
 import routes from "routes.js";
 import componentStyles from "assets/theme/layouts/admin.js";
@@ -65,27 +59,7 @@ const Admin = () => {
             imgSrc: require("../assets/img/brand/usm_logo.jpg").default,
             imgAlt: "...",
           }}          
-          input={
-            <FormControl variant="outlined" fullWidth>
-              <InputLabel htmlFor="outlined-adornment-search-responsive">
-                Search
-              </InputLabel>
-              <OutlinedInput
-                id="outlined-adornment-search-responsive"
-                type="text"
-                endAdornment={
-                  <InputAdornment position="end">
-                    <Box
-                      component={Search}
-                      width="1.25rem!important"
-                      height="1.25rem!important"
-                    />
-                  </InputAdornment>
-                }
-                labelWidth={70}
-              />
-            </FormControl>
-          }
+
         />
         <Box position="relative" className={classes.mainContent}>
           <AdminNavbar brandText={getBrandText(location.pathname)} />

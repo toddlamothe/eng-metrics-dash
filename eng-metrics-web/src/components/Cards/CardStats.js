@@ -44,32 +44,38 @@ function CardStats({ subtitle, title, footer, icon, color }) {
                 {title}
               </Box>
             </Grid>
+            {icon && typeof icon === "object" ? (
+
             <Grid item xs={"auto"}>
-              <Box
-                width="3rem"
-                height="3rem"
-                padding="12px"
-                textAlign="center"
-                display="inline-flex"
-                alignItems="center"
-                justifyContent="center"
-                borderRadius="50%"
-                boxShadow={boxShadows.boxShadow}
-                color={theme.palette.white.main}
-                className={classes[color]}
-              >
-                {icon && typeof icon === "object" ? (
-                  <Box
-                    component={icon}
-                    width="1.5rem!important"
-                    height="1.5rem!important"
-                  />
-                ) : null}
-                {icon && typeof icon === "string" ? (
-                  <Box component="i" fontSize="1.25rem" className={icon} />
-                ) : null}
-              </Box>
+            <Box
+              width="3rem"
+              height="3rem"
+              padding="12px"
+              textAlign="center"
+              display="inline-flex"
+              alignItems="center"
+              justifyContent="center"
+              borderRadius="50%"
+              boxShadow={boxShadows.boxShadow}
+              color={theme.palette.white.main}
+              className={classes[color]}
+            >
+              {icon && typeof icon === "object" ? (
+                <Box
+                  component={icon}
+                  width="1.5rem!important"
+                  height="1.5rem!important"
+                />
+              ) : null}
+              {icon && typeof icon === "string" ? (
+                <Box component="i" fontSize="1.25rem" className={icon} />
+              ) : null}
+            </Box>
             </Grid>
+
+            ) : null}
+
+
           </Grid>
           {footer ? (
             <Box
