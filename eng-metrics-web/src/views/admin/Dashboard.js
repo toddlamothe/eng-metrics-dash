@@ -1,4 +1,5 @@
 import React from "react";
+import { useState, useEffect } from "react";
 // javascipt plugin for creating charts
 import Chart from "chart.js";
 // react plugin used to create charts
@@ -24,9 +25,10 @@ import Typography from "@material-ui/core/Typography";
 // @material-ui/icons components
 import ArrowDownward from "@material-ui/icons/ArrowDownward";
 import ArrowUpward from "@material-ui/icons/ArrowUpward";
-
 // core components
 import Header from "components/Headers/Header.js";
+// hooks
+import { useApiRequest } from "hooks/useApiRequest";
 
 import {
   chartOptions,
@@ -40,10 +42,20 @@ import componentStyles from "assets/theme/views/admin/dashboard.js";
 const useStyles = makeStyles(componentStyles);
 
 function Dashboard() {
+  const backlogUrl = 'https://ha4mv8svsk.execute-api.us-east-1.amazonaws.com/test-tl/backlogs/' + '23' + '/epics';
+  const {backlogError, backlogDataIsLoaded, backlogData} = useApiRequest(backlogUrl);
+  console.log("1. backlogDataIsLoaded = ", backlogDataIsLoaded);
+  console.log("1. backlogData = ", backlogData);
+
   const classes = useStyles();
   const theme = useTheme();
-  const [activeNav, setActiveNav] = React.useState(1);
-  const [chartExample1Data, setChartExample1Data] = React.useState("data1");
+  const [activeNav, setActiveNav] = useState(1);
+  const [chartExample1Data, setChartExample1Data] = useState("data1");
+  
+  useEffect( () => {
+    console.log("2. backlogDataIsLoaded = ", backlogDataIsLoaded);
+    console.log("2. backlogData = ", backlogData);
+  }, backlogData)
 
   if (window.Chart) {
     parseOptions(Chart, chartOptions());
