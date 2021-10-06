@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import { useEffect } from "react";
+// import { useEffect } from "react";
 // javascipt plugin for creating charts
 import Chart from "chart.js";
 // react plugin used to create charts
@@ -51,11 +51,6 @@ function Dashboard() {
   const [activeNav, setActiveNav] = useState(1);
   const [chartExample1Data, setChartExample1Data] = useState("data1");
   
-  useEffect( () => {
-    console.log("isLoaded = ", isLoaded);
-    console.log("backlogData = ", backlogData);
-  }, [backlogData])
-
   if (window.Chart) {
     parseOptions(Chart, chartOptions());
   }
@@ -66,7 +61,7 @@ function Dashboard() {
   };
   return (
     <>
-      <Header />
+      <Header backlogData={backlogData} />
       {/* Page content */}
       <Container
         maxWidth={false}
