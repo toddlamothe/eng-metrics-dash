@@ -2,9 +2,9 @@ import { useState, useEffect } from "react";
 
 export const useApiRequest = (url) => {
     console.log("[useApiRequest]");
-    const [data, setData] = useState([]);
+    const [backlogData, setBacklogData] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
-    const [error, setError] = useState(null);
+    const [backlogError, setBacklogError] = useState(null);
   
     useEffect(() => {
       const fetchData = async () => {
@@ -28,17 +28,15 @@ export const useApiRequest = (url) => {
                 return response.json()            
             })
             .then(data => {
-                // console.log("fetch callback")
-                // console.log("data = ", data);
                 setIsLoaded(true);
-                setData(data);
+                setBacklogData(data);
             }).catch(function(error) {
-                setError(error);
+                setBacklogError(error);
             });
       };
       fetchData();
     }, [url]);
   
-    console.log("returning data...", data);
-    return { error, isLoaded, data };
+    console.log("returning data...", backlogData);
+    return { backlogError, isLoaded, backlogData };
 }

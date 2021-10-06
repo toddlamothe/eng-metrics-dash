@@ -1,5 +1,6 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { useEffect } from "react";
 // javascipt plugin for creating charts
 import Chart from "chart.js";
 // react plugin used to create charts
@@ -43,9 +44,7 @@ const useStyles = makeStyles(componentStyles);
 
 function Dashboard() {
   const backlogUrl = 'https://ha4mv8svsk.execute-api.us-east-1.amazonaws.com/test-tl/backlogs/' + '23' + '/epics';
-  const {backlogError, backlogDataIsLoaded, backlogData} = useApiRequest(backlogUrl);
-  console.log("1. backlogDataIsLoaded = ", backlogDataIsLoaded);
-  console.log("1. backlogData = ", backlogData);
+  const {error, isLoaded, backlogData} = useApiRequest(backlogUrl);
 
   const classes = useStyles();
   const theme = useTheme();
@@ -53,9 +52,9 @@ function Dashboard() {
   const [chartExample1Data, setChartExample1Data] = useState("data1");
   
   useEffect( () => {
-    console.log("2. backlogDataIsLoaded = ", backlogDataIsLoaded);
-    console.log("2. backlogData = ", backlogData);
-  }, backlogData)
+    console.log("isLoaded = ", isLoaded);
+    console.log("backlogData = ", backlogData);
+  }, [backlogData])
 
   if (window.Chart) {
     parseOptions(Chart, chartOptions());
