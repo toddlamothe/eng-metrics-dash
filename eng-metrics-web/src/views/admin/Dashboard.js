@@ -1,6 +1,5 @@
 import React from "react";
 import { useState } from "react";
-// import { useEffect } from "react";
 // javascipt plugin for creating charts
 import Chart from "chart.js";
 // react plugin used to create charts
@@ -43,6 +42,7 @@ import componentStyles from "assets/theme/views/admin/dashboard.js";
 const useStyles = makeStyles(componentStyles);
 
 function Dashboard() {
+  console.log("[Dashboard]");
   const backlogUrl = 'https://ha4mv8svsk.execute-api.us-east-1.amazonaws.com/test-tl/backlogs/' + '23' + '/epics';
   const {error, isLoaded, backlogData} = useApiRequest(backlogUrl);
 

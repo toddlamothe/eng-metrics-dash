@@ -1,5 +1,5 @@
 import React from "react";
-import { useLocation, Route, Switch, Redirect } from "react-router-dom";
+import { useLocation, Route, Switch } from "react-router-dom";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
@@ -26,6 +26,7 @@ const Admin = () => {
 
   const getRoutes = (routes) => {
     return routes.map((prop, key) => {
+      // console.log("prop = ", prop);
       if (prop.layout === "/admin") {
         return (
           <Route
@@ -65,7 +66,7 @@ const Admin = () => {
           <AdminNavbar brandText={getBrandText(location.pathname)} />
           <Switch>
             {getRoutes(routes)}
-            <Redirect from="*" to="/admin/index" />
+            {/* <Redirect from="*" to="/admin/index" /> */}
           </Switch>
           <Container
             maxWidth={false}

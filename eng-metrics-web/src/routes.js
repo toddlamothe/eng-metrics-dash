@@ -14,7 +14,7 @@ var routes = [
     layout: "/admin",
   },
   {
-    path: "/accelerator",
+    path: "/index",
     name: "Accelerator",
     icon: Map,
     iconColor: "Primary",
@@ -22,7 +22,7 @@ var routes = [
     layout: "/admin",
   },
   {
-    path: "/beacon",
+    path: "/index",
     name: "Beacon",
     icon: Storage,
     iconColor: "Primary",

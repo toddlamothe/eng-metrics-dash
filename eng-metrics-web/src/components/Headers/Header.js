@@ -29,17 +29,19 @@ const Header = (backlogData) => {
   var [pointsToDo, setPointsToDo] = useState('');
 
   useEffect( () => {
-    setStoriesPercentComplete(formatAsPercent(backlogData.backlogData.backlogIssuesPercentComplete) + "%");
-    setPointsPercentComplete(formatAsPercent(backlogData.backlogData.backlogPointsPercentComplete) + "%");
-    setTotalStories(backlogData.backlogData.backlogTotalIssues + "");
-    setStoriesComplete(backlogData.backlogData.backlogIssuesDone + "");
-    setStoriesInProgress(backlogData.backlogData.backlogIssuesInProgress + "");
-    setStoriesToDo(backlogData.backlogData.backlogIssuesToDo + "");
-    setStoriesUnestimated(backlogData.backlogData.backlogIssuesUnestimated + "");
-    setTotalPoints(backlogData.backlogData.backlogTotalPoints + "");
-    setPointsComplete(backlogData.backlogData.backlogPointsDone + "");
-    setPointsinProgress(backlogData.backlogData.backlogPointsInProgress + "");
-    setPointsToDo(backlogData.backlogData.backlogPointsToDo + "");
+    if (backlogData.backlogData.backlogIssuesPercentComplete) {
+      setStoriesPercentComplete(formatAsPercent(backlogData.backlogData.backlogIssuesPercentComplete) + "%");
+      setPointsPercentComplete(formatAsPercent(backlogData.backlogData.backlogPointsPercentComplete) + "%");
+      setTotalStories(backlogData.backlogData.backlogTotalIssues + "");
+      setStoriesComplete(backlogData.backlogData.backlogIssuesDone + "");
+      setStoriesInProgress(backlogData.backlogData.backlogIssuesInProgress + "");
+      setStoriesToDo(backlogData.backlogData.backlogIssuesToDo + "");
+      setStoriesUnestimated(backlogData.backlogData.backlogIssuesUnestimated + "");
+      setTotalPoints(backlogData.backlogData.backlogTotalPoints + "");
+      setPointsComplete(backlogData.backlogData.backlogPointsDone + "");
+      setPointsinProgress(backlogData.backlogData.backlogPointsInProgress + "");
+      setPointsToDo(backlogData.backlogData.backlogPointsToDo + "");
+    }
 }, [backlogData]);
   const classes = useStyles();
   const theme = useTheme();
