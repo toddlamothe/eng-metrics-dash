@@ -1,5 +1,4 @@
 // core components
-import Dashboard from "views/admin/Dashboard.js";
 import Map from "@material-ui/icons/Map";
 import BarChart from "@material-ui/icons/BarChart";
 import Storage from "@material-ui/icons/Storage";
@@ -10,7 +9,6 @@ var routes = [
     name: "Dashboard",
     icon: BarChart,
     iconColor: "Primary",
-    component: Dashboard,
     layout: "/admin",
     backlogId: 0
   },
@@ -19,7 +17,6 @@ var routes = [
     name: "Accelerator",
     icon: Map,
     iconColor: "Primary",
-    component: <Dashboard backlogId="23" />,
     layout: "/admin",
     backlogId: 23
   },
@@ -28,7 +25,6 @@ var routes = [
     name: "Beacon",
     icon: Storage,
     iconColor: "Primary",
-    component: <Dashboard backlogId="32" />,
     layout: "/admin",
     backlogId: 32
   }

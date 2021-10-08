@@ -29,12 +29,11 @@ const Admin = () => {
   const getRoutes = (routes) => {
 
     return routes.map((prop, key) => {
-      if (prop.component.props) {
-        console.log("backlogId={prop.component.props.backlogId = ", prop.component.props.backlogId);
+      if (prop.backlogId) {
         return (
           <Route
             path={prop.layout + prop.path}
-            component={() => ( <Dashboard backlogId={prop.component.props.backlogId} /> )}
+            component={() => ( <Dashboard backlogId={prop.backlogId} /> )}
             key={key}
           />
         );
