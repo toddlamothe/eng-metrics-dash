@@ -12,22 +12,25 @@ var routes = [
     iconColor: "Primary",
     component: Dashboard,
     layout: "/admin",
+    backlogId: 0
   },
   {
-    path: "/index",
+    path: "/accelerator",
     name: "Accelerator",
     icon: Map,
     iconColor: "Primary",
-    component: Dashboard,
+    component: <Dashboard backlogId="23" />,
     layout: "/admin",
+    backlogId: 23
   },
   {
-    path: "/index",
+    path: "/beacon",
     name: "Beacon",
     icon: Storage,
     iconColor: "Primary",
-    component: Dashboard,
+    component: <Dashboard backlogId="32" />,
     layout: "/admin",
+    backlogId: 32
   }
 ];
 export default routes;

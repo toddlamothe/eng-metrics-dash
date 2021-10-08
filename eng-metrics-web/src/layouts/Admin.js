@@ -12,6 +12,8 @@ import Sidebar from "components/Sidebar/Sidebar.js";
 import routes from "routes.js";
 import componentStyles from "assets/theme/layouts/admin.js";
 
+import Dashboard from "views/admin/Dashboard";
+
 const useStyles = makeStyles(componentStyles);
 
 const Admin = () => {
@@ -25,13 +27,14 @@ const Admin = () => {
   }, [location]);
 
   const getRoutes = (routes) => {
+
     return routes.map((prop, key) => {
-      // console.log("prop = ", prop);
-      if (prop.layout === "/admin") {
+      if (prop.component.props) {
+        console.log("backlogId={prop.component.props.backlogId = ", prop.component.props.backlogId);
         return (
           <Route
             path={prop.layout + prop.path}
-            component={prop.component}
+            component={() => ( <Dashboard backlogId={prop.component.props.backlogId} /> )}
             key={key}
           />
         );

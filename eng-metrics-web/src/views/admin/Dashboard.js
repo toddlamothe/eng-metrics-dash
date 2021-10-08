@@ -41,9 +41,8 @@ import componentStyles from "assets/theme/views/admin/dashboard.js";
 
 const useStyles = makeStyles(componentStyles);
 
-function Dashboard() {
-  console.log("[Dashboard]");
-  const backlogUrl = 'https://ha4mv8svsk.execute-api.us-east-1.amazonaws.com/test-tl/backlogs/' + '23' + '/epics';
+function Dashboard(props) {
+  const backlogUrl = 'https://ha4mv8svsk.execute-api.us-east-1.amazonaws.com/test-tl/backlogs/' + props.backlogId + '/epics';
   const {error, isLoaded, backlogData} = useApiRequest(backlogUrl);
 
   const classes = useStyles();
