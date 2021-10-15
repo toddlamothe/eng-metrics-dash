@@ -1,8 +1,5 @@
 import React from "react";
 import { useState } from "react";
-// javascipt plugin for creating charts
-import Chart from "chart.js";
-// react plugin used to create charts
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 import { useTheme } from "@material-ui/core/styles";
@@ -16,12 +13,9 @@ import Header from "components/Headers/Header.js";
 // hooks
 import { useApiRequest } from "hooks/useApiRequest";
 
-import {
-  chartOptions,
-  parseOptions,
-} from "variables/charts.js";
-
 import componentStyles from "assets/theme/views/admin/dashboard.js";
+
+import {StackedBar} from "components/Charts/StackedBar.js";
 
 const useStyles = makeStyles(componentStyles);
 
@@ -32,15 +26,9 @@ function Dashboard(props) {
   const classes = useStyles();
   const theme = useTheme();
   const [activeNav, setActiveNav] = useState(1);
-  const [chartExample1Data, setChartExample1Data] = useState("data1");
-  
-  if (window.Chart) {
-    parseOptions(Chart, chartOptions());
-  }
 
   const toggleNavs = (index) => {
     setActiveNav(index);
-    setChartExample1Data("data" + index);
   };
   return (
     <>
@@ -51,7 +39,7 @@ function Dashboard(props) {
             <Card classes={{root: classes.cardRoot + " " + classes.cardRootBgGradient,}}>
               <Box component={Typography} variant="h2" marginBottom="0!important">
                 <Box component="span" color={theme.palette.white.main}>
-                  Epic Stories by Status
+                  <StackedBar></StackedBar>
                 </Box>
               </Box>               
             </Card>
