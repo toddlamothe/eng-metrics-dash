@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 
 export const useApiRequest = (url) => {
-    console.log("[useApiRequest]");
     const [backlogData, setBacklogData] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
     const [backlogError, setBacklogError] = useState(null);
