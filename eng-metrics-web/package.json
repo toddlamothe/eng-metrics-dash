@@ -31,7 +31,7 @@
     "nouislider": "14.6.3",
     "prop-types": "15.7.2",
     "react": "17.0.1",
-    "react-chartjs-2": "2.11.1",
+    "react-chartjs-2": "^2.11.1",
     "react-copy-to-clipboard": "5.0.3",
     "react-datetime": "3.0.4",
     "react-dom": "17.0.1",
@@ -47,7 +47,7 @@
     ],
     "rules": {
       "no-unused-vars": "off",
-      "unused-imports/no-unused-imports" : "error",
+      "unused-imports/no-unused-imports": "error",
       "unused-imports/no-unused-vars": [
         "warn",
         {
