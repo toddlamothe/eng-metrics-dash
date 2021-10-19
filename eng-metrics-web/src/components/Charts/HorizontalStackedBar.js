@@ -2,30 +2,29 @@ import React from 'react';
 import { HorizontalBar } from 'react-chartjs-2';
 
 const data = {
-  labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+  labels: ['Epic 1', 'Epic 2', 'Epic 3', 'Epic 4', 'Epic 5', 'Epic 6'],
   datasets: [
     {
-      label: '# of Votes',
+      label: 'Done',
       data: [12, 19, 3, 5, 2, 3],
-      backgroundColor: [
-        'rgba(255, 99, 132, 0.2)',
-        'rgba(54, 162, 235, 0.2)',
-        'rgba(255, 206, 86, 0.2)',
-        'rgba(75, 192, 192, 0.2)',
-        'rgba(153, 102, 255, 0.2)',
-        'rgba(255, 159, 64, 0.2)',
-      ],
-      borderColor: [
-        'rgba(255, 99, 132, 1)',
-        'rgba(54, 162, 235, 1)',
-        'rgba(255, 206, 86, 1)',
-        'rgba(75, 192, 192, 1)',
-        'rgba(153, 102, 255, 1)',
-        'rgba(255, 159, 64, 1)',
-      ],
-      borderWidth: 1,
+      backgroundColor: 'rgb(255, 99, 132)',
     },
-  ],
+    {
+      label: 'In Progress',
+      data: [2, 3, 20, 5, 1, 4],
+      backgroundColor: 'rgb(54, 162, 235)',
+    },
+    {
+      label: 'To Do',
+      data: [3, 10, 13, 15, 22, 30],
+      backgroundColor: 'rgb(75, 192, 192)',
+    },
+    {
+      label: 'Unestimated',
+      data: [3, 10, 13, 15, 22, 30],
+      backgroundColor: 'rgb(100, 100, 100)',
+    },
+  ]
 };
 
 const options = {
@@ -40,7 +39,11 @@ const options = {
   responsive: true,
 
   scales: {
+    yAxes: [{
+      stacked: true
+    }],
     xAxes: [{
+        stacked: true,
         ticks: {
             beginAtZero: true,
             min: 0
@@ -59,8 +62,12 @@ const options = {
   },
 };
 
-const HorizontalStackedBar = () => (
-  <HorizontalBar data={data} options={options} />
-);
+const HorizontalStackedBar = (props) => {
+  const chartData = props.data ? props.data : data;
+  const chartOptions = props.options ? props.options : options;
+  return (
+    <HorizontalBar data={chartData} options={chartOptions} />
+  )
+};
 
 export default HorizontalStackedBar;
