@@ -27,6 +27,14 @@ var routes = [
     iconColor: "Primary",
     layout: "/admin",
     backlogId: 32
+  },
+  {
+    path: "/leadframework",
+    name: "Lead/CRM Framework",
+    icon: Storage,
+    iconColor: "Primary",
+    layout: "/admin",
+    backlogId: 48
   }
 ];
 export default routes;

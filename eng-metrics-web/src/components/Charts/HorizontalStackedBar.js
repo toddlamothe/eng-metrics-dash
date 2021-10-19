@@ -1,5 +1,5 @@
-import React from "react";
-import { Bar } from 'react-chartjs-2';
+import React from 'react';
+import { HorizontalBar } from 'react-chartjs-2';
 
 const data = {
   labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
@@ -38,21 +38,29 @@ const options = {
     },
   },
   responsive: true,
+
+  scales: {
+    xAxes: [{
+        ticks: {
+            beginAtZero: true,
+            min: 0
+        }
+    }],
+  },
+
   plugins: {
     legend: {
       position: 'right',
     },
     title: {
-      display: true,
-      text: 'Chart.js Horizontal Bar Chart',
+      display: false,
+      text: '',
     },
   },
 };
 
-const HorizontalStackedBar = (props) => (
-  <>
-    <Bar data={data} options={options} />
-  </>
+const HorizontalStackedBar = () => (
+  <HorizontalBar data={data} options={options} />
 );
 
 export default HorizontalStackedBar;
