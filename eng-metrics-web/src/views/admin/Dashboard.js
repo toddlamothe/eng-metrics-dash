@@ -1,4 +1,5 @@
 import React from "react";
+import { useEffect, useState } from "react";
 import { useApiRequest } from "hooks/useApiRequest";
 import { makeStyles } from "@material-ui/core/styles";
 import { useTheme } from "@material-ui/core/styles";
@@ -18,9 +19,50 @@ const useStyles = makeStyles(componentStyles);
 function Dashboard(props) {
   const backlogEpicsUrl = 'https://ha4mv8svsk.execute-api.us-east-1.amazonaws.com/test-tl/backlogs/' + props.backlogId + '/epics';
   const {error, isLoaded, backlogData} = useApiRequest(backlogEpicsUrl);
+  const [epicBarChartData, setEpicBarChartData] = useState({});
 
   const classes = useStyles();
   const theme = useTheme();
+
+  // useEffect to trigger formatting of epic data fed to the epic bar chart
+  useEffect( () => {
+    if (backlogData.epics) {
+      console.log("backlogData.epics = ", backlogData.epics);
+      let labels = backlogData.epics.map( (epic) => {
+        return epic.name
+      });
+      var doneValues = [], inProgressValue = [], toDoValues = [], unestimatedValues = [];
+      backlogData.epics.forEach( (epic) => {
+        doneValues.push(epic.issuesDone);
+        inProgressValue.push(epic.issuesInProgress);
+        toDoValues.push(epic.issuesToDo);
+        unestimatedValues.push(epic.issuesUnestimated);
+      })
+      console.log("doneValues = ", doneValues);
+      console.log("inProgressValue = ", inProgressValue);
+      console.log("toDoValues = ", toDoValues);
+      console.log("unestimatedValues = ", unestimatedValues);
+      
+      // Define blank stacked bar chart data set. each element in the datasets array is a stacked block on each bar
+      // The detault data set below defines the label and color for each block in the stack. The values for each block
+      // will be filled in by processing the epic data for the given backlog
+      let datasets = [
+        { label: 'Done', data: doneValues, backgroundColor: 'rgb(255, 99, 132)', },
+        { label: 'In Progress', data: inProgressValue, backgroundColor: 'rgb(54, 162, 235)', },
+        { label: 'To Do', data: toDoValues, backgroundColor: 'rgb(75, 192, 192)',},
+        {label: 'Unestimated', data: unestimatedValues, backgroundColor: 'rgb(100, 100, 100)', },
+      ];
+
+      // Format backlog data for use in the epics bar chart
+      let data = {
+        labels: labels,
+        datasets: datasets
+      };
+
+      setEpicBarChartData(data);
+    }   
+    
+  }, [backlogData])
 
   return (
     <>
@@ -56,7 +98,7 @@ function Dashboard(props) {
                 ></CardHeader>
                 <CardContent>
                   <Box position="relative" >
-                    <HorizontalStackedBar />
+                    <HorizontalStackedBar data={epicBarChartData} />
                   </Box>
                 </CardContent>                
             </Card>
@@ -87,7 +129,7 @@ function Dashboard(props) {
               ></CardHeader>
               <CardContent>
                 <Box position="relative" height="350px">
-                  <HorizontalStackedBar />
+                  PIE CHART
                 </Box>
               </CardContent>
             </Card>
