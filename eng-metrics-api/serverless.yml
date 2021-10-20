@@ -40,7 +40,7 @@ functions:
           private: true
           caching:
             enabled: true
-            ttlInSeconds: 10
+            ttlInSeconds: 300
             cacheKeyParameters:
               - name: request.path.backlogId
   backlog-velocity:
@@ -54,7 +54,7 @@ functions:
           private: true
           caching:
             enabled: true
-            ttlInSeconds: 10
+            ttlInSeconds: 300
             cacheKeyParameters:
               - name: request.path.backlogId
   backlog-sprints:
@@ -68,7 +68,7 @@ functions:
           private: true
           caching:
             enabled: true
-            ttlInSeconds: 10
+            ttlInSeconds: 300
             cacheKeyParameters:
               - name: request.path.backlogId    
   etl-backlog-epics:
@@ -85,6 +85,12 @@ functions:
             inputTransformer:
               inputTemplate:
                 '{"backlogId": 32, "backlogName": "Beacon"}'
+        - schedule: 
+            rate: cron(46 18 * * ? *)
+            inputTransformer:
+              inputTemplate:
+                '{"backlogId": 48, "backlogName": "Lead/CRM Framework"}'
+
   etl-backlog-velocities:
       handler: functions/etl-handlers.etlVelocity
       timeout: 30
@@ -98,4 +104,9 @@ functions:
             rate: cron(0 0 ? * THU *)
             inputTransformer:
               inputTemplate:
-                '{"backlogId": 32}'                
+                '{"backlogId": 32}'
+        - schedule: 
+            rate: cron(0 0 ? * THU *)
+            inputTransformer:
+              inputTemplate:
+                '{"backlogId": 48}'                
