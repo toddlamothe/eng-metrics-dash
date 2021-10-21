@@ -2,18 +2,27 @@ import boxShadows from "assets/theme/box-shadow.js";
 
 const componentStyles = (theme) => ({
   cardRootBgGradient: {
+    padding: "0px !important",    
     background:
       "linear-gradient(87deg," +
       theme.palette.dark.main +
       ",#1a174d)!important",
   },
   cardRoot: {
+    padding: "0px !important",
+    margin: "0px !important",
     boxShadow: boxShadows.boxShadow + "!important",
-    border: "0!important",
+    border: "0!important",    
   },
   cardHeaderRoot: {
-    backgroundColor: "initial!important",
+    backgroundColor: "initial!important", 
   },
+  removePadding: {
+    paddingTop: "0px!important",
+    paddingBottom: "0px!important",
+    paddingLeft: "0px!important",
+    paddingRight: "0px!important",
+},
   textUppercase: {
     textTransform: "uppercase",
   },

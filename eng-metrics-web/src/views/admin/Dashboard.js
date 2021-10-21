@@ -21,6 +21,7 @@ function Dashboard(props) {
   const backlogEpicsUrl = 'https://ha4mv8svsk.execute-api.us-east-1.amazonaws.com/test-tl/backlogs/' + props.backlogId + '/epics';
   const {error, isLoaded, backlogData} = useApiRequest(backlogEpicsUrl);
   const [epicBarChartData, setEpicBarChartData] = useState({});
+  const [epicPieChartData, setEpicPieChartData] = useState({});
 
   const classes = useStyles();
   const theme = useTheme();
@@ -32,11 +33,13 @@ function Dashboard(props) {
         return epic.name
       });
       var doneValues = [], inProgressValue = [], toDoValues = [], unestimatedValues = [];
+      var epicTotalPointValues = [];
       backlogData.epics.forEach( (epic) => {
         doneValues.push(epic.issuesDone);
         inProgressValue.push(epic.issuesInProgress);
         toDoValues.push(epic.issuesToDo);
         unestimatedValues.push(epic.issuesUnestimated);
+        epicTotalPointValues.push(epic.totalPoints)
       })
       
       // Define blank stacked bar chart data set. each element in the datasets array is a stacked block on each bar
@@ -50,14 +53,51 @@ function Dashboard(props) {
       ];
 
       // Format backlog data for use in the epics bar chart
-      let data = {
+      let stackedBarChartData = {
         labels: labels,
         datasets: datasets
       };
 
-      setEpicBarChartData(data);
+      let pieChartData = {
+        labels: labels,
+        datasets: [
+          {
+            label: 'Story Points',
+            data: epicTotalPointValues,
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(255, 206, 86, 0.2)',
+              'rgba(75, 192, 192, 0.2)',
+              'rgba(153, 102, 255, 0.2)',
+              'rgba(255, 159, 64, 0.2)',
+              'rgba(255, 159, 64, 0.2)',
+            ],
+            borderColor: [
+              'rgba(255, 99, 132, 1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(255, 206, 86, 1)',
+              'rgba(75, 192, 192, 1)',
+              'rgba(153, 102, 255, 1)',
+              'rgba(255, 159, 64, 1)',
+              'rgba(255, 159, 64, 1)',
+            ],
+            borderWidth: 1,
+          },
+        ],
+      }
+
+      setEpicBarChartData(stackedBarChartData);
+      setEpicPieChartData(pieChartData);
     }    
   }, [backlogData])
+
+  const cardcontent = {
+    padding: 0,
+    "&:last-child": {
+    paddingBottom: 0
+    }
+  };
 
   return (
     <>
@@ -91,7 +131,7 @@ function Dashboard(props) {
                   }
                   classes={{ root: classes.cardHeaderRoot }}
                 ></CardHeader>
-                <CardContent>
+                <CardContent classes={{ root: classes.removePadding }}>
                   <Box position="relative" >
                     <HorizontalStackedBar data={epicBarChartData} />
                   </Box>
@@ -99,7 +139,7 @@ function Dashboard(props) {
             </Card>
           </Grid>
           <Grid item xs={12} xl={4}>
-            <Card classes={{ root: classes.cardRoot }}>
+            <Card classes={{ root: classes.cardRoot + " " + classes.removePadding }}>
               <CardHeader title={
                   <Box component="span" color={theme.palette.gray[600]}>
                     Epics
@@ -122,9 +162,9 @@ function Dashboard(props) {
                   color: "initial",
                 }}
               ></CardHeader>
-              <CardContent>
+              <CardContent classes={{ root: classes.removePadding }}>
                 <Box position="relative" height="350px">
-                  <PieChart></PieChart>
+                  <PieChart data={epicPieChartData}></PieChart>
                 </Box>
               </CardContent>
             </Card>
