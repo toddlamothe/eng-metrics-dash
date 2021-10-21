@@ -14,6 +14,7 @@ import Header from "components/Headers/Header.js";
 import componentStyles from "assets/theme/views/admin/dashboard.js";
 import HorizontalStackedBar from "components/Charts/HorizontalStackedBar";
 import PieChart from "components/Charts/Pie";
+import BarLineCombo from "components/Charts/BarLineCombo";
 
 const useStyles = makeStyles(componentStyles);
 
@@ -65,22 +66,10 @@ function Dashboard(props) {
             label: 'Story Points',
             data: epicTotalPointValues,
             backgroundColor: [
-              'rgba(255, 99, 132, 0.2)',
-              'rgba(54, 162, 235, 0.2)',
-              'rgba(255, 206, 86, 0.2)',
-              'rgba(75, 192, 192, 0.2)',
-              'rgba(153, 102, 255, 0.2)',
-              'rgba(255, 159, 64, 0.2)',
-              'rgba(255, 159, 64, 0.2)',
+              'rgba(255, 99, 132, 0.2)','rgba(54, 162, 235, 0.2)','rgba(255, 159, 64, 0.2)','rgba(255, 206, 86, 0.2)','rgba(75, 192, 192, 0.2)','rgba(255, 159, 64, 0.2)','rgba(153, 102, 255, 0.2)','rgba(255, 159, 64, 0.2)','rgba(255, 159, 64, 0.2)',
             ],
             borderColor: [
-              'rgba(255, 99, 132, 1)',
-              'rgba(54, 162, 235, 1)',
-              'rgba(255, 206, 86, 1)',
-              'rgba(75, 192, 192, 1)',
-              'rgba(153, 102, 255, 1)',
-              'rgba(255, 159, 64, 1)',
-              'rgba(255, 159, 64, 1)',
+              'rgba(255, 99, 132, 1)','rgba(54, 162, 235, 1)','rgba(255, 159, 64, 1)','rgba(255, 206, 86, 1)','rgba(75, 192, 192, 1)','rgba(255, 159, 64, 1)','rgba(153, 102, 255, 1)','rgba(255, 159, 64, 1)','rgba(255, 159, 64, 1)',
             ],
             borderWidth: 1,
           },
@@ -147,19 +136,9 @@ function Dashboard(props) {
                 }
                 subheader="Story Points" classes={{ root: classes.cardHeaderRoot }}
                 titleTypographyProps={{
-                  component: Box,
-                  variant: "h6",
-                  letterSpacing: ".0625rem",
-                  marginBottom: ".25rem!important",
-                  classes: {
-                    root: classes.textUppercase,
-                  },
-                }}
+                  component: Box, variant: "h6", letterSpacing: ".0625rem", marginBottom: ".25rem!important", classes: { root: classes.textUppercase, }, }}
                 subheaderTypographyProps={{
-                  component: Box,
-                  variant: "h2",
-                  marginBottom: "0!important",
-                  color: "initial",
+                  component: Box, variant: "h2", marginBottom: "0!important", color: "initial",
                 }}
               ></CardHeader>
               <CardContent classes={{ root: classes.removePadding }}>
@@ -169,6 +148,30 @@ function Dashboard(props) {
               </CardContent>
             </Card>
           </Grid>          
+        </Grid>
+        <Grid container spacing={1}>
+          <Grid item xs={12} xl={8} >
+          <Card classes={{ root: classes.cardRoot + " " + classes.removePadding }}>
+              <CardHeader title={
+                  <Box component="span" color={theme.palette.gray[600]}>
+                    Velocity
+                  </Box>
+                }
+                subheader="Points Per Sprint" classes={{ root: classes.cardHeaderRoot }}
+                titleTypographyProps={{
+                  component: Box, variant: "h6", letterSpacing: ".0625rem", marginBottom: ".25rem!important", classes: { root: classes.textUppercase, },
+                }}
+                subheaderTypographyProps={{
+                  component: Box, variant: "h2", marginBottom: "0!important", color: "initial",
+                }}
+              ></CardHeader>
+              <CardContent classes={{ root: classes.removePadding }}>
+                <Box position="relative">
+                  <BarLineCombo></BarLineCombo>
+                </Box>
+              </CardContent>
+            </Card>
+          </Grid>
         </Grid>
       </Container>
     </>
