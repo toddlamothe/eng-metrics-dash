@@ -13,6 +13,7 @@ import CardHeader from "@material-ui/core/CardHeader";
 import Header from "components/Headers/Header.js";
 import componentStyles from "assets/theme/views/admin/dashboard.js";
 import HorizontalStackedBar from "components/Charts/HorizontalStackedBar";
+import PieChart from "components/Charts/Pie";
 
 const useStyles = makeStyles(componentStyles);
 
@@ -27,7 +28,6 @@ function Dashboard(props) {
   // useEffect to trigger formatting of epic data fed to the epic bar chart
   useEffect( () => {
     if (backlogData.epics) {
-      console.log("backlogData.epics = ", backlogData.epics);
       let labels = backlogData.epics.map( (epic) => {
         return epic.name
       });
@@ -38,18 +38,14 @@ function Dashboard(props) {
         toDoValues.push(epic.issuesToDo);
         unestimatedValues.push(epic.issuesUnestimated);
       })
-      console.log("doneValues = ", doneValues);
-      console.log("inProgressValue = ", inProgressValue);
-      console.log("toDoValues = ", toDoValues);
-      console.log("unestimatedValues = ", unestimatedValues);
       
       // Define blank stacked bar chart data set. each element in the datasets array is a stacked block on each bar
       // The detault data set below defines the label and color for each block in the stack. The values for each block
       // will be filled in by processing the epic data for the given backlog
       let datasets = [
-        { label: 'Done', data: doneValues, backgroundColor: 'rgb(255, 99, 132)', },
+        { label: 'Done', data: doneValues, backgroundColor: 'rgb(75, 192, 192)', },
         { label: 'In Progress', data: inProgressValue, backgroundColor: 'rgb(54, 162, 235)', },
-        { label: 'To Do', data: toDoValues, backgroundColor: 'rgb(75, 192, 192)',},
+        { label: 'To Do', data: toDoValues, backgroundColor: 'rgb(255, 99, 132)',},
         {label: 'Unestimated', data: unestimatedValues, backgroundColor: 'rgb(100, 100, 100)', },
       ];
 
@@ -60,8 +56,7 @@ function Dashboard(props) {
       };
 
       setEpicBarChartData(data);
-    }   
-    
+    }    
   }, [backlogData])
 
   return (
@@ -110,7 +105,7 @@ function Dashboard(props) {
                     Epics
                   </Box>
                 }
-                subheader="Total Story Points" classes={{ root: classes.cardHeaderRoot }}
+                subheader="Story Points" classes={{ root: classes.cardHeaderRoot }}
                 titleTypographyProps={{
                   component: Box,
                   variant: "h6",
@@ -129,7 +124,7 @@ function Dashboard(props) {
               ></CardHeader>
               <CardContent>
                 <Box position="relative" height="350px">
-                  PIE CHART
+                  <PieChart></PieChart>
                 </Box>
               </CardContent>
             </Card>

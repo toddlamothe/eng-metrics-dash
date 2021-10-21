@@ -42,8 +42,6 @@ const options = {
 };
 
 const HorizontalStackedBar = (props) => {
-  console.log("[HorizontalStackedBar]");
-  // console.log("props: ", props);
   const chartData = props.data ? props.data : defaultBarChartData;
   const chartOptions = props.options ? props.options : options;
   return (

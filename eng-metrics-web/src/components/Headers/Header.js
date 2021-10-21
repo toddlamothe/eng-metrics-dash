@@ -15,7 +15,7 @@ import componentStyles from "assets/theme/components/header.js";
 
 const useStyles = makeStyles(componentStyles);
 
-const Header = (backlogData) => {
+const Header = (props) => {
   var [storiesPercentComplete, setStoriesPercentComplete] = useState('');
   var [totalStories, setTotalStories] = useState('');
   var [storiesComplete, setStoriesComplete] = useState('');
@@ -29,20 +29,20 @@ const Header = (backlogData) => {
   var [pointsToDo, setPointsToDo] = useState('');
 
   useEffect( () => {
-    if (backlogData.backlogData.backlogIssuesPercentComplete) {
-      setStoriesPercentComplete(formatAsPercent(backlogData.backlogData.backlogIssuesPercentComplete) + "%");
-      setPointsPercentComplete(formatAsPercent(backlogData.backlogData.backlogPointsPercentComplete) + "%");
-      setTotalStories(backlogData.backlogData.backlogTotalIssues + "");
-      setStoriesComplete(backlogData.backlogData.backlogIssuesDone + "");
-      setStoriesInProgress(backlogData.backlogData.backlogIssuesInProgress + "");
-      setStoriesToDo(backlogData.backlogData.backlogIssuesToDo + "");
-      setStoriesUnestimated(backlogData.backlogData.backlogIssuesUnestimated + "");
-      setTotalPoints(backlogData.backlogData.backlogTotalPoints + "");
-      setPointsComplete(backlogData.backlogData.backlogPointsDone + "");
-      setPointsinProgress(backlogData.backlogData.backlogPointsInProgress + "");
-      setPointsToDo(backlogData.backlogData.backlogPointsToDo + "");
+    if (props.backlogData.epicCount) {
+      setStoriesPercentComplete(formatAsPercent(props.backlogData.backlogIssuesPercentComplete) + "%");
+      setPointsPercentComplete(formatAsPercent(props.backlogData.backlogPointsPercentComplete) + "%");
+      setTotalStories(props.backlogData.backlogTotalIssues + "");
+      setStoriesComplete(props.backlogData.backlogIssuesDone + "");
+      setStoriesInProgress(props.backlogData.backlogIssuesInProgress + "");
+      setStoriesToDo(props.backlogData.backlogIssuesToDo + "");
+      setStoriesUnestimated(props.backlogData.backlogIssuesUnestimated + "");
+      setTotalPoints(props.backlogData.backlogTotalPoints + "");
+      setPointsComplete(props.backlogData.backlogPointsDone + "");
+      setPointsinProgress(props.backlogData.backlogPointsInProgress + "");
+      setPointsToDo(props.backlogData.backlogPointsToDo + "");
     }
-}, [backlogData]);
+}, [props.backlogData]);
   const classes = useStyles();
   const theme = useTheme();
   return (
