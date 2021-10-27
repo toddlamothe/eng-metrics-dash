@@ -86,10 +86,10 @@ functions:
               inputTemplate:
                 '{"backlogId": 32, "backlogName": "Beacon"}'
         - schedule: 
-            rate: cron(46 18 * * ? *)
+            rate: cron(20 09 * * ? *)
             inputTransformer:
               inputTemplate:
-                '{"backlogId": 48, "backlogName": "Lead/CRM Framework"}'
+                '{"backlogId": 48, "backlogName": "Lead-CRM Framework"}'
 
   etl-backlog-velocities:
       handler: functions/etl-handlers.etlVelocity

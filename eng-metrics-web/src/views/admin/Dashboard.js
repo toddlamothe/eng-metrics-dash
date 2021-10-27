@@ -34,7 +34,6 @@ function Dashboard(props) {
 
   // useEffect to trigger formatting of velocity data fed to the velocity bar chart
   useEffect( () => {
-    console.log("useEffect backlogVelocityData = ", backlogVelocityData);
     var labels = [];
     var datasets = [
       {
@@ -47,9 +46,12 @@ function Dashboard(props) {
 
     backlogVelocityData.forEach( (sprint) => {
       labels.push(sprint.end_date);
+      const barColors = genColor();
       datasets[0].data.push(sprint.total_points);
-      datasets[0].backgroundColor.push(genColor());
-      datasets[1].data.push(sprint.total_points_estimated);      
+      datasets[0].backgroundColor.push(barColors.backgroundColor);
+      datasets[0].borderColor.push(barColors.borderColor);
+      datasets[1].data.push(sprint.total_points_estimated);
+      datasets[1].borderColor = 'rgba(75, 192, 192, 0.5)';
     });
 
     const chartData = {
@@ -141,7 +143,7 @@ function Dashboard(props) {
                       <Grid item xs="auto">
                         <Box component={Typography} variant="h6" letterSpacing=".0625rem" marginBottom=".25rem!important" className={classes.textUppercase} >
                           <Box component="span" color={theme.palette.gray[400]}>
-                            Epics
+                          {props.backlogName} Epics
                           </Box>
                         </Box>
                         <Box component={Typography} variant="h2" marginBottom="0!important">
@@ -165,7 +167,7 @@ function Dashboard(props) {
             <Card classes={{ root: classes.cardRoot + " " + classes.removePadding }}>
               <CardHeader title={
                   <Box component="span" color={theme.palette.gray[600]}>
-                    Epics
+                    {props.backlogName} Epics
                   </Box>
                 }
                 subheader="Story Points" classes={{ root: classes.cardHeaderRoot }}
@@ -184,11 +186,11 @@ function Dashboard(props) {
           </Grid>          
         </Grid>
         <Grid container spacing={1}>
-          <Grid item xs={12} xl={8} >
+          <Grid item xs={12} xl={10} >
           <Card classes={{ root: classes.cardRoot + " " + classes.removePadding }}>
               <CardHeader title={
                   <Box component="span" color={theme.palette.gray[600]}>
-                    Velocity
+                    {props.backlogName} Velocity
                   </Box>
                 }
                 subheader="Points Per Sprint" classes={{ root: classes.cardHeaderRoot }}
