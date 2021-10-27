@@ -33,7 +33,7 @@ const Admin = () => {
         return (
           <Route
             path={prop.layout + prop.path}
-            component={() => ( <Dashboard backlogId={prop.backlogId} /> )}
+            component={() => ( <Dashboard backlogId={prop.backlogId} backlogName={prop.name} /> )}
             key={key}
           />
         );

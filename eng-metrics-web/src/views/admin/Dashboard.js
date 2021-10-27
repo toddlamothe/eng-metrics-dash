@@ -50,7 +50,8 @@ function Dashboard(props) {
       datasets[0].data.push(sprint.total_points);
       datasets[0].backgroundColor.push(barColors.backgroundColor);
       datasets[0].borderColor.push(barColors.borderColor);
-      datasets[1].data.push(sprint.total_points_estimated);      
+      datasets[1].data.push(sprint.total_points_estimated);
+      datasets[1].borderColor = 'rgba(75, 192, 192, 0.5)';
     });
 
     const chartData = {
@@ -142,7 +143,7 @@ function Dashboard(props) {
                       <Grid item xs="auto">
                         <Box component={Typography} variant="h6" letterSpacing=".0625rem" marginBottom=".25rem!important" className={classes.textUppercase} >
                           <Box component="span" color={theme.palette.gray[400]}>
-                            Epics
+                          {props.backlogName} Epics
                           </Box>
                         </Box>
                         <Box component={Typography} variant="h2" marginBottom="0!important">
@@ -166,7 +167,7 @@ function Dashboard(props) {
             <Card classes={{ root: classes.cardRoot + " " + classes.removePadding }}>
               <CardHeader title={
                   <Box component="span" color={theme.palette.gray[600]}>
-                    Epics
+                    {props.backlogName} Epics
                   </Box>
                 }
                 subheader="Story Points" classes={{ root: classes.cardHeaderRoot }}
@@ -189,7 +190,7 @@ function Dashboard(props) {
           <Card classes={{ root: classes.cardRoot + " " + classes.removePadding }}>
               <CardHeader title={
                   <Box component="span" color={theme.palette.gray[600]}>
-                    Velocity
+                    {props.backlogName} Velocity
                   </Box>
                 }
                 subheader="Points Per Sprint" classes={{ root: classes.cardHeaderRoot }}
