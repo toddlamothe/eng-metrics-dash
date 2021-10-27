@@ -36,5 +36,5 @@ export const useApiRequest = (url) => {
       fetchData();
     }, [url]);
   
-    return { backlogError, isLoaded, backlogData };
+    return backlogData;
 }

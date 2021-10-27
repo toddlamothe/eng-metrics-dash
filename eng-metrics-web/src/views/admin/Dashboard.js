@@ -15,18 +15,52 @@ import componentStyles from "assets/theme/views/admin/dashboard.js";
 import HorizontalStackedBar from "components/Charts/HorizontalStackedBar";
 import PieChart from "components/Charts/Pie";
 import BarLineCombo from "components/Charts/BarLineCombo";
+import { genColor } from 'assets/js/helpers';
 
 const useStyles = makeStyles(componentStyles);
 
 function Dashboard(props) {
   const backlogEpicsUrl = 'https://ha4mv8svsk.execute-api.us-east-1.amazonaws.com/test-tl/backlogs/' + props.backlogId + '/epics';
-  const {error, isLoaded, backlogData} = useApiRequest(backlogEpicsUrl);
+  const backlogData = useApiRequest(backlogEpicsUrl);
   const [epicBarChartData, setEpicBarChartData] = useState({});
   const [epicPieChartData, setEpicPieChartData] = useState({});
+
+  const backlogVelocitiesUrl = 'https://ha4mv8svsk.execute-api.us-east-1.amazonaws.com/test-tl/backlogs/' + props.backlogId + '/velocity';
+  const backlogVelocityData = useApiRequest(backlogVelocitiesUrl);
+  const [velocityBarChartData, setVelocityBarChartData] = useState({});
 
   const classes = useStyles();
   const theme = useTheme();
 
+  // useEffect to trigger formatting of velocity data fed to the velocity bar chart
+  useEffect( () => {
+    console.log("useEffect backlogVelocityData = ", backlogVelocityData);
+    var labels = [];
+    var datasets = [
+      {
+        label: 'Points Completed', data: [], backgroundColor: [], borderColor: [], borderWidth: 1,
+      },
+      {
+        label: 'Points Estimated', data: [], type: "line", borderWidth: 1,  
+      }
+    ];
+
+    backlogVelocityData.forEach( (sprint) => {
+      labels.push(sprint.end_date);
+      datasets[0].data.push(sprint.total_points);
+      datasets[0].backgroundColor.push(genColor());
+      datasets[1].data.push(sprint.total_points_estimated);      
+    });
+
+    const chartData = {
+      labels: labels,
+      datasets: datasets
+    };   
+    
+    setVelocityBarChartData(chartData);
+
+  }, [backlogVelocityData]);
+  
   // useEffect to trigger formatting of epic data fed to the epic bar chart
   useEffect( () => {
     if (backlogData.epics) {
@@ -167,7 +201,7 @@ function Dashboard(props) {
               ></CardHeader>
               <CardContent classes={{ root: classes.removePadding }}>
                 <Box position="relative">
-                  <BarLineCombo></BarLineCombo>
+                  <BarLineCombo data={velocityBarChartData}></BarLineCombo>
                 </Box>
               </CardContent>
             </Card>
