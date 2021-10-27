@@ -184,7 +184,7 @@ function Dashboard(props) {
           </Grid>          
         </Grid>
         <Grid container spacing={1}>
-          <Grid item xs={12} xl={8} >
+          <Grid item xs={12} xl={10} >
           <Card classes={{ root: classes.cardRoot + " " + classes.removePadding }}>
               <CardHeader title={
                   <Box component="span" color={theme.palette.gray[600]}>

@@ -189,7 +189,7 @@ module.exports.etlVelocity = async (event, context, callback) => {
 // })
 
 
-// module.exports.etlBacklogEpics({backlogId: 48, backlogName: "Lead/CRM Framework"}, null, (error, response) => {
+// module.exports.etlBacklogEpics({backlogId: 48, backlogName: "Lead-CRM Framework"}, null, (error, response) => {
 //     console.log(response);
 // })
-module.exports.etlVelocity({backlogId : 48}, null, (error, results) => console.log(results));
+// module.exports.etlVelocity({backlogId : 48}, null, (error, results) => console.log(results));
