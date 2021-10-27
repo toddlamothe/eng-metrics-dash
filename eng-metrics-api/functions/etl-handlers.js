@@ -23,8 +23,8 @@ module.exports.etlBacklogEpics = async (event, context, callback) => {
         null,
         async (errorMessage, responseMessage) => {
             // Create backlog data insert statement
-            backlog = JSON.parse(responseMessage.body);
-            backlogUuid = helpers.uuidv4();
+            var backlog = JSON.parse(responseMessage.body);
+            var backlogUuid = helpers.uuidv4();
 
             insertStatement = "INSERT INTO backlog VALUES (" + 
                 "'" + backlogUuid + "', " +
@@ -35,13 +35,13 @@ module.exports.etlBacklogEpics = async (event, context, callback) => {
                 backlog.backlogPointsDone + ", " + 
                 backlog.backlogPointsInProgress + ", " + 
                 backlog.backlogPointsToDo + ", " + 
-                backlog.backlogPointsPercentComplete + ", " + 
+                (backlog.backlogPointsPercentComplete ? backlog.backlogPointsPercentComplete : 0) + ", " + 
                 backlog.backlogTotalIssues + ", " + 
                 backlog.backlogIssuesDone + ", " + 
                 backlog.backlogIssuesInProgress + ", " + 
                 backlog.backlogIssuesToDo + ", " + 
                 backlog.backlogIssuesUnestimated + ", " + 
-                backlog.backlogIssuesPercentComplete + ", " + 
+                (backlog.backlogIssuesPercentComplete ? backlog.backlogIssuesPercentComplete : 0) + ", " + 
                 "now()" +
                 ");";
 
@@ -59,13 +59,13 @@ module.exports.etlBacklogEpics = async (event, context, callback) => {
                     epic.pointsDone + ", " + 
                     epic.pointsInProgress + ", " + 
                     epic.pointsToDo + ", " + 
-                    epic.pointsPercentComplete + ", " + 
+                    (epic.pointsPercentComplete ? epic.pointsPercentComplete : 0) + ", " + 
                     epic.totalIssues + ", " + 
                     epic.issuesDone + ", " + 
                     epic.issuesInProgress + ", " + 
                     epic.issuesToDo + ", " + 
                     epic.issuesUnestimated + ", " + 
-                    epic.issuesPercentComplete + ", " + 
+                    (epic.issuesPercentComplete ? epic.issuesPercentComplete : 0) + ", " + 
                     "now()" +
                     ");";
 
@@ -87,7 +87,8 @@ module.exports.etlBacklogEpics = async (event, context, callback) => {
     console.log("Database connected");
 
     var selectRows, selectFields
-    for(var x=0;x<insertArray.length;x++) {
+    console.log("insertArray = ", insertArray);
+    for(var x=0;x<insertArray.length;x++) {        
         [selectRows, selectFields] = await connection.query(insertArray[x]);
     }
 
@@ -111,7 +112,7 @@ module.exports.etlVelocity = async (event, context, callback) => {
 
     // Fetch velocities for the specified backlog
     await helpers.sprintVeloHistory(event.backlogId, (backlogVelocities) => {
-        apiSprintVelocities = backlogVelocities;
+        apiSprintVelocities = backlogVelocities || [];
     });
 
     console.log("Connecting to database...");
@@ -186,3 +187,9 @@ module.exports.etlVelocity = async (event, context, callback) => {
 // module.exports.etlBacklogEpics({backlogId: 32, backlogName: "Beacon"}, null, (error, response) => {
 //     console.log(response);
 // })
+
+
+// module.exports.etlBacklogEpics({backlogId: 48, backlogName: "Lead/CRM Framework"}, null, (error, response) => {
+//     console.log(response);
+// })
+module.exports.etlVelocity({backlogId : 48}, null, (error, results) => console.log(results));
