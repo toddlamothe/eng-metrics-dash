@@ -34,7 +34,6 @@ function Dashboard(props) {
 
   // useEffect to trigger formatting of velocity data fed to the velocity bar chart
   useEffect( () => {
-    console.log("useEffect backlogVelocityData = ", backlogVelocityData);
     var labels = [];
     var datasets = [
       {
@@ -47,8 +46,10 @@ function Dashboard(props) {
 
     backlogVelocityData.forEach( (sprint) => {
       labels.push(sprint.end_date);
+      const barColors = genColor();
       datasets[0].data.push(sprint.total_points);
-      datasets[0].backgroundColor.push(genColor());
+      datasets[0].backgroundColor.push(barColors.backgroundColor);
+      datasets[0].borderColor.push(barColors.borderColor);
       datasets[1].data.push(sprint.total_points_estimated);      
     });
 
