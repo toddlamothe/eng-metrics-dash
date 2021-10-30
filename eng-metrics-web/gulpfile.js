@@ -1,7 +1,7 @@
 const gulp = require("gulp");
 const gap = require("gulp-append-prepend");
 
-gulp.task("licenses", async function () {
+async function license() {
   // this is to add Creative Tim licenses in the production mode for the minified js
   gulp
     .src("build/static/js/*chunk.js", { base: "./" })
@@ -17,9 +17,12 @@ Union Street Media - Engineering Metrics DashboardUnion Street Media - Engineeri
     .src("build/static/css/*chunk.css", { base: "./" })
     .pipe(
       gap.prependText(`/*!
-      Union Street Media - Engineering Metrics Dashboard
+Union Street Media - Engineering Metrics Dashboard
 */`)
     )
     .pipe(gulp.dest("./", { overwrite: true }));
   return;
-});
+}
+
+gulp.task("licenses", license);
+gulp.task("default", license);
