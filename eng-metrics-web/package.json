@@ -1,16 +1,16 @@
 {
-  "name": "argon-dashboard-material-ui",
+  "name": "usm-engineering-metrics-dash",
   "version": "1.0.0",
-  "author": "Creative Tim",
+  "author": "Todd LaMothe",
   "license": "MIT",
-  "description": "Material UI version of Argon Dashboard React by Creative Tim",
-  "homepage": "https://demos.creative-tim.com/argon-dashboard-material-ui/#/admin/dashboard",
+  "description": "Union Street Media - Engineering Metrics Dashboard",
+  "homepage": "https://unionstmedia.com",
   "bugs": {
-    "url": "https://github.com/creativetimofficial/argon-dashboard-material-ui/issues"
+    "url": ""
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/creativetimofficial/argon-dashboard-material-ui.git"
+    "url": "https://github.com/toddlamothe/eng-metrics-dash/tree/main/eng-metrics-web"
   },
   "scripts": {
     "start": "react-scripts start",
