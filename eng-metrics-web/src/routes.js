@@ -13,16 +13,16 @@ var routes = [
     backlogId: 0
   },
   {
-    path: "/accelerator",
-    name: "Accelerator",
+    path: "/mapsearch",
+    name: "Map Search",
     icon: Map,
     iconColor: "Primary",
     layout: "/admin",
     backlogId: 23
   },
   {
-    path: "/beacon",
-    name: "Beacon",
+    path: "/beacon4ops",
+    name: "Beacon for Ops",
     icon: Storage,
     iconColor: "Primary",
     layout: "/admin",
