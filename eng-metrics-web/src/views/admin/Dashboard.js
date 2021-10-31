@@ -143,12 +143,12 @@ function Dashboard(props) {
                       <Grid item xs="auto">
                         <Box component={Typography} variant="h6" letterSpacing=".0625rem" marginBottom=".25rem!important" className={classes.textUppercase} >
                           <Box component="span" color={theme.palette.gray[400]}>
-                          {props.backlogName} Epics
+                            Epics
                           </Box>
                         </Box>
                         <Box component={Typography} variant="h2" marginBottom="0!important">
                           <Box component="span" color={theme.palette.white.main}>
-                            Stories by Status
+                          {props.backlogName + " - Stories by Status"}
                           </Box>
                         </Box>
                       </Grid>                    
@@ -167,10 +167,10 @@ function Dashboard(props) {
             <Card classes={{ root: classes.cardRoot + " " + classes.removePadding }}>
               <CardHeader title={
                   <Box component="span" color={theme.palette.gray[600]}>
-                    {props.backlogName} Epics
+                    Epics
                   </Box>
                 }
-                subheader="Story Points" classes={{ root: classes.cardHeaderRoot }}
+                subheader={props.backlogName + " - Stories by Status"} classes={{ root: classes.cardHeaderRoot }}
                 titleTypographyProps={{
                   component: Box, variant: "h6", letterSpacing: ".0625rem", marginBottom: ".25rem!important", classes: { root: classes.textUppercase, }, }}
                 subheaderTypographyProps={{
@@ -190,10 +190,10 @@ function Dashboard(props) {
           <Card classes={{ root: classes.cardRoot + " " + classes.removePadding }}>
               <CardHeader title={
                   <Box component="span" color={theme.palette.gray[600]}>
-                    {props.backlogName} Velocity
+                    Velocity
                   </Box>
                 }
-                subheader="Points Per Sprint" classes={{ root: classes.cardHeaderRoot }}
+                subheader={props.backlogName + " - Points Per Sprint"}  classes={{ root: classes.cardHeaderRoot }}
                 titleTypographyProps={{
                   component: Box, variant: "h6", letterSpacing: ".0625rem", marginBottom: ".25rem!important", classes: { root: classes.textUppercase, },
                 }}
