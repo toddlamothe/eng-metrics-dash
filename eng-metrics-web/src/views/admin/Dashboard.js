@@ -3,12 +3,15 @@ import { useEffect, useState } from "react";
 import { useApiRequest } from "hooks/useApiRequest";
 import { makeStyles } from "@material-ui/core/styles";
 import { useTheme } from "@material-ui/core/styles";
-import Box from "@material-ui/core/Box";
-import Card from "@material-ui/core/Card";
+import Box from "@mui/material/Box";
+import Card from "@mui/material/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
+
 import Typography from "@material-ui/core/Typography";
+// import Typography from "@mui/material/Typography";
+
 // import CardHeader from "@material-ui/core/CardHeader";
 import CardHeader from '@mui/material/CardHeader';
 import Header from "components/Headers/Header.js";
