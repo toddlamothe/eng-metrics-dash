@@ -5,8 +5,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import { useTheme } from "@material-ui/core/styles";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
-import CardContent from "@material-ui/core/CardContent";
-import Container from "@material-ui/core/Container";
+import CardContent from "@mui/material/CardContent";
+import Container from "@mui/material/Container";
 import Grid from "@material-ui/core/Grid";
 
 import Typography from "@material-ui/core/Typography";
