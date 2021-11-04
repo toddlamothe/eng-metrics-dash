@@ -9,7 +9,8 @@ import CardContent from "@material-ui/core/CardContent";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
-import CardHeader from "@material-ui/core/CardHeader";
+// import CardHeader from "@material-ui/core/CardHeader";
+import CardHeader from '@mui/material/CardHeader';
 import Header from "components/Headers/Header.js";
 import componentStyles from "assets/theme/views/admin/dashboard.js";
 import HorizontalStackedBar from "components/Charts/HorizontalStackedBar";
@@ -165,18 +166,25 @@ function Dashboard(props) {
           </Grid>
           <Grid item xs={12} xl={4}>
             <Card classes={{ root: classes.cardRoot + " " + classes.removePadding }}>
-              <CardHeader title={
-                  <Box component="span" color={theme.palette.gray[600]}>
-                    Epics
-                  </Box>
-                }
-                subheader={props.backlogName + " - Stories by Status"} classes={{ root: classes.cardHeaderRoot }}
-                titleTypographyProps={{
-                  component: Box, variant: "h6", letterSpacing: ".0625rem", marginBottom: ".25rem!important", classes: { root: classes.textUppercase, }, }}
-                subheaderTypographyProps={{
-                  component: Box, variant: "h2", marginBottom: "0!important", color: "initial",
-                }}
-              ></CardHeader>
+              <CardHeader subheader={
+                  <Grid container component={Box} alignItems="center" justifyContent="space-between">
+                    <Grid item xs="auto">
+                      <Box component={Typography} variant="h6" letterSpacing=".0625rem" marginBottom=".25rem!important" className={classes.textUppercase} >
+                        <Box component="span" color={theme.palette.gray[600]}>
+                          Epics
+                        </Box>
+                      </Box>
+                      <Box component={Typography} variant="h2" marginBottom="0!important">
+                        <Box component="span" classes={{ root: classes.cardHeaderRoot }}>
+                        {props.backlogName + " - Stories by Status"}
+                        </Box>
+                      </Box>
+                    </Grid>                    
+                  </Grid>
+                  }
+                  classes={{ root: classes.cardHeaderRoot }}
+                >
+              </CardHeader>
               <CardContent classes={{ root: classes.removePadding }}>
                 <Box position="relative" height="350px">
                   <PieChart data={epicPieChartData}></PieChart>
@@ -188,19 +196,25 @@ function Dashboard(props) {
         <Grid container spacing={1}>
           <Grid item xs={12} xl={10} >
           <Card classes={{ root: classes.cardRoot + " " + classes.removePadding }}>
-              <CardHeader title={
-                  <Box component="span" color={theme.palette.gray[600]}>
-                    Velocity
-                  </Box>
+            <CardHeader subheader={
+                <Grid container component={Box} alignItems="center" justifyContent="space-between">
+                  <Grid item xs="auto">
+                    <Box component={Typography} variant="h6" letterSpacing=".0625rem" marginBottom=".25rem!important" className={classes.textUppercase} >
+                      <Box component="span" color={theme.palette.gray[600]}>
+                        Velocity
+                      </Box>
+                    </Box>
+                    <Box component={Typography} variant="h2" marginBottom="0!important">
+                      <Box component="span" classes={{ root: classes.cardHeaderRoot }}>
+                      {props.backlogName + " - Points per Sprint"}
+                      </Box>
+                    </Box>
+                  </Grid>                    
+                </Grid>
                 }
-                subheader={props.backlogName + " - Points Per Sprint"}  classes={{ root: classes.cardHeaderRoot }}
-                titleTypographyProps={{
-                  component: Box, variant: "h6", letterSpacing: ".0625rem", marginBottom: ".25rem!important", classes: { root: classes.textUppercase, },
-                }}
-                subheaderTypographyProps={{
-                  component: Box, variant: "h2", marginBottom: "0!important", color: "initial",
-                }}
-              ></CardHeader>
+                classes={{ root: classes.cardHeaderRoot }}
+                >
+              </CardHeader>
               <CardContent classes={{ root: classes.removePadding }}>
                 <Box position="relative">
                   <BarLineCombo data={velocityBarChartData}></BarLineCombo>
