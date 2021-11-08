@@ -8,12 +8,11 @@ import Container from "@mui/material/Container";
 import CardHeader from '@mui/material/CardHeader';
 
 import Grid from "@mui/material/Grid";
-// import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
-// import Typography from "@mui/material/Typography";
-import { makeStyles } from "@material-ui/core/styles";
+// import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
+import makeStyles from '@mui/styles/makeStyles';
 // import { makeStyles } from '@mui/styles';
-import { useTheme } from "@material-ui/core/styles";
+import { useTheme } from "@mui/material/styles";
 
 import Header from "components/Headers/Header.js";
 import componentStyles from "assets/theme/views/admin/dashboard.js";

@@ -25,12 +25,12 @@ const componentStyles = (theme) => ({
     },
   },
   justifyContentCenter: {
-    [theme.breakpoints.down("lg")]: {
+    [theme.breakpoints.down('xl')]: {
       justifyContent: "center!important",
     },
   },
   flexDirectionColumn: {
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down('md')]: {
       flexDirection: "column!important",
     },
   },

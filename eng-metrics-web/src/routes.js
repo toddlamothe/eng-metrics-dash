@@ -1,7 +1,7 @@
 // core components
-import Map from "@material-ui/icons/Map";
-import BarChart from "@material-ui/icons/BarChart";
-import Storage from "@material-ui/icons/Storage";
+import Map from "@mui/icons-material/Map";
+import BarChart from "@mui/icons-material/BarChart";
+import Storage from "@mui/icons-material/Storage";
 
 var routes = [
   {

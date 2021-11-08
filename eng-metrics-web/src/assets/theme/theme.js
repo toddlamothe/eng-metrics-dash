@@ -1,5 +1,5 @@
-// @material-ui/core components
-import { createMuiTheme } from "@material-ui/core/styles";
+// @mui/material components
+import { createTheme, adaptV4Theme } from "@mui/material/styles";
 // core components
 import boxShadows from "assets/theme/box-shadow.js";
 import hexToRgb from "assets/theme/hex-to-rgb.js";
@@ -16,7 +16,7 @@ const defaultHeaderStyles = {
 };
 
 // A custom theme for this app
-const theme = createMuiTheme({
+const theme = createTheme(adaptV4Theme({
   breakpoints: {
     values: {
       xs: 0,
@@ -823,6 +823,6 @@ const theme = createMuiTheme({
       },
     },
   },
-});
+}));
 
 export default theme;

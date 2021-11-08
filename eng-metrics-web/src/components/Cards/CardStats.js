@@ -1,13 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
-// @material-ui/core components
-import { makeStyles } from "@material-ui/core/styles";
-import { useTheme } from "@material-ui/core/styles";
-import Box from "@material-ui/core/Box";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
+import makeStyles from '@mui/styles/makeStyles';
+import { useTheme } from "@mui/material/styles";
+import Box from "@mui/material/Box";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
 
 // core components
 import componentStyles from "assets/theme/components/card-stats.js";
@@ -109,7 +108,7 @@ CardStats.propTypes = {
     // i.e. an icon name from Nucleo Icons - e.g. ni ni-atom
     // // or an icon name from Font Awesome - e.g. fa fa-heart
     PropTypes.string,
-    // i.e. a component from @material-ui/icons
+    // i.e. a component from @mui/icons-material
     PropTypes.object,
   ]),
   color: PropTypes.oneOf([

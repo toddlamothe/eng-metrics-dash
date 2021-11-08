@@ -2,7 +2,7 @@ import boxShadows from "assets/theme/box-shadow.js";
 
 const componentStyles = (theme) => ({
   appBarRoot: {
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down('md')]: {
       display: "none",
     },
   },
@@ -10,7 +10,7 @@ const componentStyles = (theme) => ({
     textTransform: "uppercase",
     margin: "0",
     color: theme.palette.white.main,
-    [theme.breakpoints.down("md")]: {
+    [theme.breakpoints.down('lg')]: {
       display: "none",
     },
   },

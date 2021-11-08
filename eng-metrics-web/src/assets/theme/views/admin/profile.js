@@ -76,12 +76,12 @@ const componentStyles = (theme) => ({
     },
   },
   order1: {
-    [theme.breakpoints.down("lg")]: {
+    [theme.breakpoints.down('xl')]: {
       order: "1!important",
     },
   },
   order2: {
-    [theme.breakpoints.down("lg")]: {
+    [theme.breakpoints.down('xl')]: {
       order: "2!important",
     },
   },

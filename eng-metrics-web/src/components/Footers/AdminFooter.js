@@ -1,8 +1,7 @@
 import React from "react";
 
-// @material-ui/core components
-import { makeStyles } from "@material-ui/core/styles";
-import Box from "@material-ui/core/Box";
+import makeStyles from '@mui/styles/makeStyles';
+import Box from "@mui/material/Box";
 
 // core components
 import componentStyles from "assets/theme/components/admin-footer.js";

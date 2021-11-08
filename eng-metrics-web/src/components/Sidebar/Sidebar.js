@@ -1,14 +1,13 @@
 import React from "react";
 import { useLocation, Link } from "react-router-dom";
-// @material-ui/core components
-import { makeStyles } from "@material-ui/core/styles";
-import Box from "@material-ui/core/Box";
-import Divider from "@material-ui/core/Divider";
-import Drawer from "@material-ui/core/Drawer";
-import Hidden from "@material-ui/core/Hidden";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import Typography from "@material-ui/core/Typography";
+import makeStyles from '@mui/styles/makeStyles';
+import Box from "@mui/material/Box";
+import Divider from "@mui/material/Divider";
+import Drawer from "@mui/material/Drawer";
+import Hidden from "@mui/material/Hidden";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import Typography from "@mui/material/Typography";
 // core components
 import componentStyles from "assets/theme/components/sidebar.js";
 
@@ -128,16 +127,14 @@ export default function Sidebar({ routes, logo, dropdown, input }) {
         {logoImage}
       </a>
     ) : null;
-  return (
-    <>
-      <Hidden smDown implementation="css">
-        <Drawer variant="permanent" anchor="left" open>
-          <Box paddingBottom="1rem">{logoObject}</Box>
-          <List classes={{ root: classes.listRoot }}>
-            {createLinks(routes)}
-          </List>
-        </Drawer>
-      </Hidden>
-    </>
-  );
+  return <>
+    <Hidden mdDown implementation="css">
+      <Drawer variant="permanent" anchor="left" open>
+        <Box paddingBottom="1rem">{logoObject}</Box>
+        <List classes={{ root: classes.listRoot }}>
+          {createLinks(routes)}
+        </List>
+      </Drawer>
+    </Hidden>
+  </>;
 }
