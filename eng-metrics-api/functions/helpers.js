@@ -54,7 +54,6 @@ module.exports.sprintVeloHistory = async (backlogId, callback) => {
 
     // Now fetch sprint start/end dates
     await module.exports.sprintHistory(backlogId, (sprintHistoryWithDates) => {
-        console.log("sprintHistoryWithDates.length = ", sprintHistoryWithDates.length);
         // For each sprint in the sprint history, add the sprint start/end date to 
         // the object that already contains sprint id, name and velo
         backlogSprintVelocities = sprintHistoryWithDates;
@@ -194,6 +193,7 @@ module.exports.backlogEpics = async (event, context, callback) => {
         var epicTotalPoints=0, epicDonePoints=0, epicInProgressPoints=0, epicToDoPoints=0;
 
         await epicIssues({pathParameters: {epicId : epic.id}}, null, (error, response) => {
+            // console.log("epic.id = ", epic.id);
             // Tally up stats for this epic
             allEpicIssues = JSON.parse(response.body).issues;
             allEpicIssues.forEach(issue => {
@@ -210,23 +210,24 @@ module.exports.backlogEpics = async (event, context, callback) => {
                 // Only count as unestimated if it's a user story
                 if (issue.fields.issuetype && issue.fields.issuetype.name && issue.fields.issuetype.name==="Story" && storyPoints===0) {
                     epicUnestimatedIssues++;
-                } else {
-                    // The issue is not an unestimated user story, categorize it
-                    switch(issue.fields.status.name) {
-                        case "Done":
-                            epicDoneIssues++;
-                            epicDonePoints+=storyPoints;
-                            break;
-                        case "In Progress":
-                            epicInProgressIssues++;
-                            epicInProgressPoints+=storyPoints;
-                            break;
-                        case "To Do":
-                            epicToDoIssues++;
-                            epicToDoPoints+=storyPoints;
-                            break;
-                    }
+                } 
+                // The issue is not an unestimated user story, categorize it
+                // console.log("issue.fields.status.name = ", issue.fields.status.name);
+                switch(issue.fields.status.name) {
+                    case "Done":
+                        epicDoneIssues++;
+                        epicDonePoints+=storyPoints;
+                        break;
+                    case "In Progress":
+                        epicInProgressIssues++;
+                        epicInProgressPoints+=storyPoints;
+                        break;
+                    case "To Do":
+                        epicToDoIssues++;
+                        epicToDoPoints+=storyPoints;
+                        break;
                 }
+
             });
 
             var epicIssuesPercentComplete = epicTotalIssues>0 ? epicDoneIssues/epicTotalIssues : 0
@@ -329,6 +330,8 @@ async function epicIssues(event, context, callback) {
                 issues: data.issues
             }
 
+            // console.log(responseBody);
+
             const responseMessage = {
                 "isBase64Encoded": false,
                 "statusCode": 200,
@@ -346,3 +349,12 @@ async function epicIssues(event, context, callback) {
 
 // module.exports.sprintHistory(23, () => console.log("end."));
 // module.exports.sprintVeloHistory(32, () => console.log("end."));
+
+// epicIssues(
+//     {pathParameters : {epicId : 60278}}, 
+//     null, 
+//     (error, responseMessage) => { return;})
+
+// module.exports.backlogEpics({pathParameters : {backlogId : 48}}, 
+//     null, 
+//     (error, responseMessage) => { return;})

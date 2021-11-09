@@ -24,6 +24,7 @@ module.exports.etlBacklogEpics = async (event, context, callback) => {
         async (errorMessage, responseMessage) => {
             // Create backlog data insert statement
             var backlog = JSON.parse(responseMessage.body);
+            console.log(backlog);
             var backlogUuid = helpers.uuidv4();
 
             insertStatement = "INSERT INTO backlog VALUES (" + 
