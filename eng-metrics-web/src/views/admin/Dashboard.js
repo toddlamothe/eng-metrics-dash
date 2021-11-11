@@ -6,14 +6,11 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Container from "@mui/material/Container";
 import CardHeader from '@mui/material/CardHeader';
-
 import Grid from "@mui/material/Grid";
-// import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import makeStyles from '@mui/styles/makeStyles';
-// import { makeStyles } from '@mui/styles';
 import { useTheme } from "@mui/material/styles";
-
+import CircularProgress from '@mui/material/CircularProgress';
 import Header from "components/Headers/Header.js";
 import componentStyles from "assets/theme/views/admin/dashboard.js";
 import HorizontalStackedBar from "components/Charts/HorizontalStackedBar";
@@ -24,6 +21,7 @@ import { genColor } from 'assets/js/helpers';
 const useStyles = makeStyles(componentStyles);
 
 function Dashboard(props) {
+  const [showSpinner, setShowSpinner] = useState(false);
   const backlogEpicsUrl = 'https://ha4mv8svsk.execute-api.us-east-1.amazonaws.com/test-tl/backlogs/' + props.backlogId + '/epics';
   const backlogData = useApiRequest(backlogEpicsUrl);
   const [epicBarChartData, setEpicBarChartData] = useState({});
@@ -69,6 +67,7 @@ function Dashboard(props) {
   
   // useEffect to trigger formatting of epic data fed to the epic bar chart
   useEffect( () => {
+    setShowSpinner(true);
     if (backlogData.epics) {
       let labels = backlogData.epics.map( (epic) => {
         return epic.name
@@ -118,7 +117,8 @@ function Dashboard(props) {
 
       setEpicBarChartData(stackedBarChartData);
       setEpicPieChartData(pieChartData);
-    }    
+    }
+    setShowSpinner(false);
   }, [backlogData])
 
   const cardcontent = {
@@ -130,6 +130,11 @@ function Dashboard(props) {
 
   return (
     <>
+      { showSpinner &&
+        <div style={{ alignItems: "center", display: "flex", position: "fixed", zIndex:"1", justifyContent: "center", height: "100vh", width: "100vw" }}>
+            <CircularProgress />          
+        </div>
+      }
       <Header backlogData={backlogData} />
       <Container maxWidth={false} component={Box} marginTop="-6rem">
         {/* Root grid container for dashboard charts */}
