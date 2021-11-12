@@ -212,19 +212,20 @@ module.exports.backlogEpics = async (event, context, callback) => {
                     epicUnestimatedIssues++;
                 } 
                 // The issue is not an unestimated user story, categorize it
-                // console.log("issue.fields.status.name = ", issue.fields.status.name);
+                // Since some boards add interstitial status columns, consider 
+                // everything not "To Do" or "Done" to be some form of "In Progress"
                 switch(issue.fields.status.name) {
                     case "Done":
                         epicDoneIssues++;
                         epicDonePoints+=storyPoints;
                         break;
-                    case "In Progress":
-                        epicInProgressIssues++;
-                        epicInProgressPoints+=storyPoints;
-                        break;
                     case "To Do":
                         epicToDoIssues++;
                         epicToDoPoints+=storyPoints;
+                        break;
+                    default:
+                        epicInProgressIssues++;
+                        epicInProgressPoints+=storyPoints;
                         break;
                 }
 
