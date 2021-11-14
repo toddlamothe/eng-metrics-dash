@@ -21,7 +21,7 @@ import { genColor } from 'assets/js/helpers';
 const useStyles = makeStyles(componentStyles);
 
 function Dashboard(props) {
-  const [showSpinner, setShowSpinner] = useState(false);
+  const [showSpinner, setShowSpinner] = useState(true);
   const backlogEpicsUrl = 'https://ha4mv8svsk.execute-api.us-east-1.amazonaws.com/test-tl/backlogs/' + props.backlogId + '/epics';
   const backlogData = useApiRequest(backlogEpicsUrl);
   const [epicBarChartData, setEpicBarChartData] = useState({});
@@ -36,6 +36,7 @@ function Dashboard(props) {
 
   // useEffect to trigger formatting of velocity data fed to the velocity bar chart
   useEffect( () => {
+    setShowSpinner(true);
     var labels = [];
     var datasets = [
       {
@@ -62,6 +63,7 @@ function Dashboard(props) {
     };   
     
     setVelocityBarChartData(chartData);
+    setShowSpinner(false);
 
   }, [backlogVelocityData]);
   
@@ -89,7 +91,6 @@ function Dashboard(props) {
         { label: 'Done', data: doneValues, backgroundColor: 'rgb(75, 192, 192)', },
         { label: 'In Progress', data: inProgressValue, backgroundColor: 'rgb(54, 162, 235)', },
         { label: 'To Do', data: toDoValues, backgroundColor: 'rgb(255, 99, 132)',},
-        {label: 'Unestimated', data: unestimatedValues, backgroundColor: 'rgb(100, 100, 100)', },
       ];
 
       // Format backlog data for use in the epics bar chart
@@ -184,7 +185,7 @@ function Dashboard(props) {
                       </Box>
                       <Box component={Typography} variant="h2" marginBottom="0!important">
                         <Box component="span" classes={{ root: classes.cardHeaderRoot }}>
-                        {props.backlogName + " - Stories by Status"}
+                        {props.backlogName + " - Points per Epic"}
                         </Box>
                       </Box>
                     </Grid>                    
