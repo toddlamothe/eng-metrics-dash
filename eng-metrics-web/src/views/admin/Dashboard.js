@@ -140,7 +140,7 @@ function Dashboard(props) {
       <Container maxWidth={false} component={Box} marginTop="-6rem">
         {/* Root grid container for dashboard charts */}
         <Grid container spacing={1} classes={{root: classes.muiGridRoot}}>
-          <Grid item xs={12} xl={9} >
+          <Grid item xs={12} xl={8} >
             {/* 
               This card fedines a blue box and brings it to the front
               cardRootBgGradient is defined in assets/theme/views/admin/dashboard.js and makes the card blue blue
@@ -165,12 +165,40 @@ function Dashboard(props) {
                   classes={{ root: classes.cardHeaderRoot }}
                 ></CardHeader>
                 <CardContent classes={{ root: classes.removePadding }}>
-                  <Box position="relative"  height="450px">
+                  <Box position="relative">
                     <HorizontalStackedBar data={epicBarChartData} />
                   </Box>
                 </CardContent>                
             </Card>
-          </Grid>                 
+          </Grid>
+          <Grid item xs={12} xl={4}>
+            <Card classes={{ root: classes.cardRoot + " " + classes.removePadding }}>
+              <CardHeader subheader={
+                  <Grid container component={Box} alignItems="center" justifyContent="space-between">
+                    <Grid item xs="auto">
+                      <Box component={Typography} variant="h6" letterSpacing=".0625rem" marginBottom=".25rem!important" className={classes.textUppercase} >
+                        <Box component="span" color={theme.palette.gray[600]}>
+                          Epics
+                        </Box>
+                      </Box>
+                      <Box component={Typography} variant="h2" marginBottom="0!important">
+                        <Box component="span" classes={{ root: classes.cardHeaderRoot }}>
+                        Unestimated Stories By Epic
+                        </Box>
+                      </Box>
+                    </Grid>                    
+                  </Grid>
+                  }
+                  classes={{ root: classes.cardHeaderRoot }}
+                >
+              </CardHeader>
+              <CardContent classes={{ root: classes.removePadding }}>
+                <Box position="relative" height="300px">
+                  <PieChart data={epicPieChartData}></PieChart>
+                </Box>
+              </CardContent>
+            </Card>
+          </Grid>
         </Grid>
 
         <Grid container spacing={1} classes={{root: classes.muiGridRoot}}>
@@ -203,38 +231,6 @@ function Dashboard(props) {
             </Card>
           </Grid>
         </Grid>
-
-        <Grid container spacing={1} classes={{root: classes.muiGridRoot}}>          
-          <Grid item xs={12} xl={6}>
-            <Card classes={{ root: classes.cardRoot + " " + classes.removePadding }}>
-              <CardHeader subheader={
-                  <Grid container component={Box} alignItems="center" justifyContent="space-between">
-                    <Grid item xs="auto">
-                      <Box component={Typography} variant="h6" letterSpacing=".0625rem" marginBottom=".25rem!important" className={classes.textUppercase} >
-                        <Box component="span" color={theme.palette.gray[600]}>
-                          Epics
-                        </Box>
-                      </Box>
-                      <Box component={Typography} variant="h2" marginBottom="0!important">
-                        <Box component="span" classes={{ root: classes.cardHeaderRoot }}>
-                        Unestimated Stories By Epic
-                        </Box>
-                      </Box>
-                    </Grid>                    
-                  </Grid>
-                  }
-                  classes={{ root: classes.cardHeaderRoot }}
-                >
-              </CardHeader>
-              <CardContent classes={{ root: classes.removePadding }}>
-                <Box position="relative" height="300px">
-                  <PieChart data={epicPieChartData}></PieChart>
-                </Box>
-              </CardContent>
-            </Card>
-          </Grid>          
-        </Grid>
-
       </Container>
     </>
   );
