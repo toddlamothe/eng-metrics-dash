@@ -62,7 +62,7 @@ module.exports.backlogVelocity = async(event, context, callback) => {
     });
 
     try {
-        const veloSelectStatement = "select end_date, sum(points_done) as total_points, sum(points_estimated) as total_points_estimated from velocity where backlog_id=" + event.pathParameters.backlogId + " and points_done>0 group by end_date order by end_date ASC;"
+        const veloSelectStatement = "select end_date, sum(points_done) as total_points, sum(points_estimated) as total_points_estimated from sprint where backlog_id=" + event.pathParameters.backlogId + " and points_done>0 group by end_date order by end_date ASC;"
         const [sprintRows, sprintFields] = await connection.query(veloSelectStatement);
         var sprintResponseObject = JSON.parse(JSON.stringify(sprintRows));
 
@@ -100,7 +100,7 @@ module.exports.backlogSprints = async (event, context, callback) => {
     });
 
     try {
-        const sprintSelectStatement = "select * from velocity where (points_estimated>0 or points_done > 0) AND backlog_id=" + event.pathParameters.backlogId + " ORDER BY end_date ASC";
+        const sprintSelectStatement = "select * from sprint where (points_estimated>0 or points_done > 0) AND backlog_id=" + event.pathParameters.backlogId + " ORDER BY end_date ASC";
         const [sprintRows, sprintFields] = await connection.query(sprintSelectStatement);
         var sprintResponseObject = JSON.parse(JSON.stringify(sprintRows));
 
@@ -169,6 +169,6 @@ function formatEpicObject(epicObject) {
 }
 
 // module.exports.backlogEpics({pathParameters: { backlogId: 32}}, {}, (error, response) => console.log(response))
-module.exports.backlogEpics({pathParameters: { backlogId: 48}}, {}, (error, response) => console.log(response))
+// module.exports.backlogEpics({pathParameters: { backlogId: 48}}, {}, (error, response) => console.log(response))
 // module.exports.backlogSprints({pathParameters: { backlogId: 23}}, {}, (error, response) => console.log(response))
-//  module.exports.backlogVelocity({pathParameters: { backlogId: 23}}, {}, (error, response) => console.log(response))
+ module.exports.backlogVelocity({pathParameters: { backlogId: 23}}, {}, (error, response) => console.log(response))

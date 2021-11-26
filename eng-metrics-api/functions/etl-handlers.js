@@ -127,7 +127,7 @@ module.exports.etlVelocity = async (event, context, callback) => {
     console.log("Database connected");
 
     // Add any new velocities to the database
-    const [dbSprintVelocities, fields] = await connection.query('SELECT * FROM velocity WHERE backlog_id = ' + event.backlogId);
+    const [dbSprintVelocities, fields] = await connection.query('SELECT * FROM sprint WHERE backlog_id = ' + event.backlogId);
 
     // Create a key/value hash from the recordset
     var dbSprintVelocitiesHash = {};
@@ -143,7 +143,7 @@ module.exports.etlVelocity = async (event, context, callback) => {
         // database, add an insert statement for it
         if (!dbSprintVelocitiesHash[apiSprint.id] && apiSprint.state==='closed') {
             // Sprint is not in the database. Add insert statement
-            insertStatement = "INSERT INTO velocity VALUES (" + 
+            insertStatement = "INSERT INTO sprint VALUES (" + 
                 event.backlogId + ", " + 
                 apiSprint.id + ", " + 
                 "'" + apiSprint.name + "', " + 

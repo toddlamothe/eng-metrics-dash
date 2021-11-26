@@ -133,7 +133,7 @@ function Dashboard(props) {
     <>
       { showSpinner &&
         <div style={{ alignItems: "center", display: "flex", position: "fixed", zIndex:"1", justifyContent: "center", height: "100vh", width: "100vw" }}>
-            <CircularProgress />          
+            <CircularProgress />
         </div>
       }
       <Header backlogData={backlogData} />
@@ -159,7 +159,7 @@ function Dashboard(props) {
                           {props.backlogName + " - Stories by Status"}
                           </Box>
                         </Box>
-                      </Grid>                    
+                      </Grid>
                     </Grid>
                   }
                   classes={{ root: classes.cardHeaderRoot }}
@@ -168,7 +168,7 @@ function Dashboard(props) {
                   <Box position="relative">
                     <HorizontalStackedBar data={epicBarChartData} />
                   </Box>
-                </CardContent>                
+                </CardContent>
             </Card>
           </Grid>
           <Grid item xs={12} xl={4}>
@@ -186,7 +186,7 @@ function Dashboard(props) {
                         Unestimated Stories By Epic
                         </Box>
                       </Box>
-                    </Grid>                    
+                    </Grid>
                   </Grid>
                   }
                   classes={{ root: classes.cardHeaderRoot }}
@@ -217,7 +217,7 @@ function Dashboard(props) {
                       {props.backlogName + " - Points per Sprint"}
                       </Box>
                     </Box>
-                  </Grid>                    
+                  </Grid>
                 </Grid>
                 }
                 classes={{ root: classes.cardHeaderRoot }}
