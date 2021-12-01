@@ -348,7 +348,7 @@ async function epicIssues(event, context, callback) {
         });
 };
 
-module.exports.backlogActiveSprintsWithIssues = async (backlogId) => {
+module.exports.backlogActiveSprintsWithIssues = async (backlogId, callback) => {
     if (!backlogId) {
         const responseMessage = {
             statusCode: 500,
@@ -413,10 +413,8 @@ module.exports.backlogActiveSprintsWithIssues = async (backlogId) => {
         }).catch((error) => {
             console.log(Error(error));
         });
-
-        console.log("activeSprints[x] = ", activeSprints[x]);
     }
-        
+    callback(activeSprints);
 };
 
 // module.exports.backlogActiveSprintsWithIssues(23, () => console.log("end."));
