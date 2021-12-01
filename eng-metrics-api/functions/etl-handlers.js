@@ -104,7 +104,6 @@ module.exports.etlBacklogEpics = async (event, context, callback) => {
 Fetch velocities for the specified backlog and add them to the database
 */
 module.exports.etlVelocity = async (event, context, callback) => {
-    console.log("Begin etl execution");
     if (!event.backlogId) {
         const responseMessage = {
             statusCode: 500,
@@ -143,11 +142,10 @@ module.exports.etlVelocity = async (event, context, callback) => {
         dbSprintVelocitiesHash[dbSprintVelocity.sprint_id] = dbSprintVelocity;
     };
 
-    // Create insert statements for new sprints
+    // Create insert statements for sprints and their velo's
     var insertStatement;
     apiSprintVelocities.map( (apiSprint) => {
-        // If this is a closed sprint and is not in the
-        // database, add an insert statement for it
+        // If this is a closed sprint and is not in the database, add an insert statement for it
         if (!dbSprintVelocitiesHash[apiSprint.id] && apiSprint.state==='closed') {
             // Sprint is not in the database. Add insert statement
             insertStatement = "INSERT INTO sprint VALUES (" + 
@@ -165,12 +163,23 @@ module.exports.etlVelocity = async (event, context, callback) => {
             console.log(insertStatement);
             insertArray.push(insertStatement);
         }
+        // If this is a closed sprint that is already in the database, 
+        // and if the API returns a positive value for estimate/done,
+        // update velo numbers for that sprint
+        else if (dbSprintVelocitiesHash[apiSprint.id] && (apiSprint.estimated>0 || apiSprint.completed>0)) {
+            insertStatement = "UPDATE sprint SET " + 
+                "points_estimated = " + apiSprint.estimated + ", " + 
+                "points_done = " + apiSprint.completed + 
+                " WHERE backlog_id=" + event.backlogId + 
+                " AND sprint_id = " + apiSprint.id
+            console.log(insertStatement);
+            insertArray.push(insertStatement);
+        }
     })
 
     try {
         // Execute insert statements
         var insertRows, insertFields;
-        console.log("Inserting sprints: ", insertArray);
         for(var x=0;x<insertArray.length;x++) {
             [insertRows, insertFields] = await connection.query(insertArray[x]);
         };
@@ -194,8 +203,6 @@ This function does not ETL the sprints themselves, just issues
 for any active sprints
 */
 module.exports.etlActiveSprintIssues = async (event, context, callback) => {
-    console.log("[etlActiveSprintIssues]");
-
     if (!event.backlogId) {
         const responseMessage = {
             statusCode: 500,
@@ -210,15 +217,20 @@ module.exports.etlActiveSprintIssues = async (event, context, callback) => {
 
     // Fetch active sprints and issues
     await helpers.backlogActiveSprintsWithIssues(event.backlogId, (activeSprintsWithIssues) => {
-        apiActiveSprintsWithIssues = activeSprintsWithIssues || [];        
+        apiActiveSprintsWithIssues = activeSprintsWithIssues || [];
+
+        // 1. If the active sprint is not in the database, add it
+
+        // 2. Delete and re-add any issues for the current sprint
+
     });
 
     console.log("helpers apiActiveSprintsWithIssues = ", apiActiveSprintsWithIssues);
 }
 
-module.exports.etlActiveSprintIssues({backlogId : 23}, null, (error, results) => console.log(results));
+// module.exports.etlActiveSprintIssues({backlogId : 23}, null, (error, results) => console.log(results));
 
-// module.exports.etlVelocity({backlogId : 32}, null, (error, results) => console.log(results));
+// module.exports.etlVelocity({backlogId : 23}, null, (error, results) => console.log(results));
 
 // module.exports.etlBacklogEpics({backlogId: 23, backlogName: "Map Search"}, null, (error, response) => {
 //     console.log(response);
