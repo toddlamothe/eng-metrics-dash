@@ -348,6 +348,76 @@ async function epicIssues(event, context, callback) {
         });
 };
 
+module.exports.backlogActiveSprintsWithIssues = async (backlogId, callback) => {
+    if (!backlogId) {
+        const responseMessage = {
+            statusCode: 500,
+            body: "Backlog ID required"
+        };
+        callback(JSON.stringify(responseMessage));
+    }
+
+    var activeSprints = [];
+
+    var backlogActiveSprintsUri = "https://unionstmedia.atlassian.net/rest/agile/1.0/board/" + backlogId + "/sprint?state=active";
+    await fetch(
+        backlogActiveSprintsUri, {
+        method: 'GET',
+        headers: {
+            Authorization: process.env.ATLASSIAN_API_KEY,
+        }
+     })
+    .then(response => {
+        if (!response.ok) {
+            const responseMessage = {
+                statusCode: response.status,
+                body: response.statusText
+            };
+            callback(JSON.stringify(responseMessage));
+        }
+        return response.json()            
+    })
+    .then(data => {            
+        activeSprints = data.values;
+    }).catch((error) => {
+        callback(Error(error));
+    });
+
+    let activeSprint;
+    // For each active sprint, fetch issues and add them to that sprint's object    
+    for ( let x = 0; x < activeSprints.length; x++) {
+        activeSprint = activeSprints[x];
+        console.log(activeSprint.name)
+        activeSprintIssuesUrl = "https://unionstmedia.atlassian.net/rest/agile/1.0/sprint/" + activeSprint.id + "/issue?jql=type%20IN%20%28Story%2C%20%22Tech%20Story%22%2C%20Defect%2C%20Spike%2C%20Bug%29&fields=id,key,customfield_10035,issueType,status,description,created,updated,resolutiondate&maxResults=1000";
+        console.log("activeSprintIssuesUrl = ", activeSprintIssuesUrl);
+        await fetch(
+            activeSprintIssuesUrl, {
+            method: 'GET',
+            headers: {
+                Authorization: process.env.ATLASSIAN_API_KEY,
+            }
+         })
+        .then(response => {
+            if (!response.ok) {
+                const responseMessage = {
+                    statusCode: response.status,
+                    body: response.statusText
+                };
+                console.log(responseMessage);
+            }
+            return response.json()            
+        })
+        .then(data => {            
+            activeSprintIssues = data.issues;
+            activeSprints[x].issues = activeSprintIssues;
+        }).catch((error) => {
+            console.log(Error(error));
+        });
+    }
+    callback(activeSprints);
+};
+
+// module.exports.backlogActiveSprintsWithIssues(23, () => console.log("end."));
 // module.exports.sprintHistory(23, () => console.log("end."));
 // module.exports.sprintVeloHistory(32, () => console.log("end."));
 

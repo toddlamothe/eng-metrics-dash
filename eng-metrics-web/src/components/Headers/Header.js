@@ -91,7 +91,7 @@ const Header = (props) => {
               </Grid>
               <Grid item xl={2} lg={6} xs={12}>
                 <CardStats
-                  subtitle="Stories Unestimated"
+                  subtitle="Unestimated"
                   title={storiesUnestimated}
                   color="bgInfo"
                 />

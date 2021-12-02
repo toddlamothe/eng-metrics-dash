@@ -1,6 +1,9 @@
 import boxShadows from "assets/theme/box-shadow.js";
 
 const componentStyles = (theme) => ({
+  muiGridRoot: {
+    marginBottom : "10px"
+  },
   cardRootBgGradient: {
     padding: "0px !important",    
     background:

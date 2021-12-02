@@ -21,7 +21,7 @@ import { genColor } from 'assets/js/helpers';
 const useStyles = makeStyles(componentStyles);
 
 function Dashboard(props) {
-  const [showSpinner, setShowSpinner] = useState(false);
+  const [showSpinner, setShowSpinner] = useState(true);
   const backlogEpicsUrl = 'https://ha4mv8svsk.execute-api.us-east-1.amazonaws.com/test-tl/backlogs/' + props.backlogId + '/epics';
   const backlogData = useApiRequest(backlogEpicsUrl);
   const [epicBarChartData, setEpicBarChartData] = useState({});
@@ -36,6 +36,7 @@ function Dashboard(props) {
 
   // useEffect to trigger formatting of velocity data fed to the velocity bar chart
   useEffect( () => {
+    setShowSpinner(true);
     var labels = [];
     var datasets = [
       {
@@ -62,6 +63,7 @@ function Dashboard(props) {
     };   
     
     setVelocityBarChartData(chartData);
+    setShowSpinner(false);
 
   }, [backlogVelocityData]);
   
@@ -79,7 +81,7 @@ function Dashboard(props) {
         inProgressValue.push(epic.issuesInProgress);
         toDoValues.push(epic.issuesToDo);
         unestimatedValues.push(epic.issuesUnestimated);
-        epicTotalPointValues.push(epic.totalPoints)
+        // epicTotalPointValues.push(epic.totalPoints)
       })
       
       // Define blank stacked bar chart data set. each element in the datasets array is a stacked block on each bar
@@ -89,7 +91,6 @@ function Dashboard(props) {
         { label: 'Done', data: doneValues, backgroundColor: 'rgb(75, 192, 192)', },
         { label: 'In Progress', data: inProgressValue, backgroundColor: 'rgb(54, 162, 235)', },
         { label: 'To Do', data: toDoValues, backgroundColor: 'rgb(255, 99, 132)',},
-        {label: 'Unestimated', data: unestimatedValues, backgroundColor: 'rgb(100, 100, 100)', },
       ];
 
       // Format backlog data for use in the epics bar chart
@@ -103,7 +104,7 @@ function Dashboard(props) {
         datasets: [
           {
             label: 'Story Points',
-            data: epicTotalPointValues,
+            data: unestimatedValues,
             backgroundColor: [
               'rgba(255, 99, 132, 0.2)','rgba(54, 162, 235, 0.2)','rgba(255, 159, 64, 0.2)','rgba(255, 206, 86, 0.2)','rgba(75, 192, 192, 0.2)','rgba(255, 159, 64, 0.2)','rgba(153, 102, 255, 0.2)','rgba(255, 159, 64, 0.2)','rgba(255, 159, 64, 0.2)',
             ],
@@ -132,19 +133,17 @@ function Dashboard(props) {
     <>
       { showSpinner &&
         <div style={{ alignItems: "center", display: "flex", position: "fixed", zIndex:"1", justifyContent: "center", height: "100vh", width: "100vw" }}>
-            <CircularProgress />          
+            <CircularProgress />
         </div>
       }
       <Header backlogData={backlogData} />
       <Container maxWidth={false} component={Box} marginTop="-6rem">
         {/* Root grid container for dashboard charts */}
-        <Grid container spacing={1}>
+        <Grid container spacing={1} classes={{root: classes.muiGridRoot}}>
           <Grid item xs={12} xl={8} >
             {/* 
               This card fedines a blue box and brings it to the front
               cardRootBgGradient is defined in assets/theme/views/admin/dashboard.js and makes the card blue blue
-
-              <Card classes={{root: classes.cardRoot + " " + classes.cardRootBgGradient,}} >
              */}
             <Card classes={{root: classes.cardRoot + " " + classes.cardRootBgGradient,}} >
               <CardHeader subheader={
@@ -160,16 +159,16 @@ function Dashboard(props) {
                           {props.backlogName + " - Stories by Status"}
                           </Box>
                         </Box>
-                      </Grid>                    
+                      </Grid>
                     </Grid>
                   }
                   classes={{ root: classes.cardHeaderRoot }}
                 ></CardHeader>
                 <CardContent classes={{ root: classes.removePadding }}>
-                  <Box position="relative" >
+                  <Box position="relative">
                     <HorizontalStackedBar data={epicBarChartData} />
                   </Box>
-                </CardContent>                
+                </CardContent>
             </Card>
           </Grid>
           <Grid item xs={12} xl={4}>
@@ -184,24 +183,25 @@ function Dashboard(props) {
                       </Box>
                       <Box component={Typography} variant="h2" marginBottom="0!important">
                         <Box component="span" classes={{ root: classes.cardHeaderRoot }}>
-                        {props.backlogName + " - Stories by Status"}
+                        Unestimated Stories By Epic
                         </Box>
                       </Box>
-                    </Grid>                    
+                    </Grid>
                   </Grid>
                   }
                   classes={{ root: classes.cardHeaderRoot }}
                 >
               </CardHeader>
               <CardContent classes={{ root: classes.removePadding }}>
-                <Box position="relative" height="350px">
+                <Box position="relative" height="300px">
                   <PieChart data={epicPieChartData}></PieChart>
                 </Box>
               </CardContent>
             </Card>
-          </Grid>          
+          </Grid>
         </Grid>
-        <Grid container spacing={1}>
+
+        <Grid container spacing={1} classes={{root: classes.muiGridRoot}}>
           <Grid item xs={12} xl={10} >
           <Card classes={{ root: classes.cardRoot + " " + classes.removePadding }}>
             <CardHeader subheader={
@@ -217,7 +217,7 @@ function Dashboard(props) {
                       {props.backlogName + " - Points per Sprint"}
                       </Box>
                     </Box>
-                  </Grid>                    
+                  </Grid>
                 </Grid>
                 }
                 classes={{ root: classes.cardHeaderRoot }}
