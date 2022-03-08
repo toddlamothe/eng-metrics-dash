@@ -71,6 +71,24 @@ functions:
             ttlInSeconds: 300
             cacheKeyParameters:
               - name: request.path.backlogId    
+  get-releases:
+    handler: functions/release-handlers.getReleases
+    timeout: 20
+    events:
+      - http:
+          path: /releases
+          method: get
+          cors: true
+          private: true
+  put-release:
+    handler: functions/release-handlers.createRelease
+    timeout: 20
+    events:
+      - http:
+          path: /releases
+          method: put
+          cors: true
+          private: true
   etl-backlog-epics:
       handler: functions/etl-handlers.etlBacklogEpics
       timeout: 30
