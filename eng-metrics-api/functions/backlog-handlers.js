@@ -1,7 +1,6 @@
 const mysql = require('mysql2/promise');
 
 module.exports.backlogEpics = async (event, context, callback) => {
-    // Opening and closing a conneciton on every call is probably bad technique
     const connection = await mysql.createConnection( {
         host: 'eng-metrics.cgwxrjuo6oyd.us-east-1.rds.amazonaws.com',
         user: process.env.DB_USER,
@@ -53,7 +52,6 @@ module.exports.backlogEpics = async (event, context, callback) => {
 // Return a list of sprints, combining point totals for sprints that have the same
 // end date, to gain a picture of total work completed by multiple teams during that sprint
 module.exports.backlogVelocity = async(event, context, callback) => {
-    // Opening and closing a conneciton on every call is probably bad technique
     const connection = await mysql.createConnection( {
         host: 'eng-metrics.cgwxrjuo6oyd.us-east-1.rds.amazonaws.com',
         user: process.env.DB_USER,
@@ -91,7 +89,6 @@ module.exports.backlogVelocity = async(event, context, callback) => {
 
 // Return a complete list of backlog sprints and sprint statistics
 module.exports.backlogSprints = async (event, context, callback) => {
-    // Opening and closing a conneciton on every call is probably bad technique
     const connection = await mysql.createConnection( {
         host: 'eng-metrics.cgwxrjuo6oyd.us-east-1.rds.amazonaws.com',
         user: process.env.DB_USER,
