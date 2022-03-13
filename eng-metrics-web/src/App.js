@@ -19,6 +19,7 @@ import {
   Route,
   Link,
 } from "react-router-dom";
+import { useApiGet } from 'hooks/useApiGet';
 
 const drawerWidth = 240;
 
@@ -74,6 +75,10 @@ function DashboardContent() {
     setOpen(!open);
   };
 
+  // Get releases
+  const releasesUrl = "https://ha4mv8svsk.execute-api.us-east-1.amazonaws.com/test-tl/releases";
+  const releases =  useApiGet(releasesUrl);
+
   return (
     <ThemeProvider theme={mdTheme}>
       <Box sx={{ display: 'flex' }}>
@@ -126,11 +131,24 @@ function DashboardContent() {
             <div>
               <Link to="/release-admin">Release Admin</Link>
             </div> 
+            <Divider sx={{ my: 1 }} />
             <div>
-            <Link to="/release-dashboard">Release Dashboard</Link>
-            </div>            
-              {/* <Divider sx={{ my: 1 }} /> */}
-              {/* {secondaryListItems} */}
+              Releases
+            </div>
+            {
+              releases.map( (release) => {
+                return (
+                  <div>
+                    <Link to={{
+                      pathname : "/release-dashboard",
+                      state : {
+                        "release" : release
+                        }
+                      }} >{release.release_name}</Link>
+                  </div>
+                )
+              })
+            }
             </List>
         </Drawer>
         <Box
