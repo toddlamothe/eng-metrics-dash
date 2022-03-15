@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGrid, GridEvents } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import { useApiGet } from '../hooks/useApiGet';
 
 const columns = [
