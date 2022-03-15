@@ -19,15 +19,43 @@ const ReleaseDashboard = (props) => {
         <Toolbar>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             {release.release_name} - Release Dashboard
-          </Typography>  
+          </Typography>
         </Toolbar>
-        <Container maxWidth="lg" sx={{ mt: 1, mb: 1 }}>
-          <Grid container spacing={1}>
-            <Grid item xs={12} md={6} lg={6}>
-              <MetricCard title="sample metric" value="$123.45"></MetricCard>
-            </Grid>
+        <Grid container spacing={1}>
+          <Grid item xs={2} md={2} lg={2}>
+            <MetricCard title="sample metric" value="$123.45"></MetricCard>
           </Grid>
-        </Container>
+          <Grid item xs={2} md={2} lg={2}>
+            <MetricCard title="sample metric" value="$123.45"></MetricCard>
+          </Grid>
+          <Grid item xs={2} md={2} lg={2}>
+            <MetricCard title="sample metric" value="$123.45"></MetricCard>
+          </Grid>
+          <Grid item xs={2} md={2} lg={2}>
+            <MetricCard title="sample metric" value="$123.45"></MetricCard>
+          </Grid>
+          <Grid item xs={2} md={2} lg={2}>
+            <MetricCard title="sample metric" value="$123.45"></MetricCard>
+          </Grid>
+          <Grid item xs={2} md={2} lg={2}>
+            <MetricCard title="sample metric" value="$123.45"></MetricCard>
+          </Grid>
+          <Grid item xs={2} md={2} lg={2}>
+            <MetricCard title="sample metric" value="$123.45"></MetricCard>
+          </Grid>
+          <Grid item xs={2} md={2} lg={2}>
+            <MetricCard title="sample metric" value="$123.45"></MetricCard>
+          </Grid>
+          <Grid item xs={2} md={2} lg={2}>
+            <MetricCard title="sample metric" value="$123.45"></MetricCard>
+          </Grid>
+          <Grid item xs={2} md={2} lg={2}>
+            <MetricCard title="sample metric" value="$123.45"></MetricCard>
+          </Grid>
+          <Grid item xs={2} md={2} lg={2}>
+            <MetricCard title="sample metric" value="$123.45"></MetricCard>
+          </Grid>
+        </Grid>
       </>
     )
   }

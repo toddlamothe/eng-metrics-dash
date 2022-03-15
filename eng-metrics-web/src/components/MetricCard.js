@@ -16,7 +16,7 @@ export default function MetricCard(props) {
             display: 'flex',
             flexDirection: 'column',
             height: 150,
-            width: 200
+            width: 180
           }}
         >
           <Typography component="h2" variant="h6" gutterBottom>
