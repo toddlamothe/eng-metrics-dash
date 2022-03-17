@@ -108,7 +108,7 @@ function DashboardContent() {
               noWrap
               sx={{ flexGrow: 1 }}
             >
-              USM Engineering Metrics Dashboard
+              USM Engineering Metrics
             </Typography>
           </Toolbar>
         </AppBar>
@@ -138,7 +138,7 @@ function DashboardContent() {
             {
               releases.map( (release) => {
                 return (
-                  <div>
+                  <div key={release.uuid}>
                     <Link to={{
                       pathname : "/release-dashboard",
                       state : {

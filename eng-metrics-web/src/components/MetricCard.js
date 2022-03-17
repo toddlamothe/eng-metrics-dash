@@ -1,12 +1,19 @@
 import * as React from 'react';
-import Link from '@mui/material/Link';
-import {Typography, Grid, Paper } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import { useTheme } from "@mui/material/styles";
+import {Typography, Grid, Paper, Box } from '@mui/material';
+import componentStyles from "assets/theme/card-stats";
+
+const useStyles = makeStyles(componentStyles);
 
 function preventDefault(event) {
   event.preventDefault();
 }
 
 export default function MetricCard(props) {
+  const classes = useStyles();
+  const theme = useTheme();
+  
   return (
     <React.Fragment>
       <Grid item xs={12} md={4} lg={3}>
@@ -19,15 +26,25 @@ export default function MetricCard(props) {
             width: 180
           }}
         >
-          <Typography component="h2" variant="h6" gutterBottom>
+          <Box
+            component={Typography}
+            variant="h7"
+            color={theme.palette.grey[600] + "!important"}
+            marginBottom="0!important"
+            marginTop="0!important"
+            className={classes.textUppercase}
+          >
             {props.title}
-          </Typography>
-          <Typography component="p" variant="h4">
+          </Box>
+          <Box
+            component={Typography}
+            variant="h5"
+            fontWeight="600!important"
+            marginBottom="0!important"
+            marginTop="0!important"
+          >
             {props.value}
-          </Typography>
-          <Typography color="text.secondary" sx={{ flex: 1 }}>
-            {props.subtitle}
-          </Typography>       
+          </Box>    
         </Paper>
       </Grid>      
     </React.Fragment>

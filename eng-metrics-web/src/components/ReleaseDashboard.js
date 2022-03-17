@@ -68,7 +68,7 @@ const ReleaseDashboard = () => {
               <MetricCard title="Stories % Complete" value={storiesPercentComplete}></MetricCard>
             </Grid>
             <Grid item xs={2} md={2} lg={2}>
-              <MetricCard title="Total User Stories" value={totalStories}></MetricCard>
+              <MetricCard title="Total Stories" value={totalStories}></MetricCard>
             </Grid>
             <Grid item xs={2} md={2} lg={2}>
               <MetricCard title="Stories Complete" value={storiesComplete}></MetricCard>
