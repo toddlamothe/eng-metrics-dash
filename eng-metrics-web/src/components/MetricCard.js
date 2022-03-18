@@ -16,7 +16,7 @@ export default function MetricCard(props) {
   
   return (
     <React.Fragment>
-      <Grid item xs={12} md={4} lg={3}>
+      <Grid item>
         <Paper
           sx={{
             p: 2,
@@ -28,6 +28,8 @@ export default function MetricCard(props) {
         >
           <Box
             component={Typography}
+            height="3rem"
+            padding="0px"
             variant="h7"
             color={theme.palette.grey[600] + "!important"}
             marginBottom="0!important"
@@ -38,8 +40,9 @@ export default function MetricCard(props) {
           </Box>
           <Box
             component={Typography}
-            variant="h5"
-            fontWeight="600!important"
+            padding="10px"
+            variant="h4"
+            fontWeight="500!important"
             marginBottom="0!important"
             marginTop="0!important"
           >

@@ -1,5 +1,5 @@
 export function formatAsPercent(rawValue) {
-    return parseFloat( (rawValue + 0) * 100 ).toFixed(2);
+    return parseFloat( (rawValue + 0) * 100 ).toFixed(1);
 }
   
 // Return 1 of 10 random colors
