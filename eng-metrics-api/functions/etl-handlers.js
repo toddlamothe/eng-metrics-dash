@@ -2,6 +2,40 @@ const mysql = require('mysql2/promise');
 const helpers = require('./helpers')
 
 /*
+Fetch a list of active releases
+For each active release in the database, ETL the backlogs epics and velocities for that release
+*/
+module.exports.etlActiveReleases = async (event, context, callback) => {
+  console.log("[etlActiveReleases]");
+
+  console.log("Connecting to database...");
+  var connection = await mysql.createConnection( {
+      host: 'eng-metrics.cgwxrjuo6oyd.us-east-1.rds.amazonaws.com',
+      user: process.env.DB_USER,
+      password: process.env.DB_PASS,
+      database: 'eng_metrics',
+      debug: false
+  }); 
+  console.log("Database connected");
+
+  const [activeReleases, fields] = await connection.query('SELECT * FROM `release` WHERE is_active=true;');
+
+  connection.end()
+
+  for (let x=0;x<activeReleases.length;x++) {
+      var activeRelease = activeReleases[x];
+      // console.log("activeReleases[" + x + "] = ", activeReleases[x]);
+      console.log("ETL'ing epics for '" + activeRelease["release_name"] + "' (backlog id " + activeRelease["backlog_id"] + ")");
+      // ETL backlog epics for the specified release
+      await module.exports.etlBacklogEpics({backlogId: activeRelease["backlog_id"], backlogName: activeRelease["release_name"]}, null, (error, response) => {
+          console.log(response);
+      })
+  };
+
+  callback(null, null);
+}
+
+/*
 Fetch epics from the specified backlog tagged with 
 the 'budget-reporting' label and load them into the database
 */
@@ -245,3 +279,7 @@ module.exports.etlActiveSprintIssues = async (event, context, callback) => {
 // })
 
 // module.exports.etlVelocity({backlogId : 48}, null, (error, results) => console.log(results));
+
+module.exports.etlActiveReleases(null, null, (error, response) => {
+    console.log(response);
+});
