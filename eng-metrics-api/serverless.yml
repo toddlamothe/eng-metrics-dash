@@ -96,7 +96,7 @@ functions:
       handler: functions/etl-handlers.etlVelocity
       timeout: 45
   etl-active-releases:
-      hander: functions/etl-handlers.etlActiveReleases
+      handler: functions/etl-handlers.etlActiveReleases
       timeout: 120
       events:
         - schedule: 

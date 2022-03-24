@@ -26,10 +26,9 @@ module.exports.etlActiveReleases = async (event, context, callback) => {
       var activeRelease = activeReleases[x];
       // console.log("activeReleases[" + x + "] = ", activeReleases[x]);
       console.log("ETL'ing epics for '" + activeRelease["release_name"] + "' (backlog id " + activeRelease["backlog_id"] + ")");
-      // ETL backlog epics for the specified release
-      await module.exports.etlBacklogEpics({backlogId: activeRelease["backlog_id"], backlogName: activeRelease["release_name"]}, null, (error, response) => {
-          console.log(response);
-      })
+      // ETL backlog epics and velocities for the specified release
+      await module.exports.etlBacklogEpics({backlogId: activeRelease["backlog_id"], backlogName: activeRelease["release_name"]}, null, (error, response) => console.log(response));
+      await module.exports.etlVelocity({backlogId : activeRelease["backlog_id"]}, null, (error, results) => console.log(results));
   };
 
   callback(null, null);
@@ -280,6 +279,6 @@ module.exports.etlActiveSprintIssues = async (event, context, callback) => {
 
 // module.exports.etlVelocity({backlogId : 48}, null, (error, results) => console.log(results));
 
-module.exports.etlActiveReleases(null, null, (error, response) => {
-    console.log(response);
-});
+// module.exports.etlActiveReleases(null, null, (error, response) => {
+//     console.log(response);
+// });
