@@ -19,18 +19,18 @@ export default function MetricCard(props) {
       <Grid item>
         <Paper
           sx={{
-            p: 2,
+            p: 1,
             display: 'flex',
             flexDirection: 'column',
-            height: 150,
-            width: 180
+            height: 75,
+            width: 145
           }}
         >
           <Box
             component={Typography}
-            height="3rem"
+            height="1rem"
             padding="0px"
-            variant="h7"
+            variant="caption"
             color={theme.palette.grey[600] + "!important"}
             marginBottom="0!important"
             marginTop="0!important"
@@ -41,7 +41,7 @@ export default function MetricCard(props) {
           <Box
             component={Typography}
             padding="10px"
-            variant="h4"
+            variant="h5"
             fontWeight="500!important"
             marginBottom="0!important"
             marginTop="0!important"

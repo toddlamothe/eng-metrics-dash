@@ -66,7 +66,7 @@ const ReleaseDashboard = () => {
           </Toolbar>
           <Grid container spacing={1}>
             <Grid item xs={2} md={2} lg={2}>
-              <MetricCard title="Stories % Complete" value={storiesPercentComplete}></MetricCard>
+              <MetricCard title="Stories % Compl." value={storiesPercentComplete}></MetricCard>
             </Grid>
             <Grid item xs={2} md={2} lg={2}>
               <MetricCard title="Total Stories" value={totalStories}></MetricCard>
@@ -75,7 +75,7 @@ const ReleaseDashboard = () => {
               <MetricCard title="Stories Complete" value={storiesComplete}></MetricCard>
             </Grid>
             <Grid item xs={2} md={2} lg={2}>
-              <MetricCard title="Stories In Progress" value={storiesInProgress}></MetricCard>
+              <MetricCard title="Stories In Prog." value={storiesInProgress}></MetricCard>
             </Grid>
             <Grid item xs={2} md={2} lg={2}>
               <MetricCard title="Stories To Do" value={storiesToDo}></MetricCard>
@@ -84,16 +84,16 @@ const ReleaseDashboard = () => {
               <MetricCard title="Unestimated" value={storiesUnestimated}></MetricCard>
             </Grid>
             <Grid item xs={2} md={2} lg={2}>
-              <MetricCard title="Points % Complete" value={pointsPercentComplete}></MetricCard>
+              <MetricCard title="Points % Compl." value={pointsPercentComplete}></MetricCard>
             </Grid>
             <Grid item xs={2} md={2} lg={2}>
-              <MetricCard title="Total Story Points" value={totalPoints}></MetricCard>
+              <MetricCard title="Total Points" value={totalPoints}></MetricCard>
             </Grid>
             <Grid item xs={2} md={2} lg={2}>
               <MetricCard title="Points Complete" value={pointsComplete}></MetricCard>
             </Grid>
             <Grid item xs={2} md={2} lg={2}>
-              <MetricCard title="Points In Progress" value={pointsInProgress}></MetricCard>
+              <MetricCard title="Points In Prog." value={pointsInProgress}></MetricCard>
             </Grid>
             <Grid item xs={2} md={2} lg={2}>
               <MetricCard title="Points To Do" value={pointsToDo}></MetricCard>
