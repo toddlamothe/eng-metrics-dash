@@ -7,6 +7,7 @@ import Box from "@mui/material/Box";
 import {Toolbar, Typography} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import MetricCard from "./MetricCard";
+import {HorizontalStackedBar} from './charts/HorizontalStackedBar';
 import { useApiGet } from '../hooks/useApiGet';
 import {formatAsPercent} from "assets/helpers/helpers";
 import componentStyles from "assets/theme/release-dashboard";
@@ -98,13 +99,13 @@ const ReleaseDashboard = () => {
               <MetricCard title="Points To Do" value={pointsToDo}></MetricCard>
             </Grid>
           </Grid>
+          <Grid container spacing={1}>            
+            <Grid item xs={12} md={12} lg={12}>
+              <HorizontalStackedBar></HorizontalStackedBar>
+            </Grid>
+          </Grid>
         </Container>    
-      </div>
-
-
-
-
-      
+      </div>      
     </>
   )
 
