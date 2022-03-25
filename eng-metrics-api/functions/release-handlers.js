@@ -103,3 +103,5 @@ module.exports.createRelease = async (event, context, callback) => {
       });	            
   }
 }
+
+// module.exports.getReleases(null, null, (error, response) => console.log(response) );
