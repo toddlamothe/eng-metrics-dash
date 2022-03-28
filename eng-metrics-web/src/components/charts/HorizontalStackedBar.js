@@ -21,39 +21,42 @@ ChartJS.register(
 
 export const options = {
   indexAxis: 'y',
-  elements: {
-    bar: {
-      borderWidth: 2,
+  plugins: {
+    title: {
+      display: true,
+      text: 'Chart.js Bar Chart - Stacked',
     },
   },
   responsive: true,
-  plugins: {
-    legend: {
-      position: 'right',
+  scales: {
+    x: {
+      stacked: true,
     },
-    title: {
-      display: true,
-      text: 'Chart.js Horizontal Bar Chart',
+    y: {
+      stacked: true,
     },
   },
 };
 
-const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
+const labels = ['Epic 1', 'Epic 2', 'Epic 3'];
 
 export const data = {
   labels,
   datasets: [
     {
-      label: 'Dataset 1',
-      data: labels.map(() => 1000),
-      borderColor: 'rgb(255, 99, 132)',
-      backgroundColor: 'rgba(255, 99, 132, 0.5)',
+      label: 'Done',
+      data: labels.map(() => -1000),
+      backgroundColor: 'rgb(255, 99, 132)',
     },
     {
-      label: 'Dataset 2',
-      data: labels.map(() => 450),
-      borderColor: 'rgb(53, 162, 235)',
-      backgroundColor: 'rgba(53, 162, 235, 0.5)',
+      label: 'In Progress',
+      data: [100, 200, 300, 400, 500, 600 , 700],
+      backgroundColor: 'rgb(75, 192, 192)',
+    },
+    {
+      label: 'To Do',
+      data: labels.map(() => 500),
+      backgroundColor: 'rgb(53, 162, 235)',
     },
   ],
 };

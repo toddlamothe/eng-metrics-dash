@@ -100,7 +100,7 @@ const ReleaseDashboard = () => {
             </Grid>
           </Grid>
           <Grid container spacing={1}>            
-            <Grid item xs={12} md={12} lg={12}>
+            <Grid item xs={8} md={8} lg={8}>
               <HorizontalStackedBar></HorizontalStackedBar>
             </Grid>
           </Grid>
