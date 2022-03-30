@@ -205,7 +205,7 @@ const ReleaseDashboard = () => {
                   ></CardHeader>
                   <CardContent classes={{ root: classes.removePadding }}>
                     <Box position="relative">
-                      <PieChart/>
+                    <PieChart data={epicPieChartData}/>
                     </Box>
                   </CardContent>                  
               </Card>
