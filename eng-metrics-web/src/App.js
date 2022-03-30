@@ -67,7 +67,23 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
   }),
 );
 
-const mdTheme = createTheme();
+const mdTheme = createTheme({
+  typography: {
+    // In Chinese and Japanese the characters are usually larger,
+    // so a smaller fontsize may be appropriate.
+    fontSize: 10,
+  },
+});
+
+mdTheme.typography.h3 = {
+  fontSize: '1.2rem',
+  '@media (min-width:600px)': {
+    fontSize: '1.5rem',
+  },
+  [mdTheme.breakpoints.up('md')]: {
+    fontSize: '2.0rem',
+  },
+};
 
 function DashboardContent() {
   const [open, setOpen] = React.useState(true);
@@ -103,7 +119,7 @@ function DashboardContent() {
             </IconButton>
             <Typography
               component="h1"
-              variant="h6"
+              variant="h4"
               color="inherit"
               noWrap
               sx={{ flexGrow: 1 }}

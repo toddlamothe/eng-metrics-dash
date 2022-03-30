@@ -10,6 +10,11 @@ import {
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 
+const defaultBarChartData = {
+  labels: [],
+  datasets: []
+};
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -23,8 +28,7 @@ export const options = {
   indexAxis: 'y',
   plugins: {
     title: {
-      display: true,
-      text: 'Chart.js Bar Chart - Stacked',
+      display: false,
     },
   },
   responsive: true,
@@ -38,29 +42,9 @@ export const options = {
   },
 };
 
-const labels = ['Epic 1', 'Epic 2', 'Epic 3'];
+export function HorizontalStackedBar(props) {
+  const chartData = (props.data && props.data.labels) ? props.data : defaultBarChartData;
+  const chartOptions = props.options ? props.options : options;
 
-export const data = {
-  labels,
-  datasets: [
-    {
-      label: 'Done',
-      data: labels.map(() => -1000),
-      backgroundColor: 'rgb(255, 99, 132)',
-    },
-    {
-      label: 'In Progress',
-      data: [100, 200, 300, 400, 500, 600 , 700],
-      backgroundColor: 'rgb(75, 192, 192)',
-    },
-    {
-      label: 'To Do',
-      data: labels.map(() => 500),
-      backgroundColor: 'rgb(53, 162, 235)',
-    },
-  ],
-};
-
-export function HorizontalStackedBar() {
-  return <Bar options={options} data={data} />;
+  return <Bar options={chartOptions} data={chartData} />;
 }
