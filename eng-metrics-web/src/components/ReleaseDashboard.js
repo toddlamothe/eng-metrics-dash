@@ -12,6 +12,7 @@ import {Toolbar, Typography} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import MetricCard from "./MetricCard";
 import {HorizontalStackedBar} from './charts/HorizontalStackedBar';
+import {PieChart} from './charts/Pie';
 import { useApiGet } from '../hooks/useApiGet';
 import {formatAsPercent} from "assets/helpers/helpers";
 import componentStyles from "assets/theme/release-dashboard";
@@ -181,7 +182,32 @@ const ReleaseDashboard = () => {
                     <Box position="relative">
                       <HorizontalStackedBar data={epicBarChartData}></HorizontalStackedBar>
                     </Box>
-                  </CardContent>
+                  </CardContent>                  
+              </Card>
+            </Grid>
+            <Grid item xs={4} md={4} lg={4}>
+              <Card classes={{root: classes.cardRoot + " " + classes.cardRootBgGradient,}} >
+                <CardHeader subheader={
+                      <Grid container component={Box} alignItems="center" justifyContent="space-between">
+                        <Grid item xs="auto">
+                          <Box component={Typography} variant="h6" letterSpacing=".0625rem" marginBottom=".25rem!important" className={classes.textUppercase} >
+                            <Box component="span">
+                              Epics
+                            </Box>
+                          </Box>
+                          <Box component={Typography} variant="h4" marginBottom="0!important">
+                            <Box component="span">Unestimated stories by epic</Box>
+                          </Box>
+                        </Grid>
+                      </Grid>
+                    }
+                    classes={{ root: classes.cardHeaderRoot }}
+                  ></CardHeader>
+                  <CardContent classes={{ root: classes.removePadding }}>
+                    <Box position="relative">
+                      <PieChart/>
+                    </Box>
+                  </CardContent>                  
               </Card>
             </Grid>
           </Grid>
