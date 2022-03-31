@@ -24,7 +24,7 @@ ChartJS.register(
   Legend
 );
 
-export const options = {
+export const defaultChartOptions = {
   indexAxis: 'y',
   plugins: {
     title: {
@@ -44,7 +44,7 @@ export const options = {
 
 export function HorizontalStackedBar(props) {
   const chartData = (props.data && props.data.labels) ? props.data : defaultBarChartData;
-  const chartOptions = props.options ? props.options : options;
+  const chartOptions = props.options ? props.options : defaultChartOptions;
 
   return <Bar options={chartOptions} data={chartData} />;
 }

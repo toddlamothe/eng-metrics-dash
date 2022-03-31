@@ -13,8 +13,9 @@ import makeStyles from '@mui/styles/makeStyles';
 import MetricCard from "./MetricCard";
 import {HorizontalStackedBar} from './charts/HorizontalStackedBar';
 import {PieChart} from './charts/Pie';
+import {BarLineCombo} from "./charts/BarLineCombo";
 import { useApiGet } from '../hooks/useApiGet';
-import {formatAsPercent} from "assets/helpers/helpers";
+import {formatAsPercent, genColor} from "assets/helpers/helpers";
 import componentStyles from "assets/theme/release-dashboard";
 
 
@@ -37,6 +38,9 @@ const ReleaseDashboard = () => {
   let location = useLocation();
   const backlogEpicsUrl = 'https://ha4mv8svsk.execute-api.us-east-1.amazonaws.com/test-tl/backlogs/' + location.state.release.backlog_id + '/epics';
   const backlogData = useApiGet(backlogEpicsUrl);
+  const backlogVelocitiesUrl = 'https://ha4mv8svsk.execute-api.us-east-1.amazonaws.com/test-tl/backlogs/' + location.state.release.backlog_id + '/velocity';
+  const backlogVelocityData = useApiGet(backlogVelocitiesUrl);  
+  const [velocityBarChartData, setVelocityBarChartData] = useState({});
 
   const useStyles = makeStyles(componentStyles);
 
@@ -105,6 +109,37 @@ const ReleaseDashboard = () => {
     }
 
   }, [backlogData]);
+
+  // useEffect to trigger formatting of velocity data fed to the velocity bar chart
+  useEffect( () => {
+    var labels = [];
+    var datasets = [
+      {
+        label: 'Points Completed', data: [], backgroundColor: [], borderColor: [], borderWidth: 1,
+      },
+      {
+        label: 'Points Estimated', data: [], borderWidth: 1,  
+      }
+    ];
+
+    backlogVelocityData.forEach( (sprint) => {
+      labels.push(sprint.end_date);
+      const barColors = genColor();
+      datasets[0].data.push(sprint.total_points);
+      datasets[0].backgroundColor.push(barColors.backgroundColor);
+      datasets[0].borderColor.push(barColors.borderColor);
+      datasets[1].data.push(sprint.total_points_estimated);
+      datasets[1].borderColor = 'rgba(75, 192, 192, 0.5)';
+    });
+
+    const chartData = {
+      labels: labels,
+      datasets: datasets
+    };   
+    
+    setVelocityBarChartData(chartData);
+
+  }, [backlogVelocityData]);
 
   const classes = useStyles();
   const release = location.state.release;
@@ -206,6 +241,33 @@ const ReleaseDashboard = () => {
                   <CardContent classes={{ root: classes.removePadding }}>
                     <Box position="relative">
                     <PieChart data={epicPieChartData}/>
+                    </Box>
+                  </CardContent>                  
+              </Card>
+            </Grid>
+            <Grid item xs={12} md={12} lg={12}>
+              <Card classes={{root: classes.cardRoot + " " + classes.cardRootBgGradient,}} >
+                <CardHeader subheader={
+                      <Grid container component={Box} alignItems="center" justifyContent="space-between">
+                        <Grid item xs="auto">
+                          <Box component={Typography} variant="h6" letterSpacing=".0625rem" marginBottom=".25rem!important" className={classes.textUppercase} >
+                            <Box component="span">
+                              Velocity
+                            </Box>
+                          </Box>
+                          <Box component={Typography} variant="h4" marginBottom="0!important">
+                            <Box component="span">
+                            {release.release_name + " - Points per Sprint"}
+                            </Box>
+                          </Box>
+                        </Grid>
+                      </Grid>
+                    }
+                    classes={{ root: classes.cardHeaderRoot }}
+                  ></CardHeader>
+                  <CardContent classes={{ root: classes.removePadding }}>
+                    <Box position="relative">
+                      <BarLineCombo data={velocityBarChartData} />
                     </Box>
                   </CardContent>                  
               </Card>
