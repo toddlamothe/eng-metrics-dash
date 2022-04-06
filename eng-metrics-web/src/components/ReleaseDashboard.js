@@ -125,11 +125,18 @@ const ReleaseDashboard = () => {
     backlogVelocityData.forEach( (sprint) => {
       labels.push(sprint.end_date);
       const barColors = genColor();
-      datasets[0].data.push(sprint.total_points);
-      datasets[0].backgroundColor.push(barColors.backgroundColor);
-      datasets[0].borderColor.push(barColors.borderColor);
-      datasets[1].data.push(sprint.total_points_estimated);
-      datasets[1].borderColor = 'rgba(75, 192, 192, 0.5)';
+      datasets[0].type = "bar";
+      datasets[0].label = "Dataset 2";
+      datasets[0].backgroundColor = "rgb(75, 192, 192)";
+      datasets[0].borderColor = "white";
+      datasets[0].data.push(Number(sprint.total_points));
+
+      datasets[1].type = "line";
+      datasets[1].label = "Dataset 1";
+      datasets[1].borderColor = "rgb(255, 99, 132)";
+      datasets[1].borderWidth = 2;
+      datasets[1].fill = false;
+      datasets[1].data.push(Number(sprint.total_points_estimated));
     });
 
     const chartData = {
