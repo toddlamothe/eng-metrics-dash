@@ -126,13 +126,13 @@ const ReleaseDashboard = () => {
       labels.push(sprint.end_date);
       const barColors = genColor();
       datasets[0].type = "bar";
-      datasets[0].label = "Dataset 2";
+      datasets[0].label = "Points Completed";
       datasets[0].backgroundColor = "rgb(75, 192, 192)";
       datasets[0].borderColor = "white";
       datasets[0].data.push(Number(sprint.total_points));
 
       datasets[1].type = "line";
-      datasets[1].label = "Dataset 1";
+      datasets[1].label = "Points Estimated";
       datasets[1].borderColor = "rgb(255, 99, 132)";
       datasets[1].borderWidth = 2;
       datasets[1].fill = false;
