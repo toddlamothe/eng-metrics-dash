@@ -116,26 +116,29 @@ const ReleaseDashboard = () => {
     var datasets = [
       {
         label: 'Points Completed', data: [], backgroundColor: [], borderColor: [], borderWidth: 1,
+        type: "bar",
+        label: "Points Completed",
+        backgroundColor: "rgb(75, 192, 192)",
+        borderColor: "white",
+        borderWidth: 2,
+        data: [],
       },
       {
         label: 'Points Estimated', data: [], borderWidth: 1,  
+        type: "line",
+        label: "Points Estimated",
+        borderColor: "rgb(255, 99, 132)",
+        borderWidth: 2,
+        fill: false,  
+        data: [],
       }
     ];
 
     backlogVelocityData.forEach( (sprint) => {
       labels.push(sprint.end_date);
       const barColors = genColor();
-      datasets[0].type = "bar";
-      datasets[0].label = "Points Completed";
-      datasets[0].backgroundColor = "rgb(75, 192, 192)";
-      datasets[0].borderColor = "white";
       datasets[0].data.push(Number(sprint.total_points));
 
-      datasets[1].type = "line";
-      datasets[1].label = "Points Estimated";
-      datasets[1].borderColor = "rgb(255, 99, 132)";
-      datasets[1].borderWidth = 2;
-      datasets[1].fill = false;
       datasets[1].data.push(Number(sprint.total_points_estimated));
     });
 
