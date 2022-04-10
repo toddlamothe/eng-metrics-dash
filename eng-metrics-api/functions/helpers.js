@@ -115,9 +115,9 @@ module.exports.sprintHistory = async (backlogId, callback) => {
                 backlogSprints = backlogSprints.concat(data.values);
             }            
         })
-        callback(backlogSprints);
     }
-}
+    callback(backlogSprints);
+  }
 
 module.exports.backlogEpics = async (event, context, callback) => {
     if (!event.pathParameters.backlogId) {

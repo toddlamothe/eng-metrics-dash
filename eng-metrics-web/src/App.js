@@ -19,6 +19,7 @@ import {
   Route,
   Link,
 } from "react-router-dom";
+import { useApiGet } from 'hooks/useApiGet';
 
 const drawerWidth = 240;
 
@@ -66,13 +67,33 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
   }),
 );
 
-const mdTheme = createTheme();
+const mdTheme = createTheme({
+  typography: {
+    // In Chinese and Japanese the characters are usually larger,
+    // so a smaller fontsize may be appropriate.
+    fontSize: 10,
+  },
+});
+
+mdTheme.typography.h3 = {
+  fontSize: '1.2rem',
+  '@media (min-width:600px)': {
+    fontSize: '1.5rem',
+  },
+  [mdTheme.breakpoints.up('md')]: {
+    fontSize: '2.0rem',
+  },
+};
 
 function DashboardContent() {
   const [open, setOpen] = React.useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
   };
+
+  // Get releases
+  const releasesUrl = "https://ha4mv8svsk.execute-api.us-east-1.amazonaws.com/test-tl/releases";
+  const releases =  useApiGet(releasesUrl);
 
   return (
     <ThemeProvider theme={mdTheme}>
@@ -98,12 +119,12 @@ function DashboardContent() {
             </IconButton>
             <Typography
               component="h1"
-              variant="h6"
+              variant="h4"
               color="inherit"
               noWrap
               sx={{ flexGrow: 1 }}
             >
-              USM Engineering Metrics Dashboard
+              USM Engineering Metrics
             </Typography>
           </Toolbar>
         </AppBar>
@@ -126,11 +147,24 @@ function DashboardContent() {
             <div>
               <Link to="/release-admin">Release Admin</Link>
             </div> 
+            <Divider sx={{ my: 1 }} />
             <div>
-            <Link to="/release-dashboard">Release Dashboard</Link>
-            </div>            
-              {/* <Divider sx={{ my: 1 }} /> */}
-              {/* {secondaryListItems} */}
+              Releases
+            </div>
+            {
+              releases.map( (release) => {
+                return (
+                  <div key={release.uuid}>
+                    <Link to={{
+                      pathname : "/release-dashboard",
+                      state : {
+                        "release" : release
+                        }
+                      }} >{release.release_name}</Link>
+                  </div>
+                )
+              })
+            }
             </List>
         </Drawer>
         <Box
