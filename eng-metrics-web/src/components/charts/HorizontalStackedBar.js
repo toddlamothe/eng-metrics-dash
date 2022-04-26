@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -8,21 +8,18 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-import { Bar } from 'react-chartjs-2';
+import { 
+  Bar,
+  getDatasetAtEvent,
+  getElementAtEvent,
+  getElementsAtEvent
+} from 'react-chartjs-2';
 
 const defaultBarChartData = {
   labels: [],
   datasets: []
 };
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
-);
 
 export const defaultChartOptions = {
   indexAxis: 'y',
@@ -45,6 +42,28 @@ export const defaultChartOptions = {
 export function HorizontalStackedBar(props) {
   const chartData = (props.data && props.data.labels) ? props.data : defaultBarChartData;
   const chartOptions = props.options ? props.options : defaultChartOptions;
+  const chartRef = useRef();
 
-  return <Bar options={chartOptions} data={chartData} />;
+  const onClick = (event) => {
+    // console.log("getDatasetAtEvent : ");
+    const dataSetAtEvent = getDatasetAtEvent(chartRef.current, event);
+    console.log("dataSetAtEvent = ", dataSetAtEvent);
+    console.log("dataSetAtEvent[0].datasetIndex = ", dataSetAtEvent[0].datasetIndex);
+    console.log("getElementAtEvent(chartRef.current, event) = ", getElementAtEvent(chartRef.current, event));
+    
+    // console.log(getDatasetAtEvent(chartRef.current, event));
+    // console.log("getElementAtEvent : ");
+    // console.log(getElementAtEvent(chartRef.current, event));
+    // console.log("getElementsAtEvent : ");
+    // console.log(getElementsAtEvent(chartRef.current, event));
+  }
+
+  return (
+    <Bar 
+      ref={chartRef}
+      options={chartOptions} 
+      data={chartData}
+      onClick={onClick}
+    />
+  );
 }

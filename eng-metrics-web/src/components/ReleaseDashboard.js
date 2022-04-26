@@ -135,7 +135,7 @@ const ReleaseDashboard = () => {
     ];
 
     backlogVelocityData.forEach( (sprint) => {
-      labels.push(sprint.end_date);
+      labels.push(sprint.name);
       const barColors = genColor();
       datasets[0].data.push(Number(sprint.total_points));
 
