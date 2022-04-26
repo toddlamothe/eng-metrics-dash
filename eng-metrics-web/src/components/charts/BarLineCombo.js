@@ -28,5 +28,10 @@ const defaultChartData = {
 
 export function BarLineCombo(props) {
   const chartData = (props.data && props.data.labels && props.data.labels.length > 0) ? props.data : defaultChartData;
-  return <Chart type='bar' data={chartData} />;
+  return (
+    <Chart 
+      type='bar' 
+      data={chartData}       
+    />
+  );
 }
