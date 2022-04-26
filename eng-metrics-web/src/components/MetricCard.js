@@ -22,7 +22,7 @@ export default function MetricCard(props) {
             p: 1,
             display: 'flex',
             flexDirection: 'column',
-            height: 90,
+            height: 70,
             width: 160
           }}
         >
@@ -41,7 +41,7 @@ export default function MetricCard(props) {
           <Box
             component={Typography}
             padding="5px"
-            variant="h3"
+            variant="h4"
             fontWeight="500!important"
             marginBottom="0!important"
             marginTop="0!important"
