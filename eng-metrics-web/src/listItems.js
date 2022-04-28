@@ -48,20 +48,19 @@ export const generateSecondaryListItems = (releases) => {
       </ListSubheader>
       {
         releases.map( (release) => {
-          console.log("hello!");
           return(
             <React.Fragment>
               <ListItemButton>
-                <ListItemIcon>
-                  <NewReleases />
-                </ListItemIcon>
-                  <div key={release.uuid}>
+                  <div key={release.uuid}>                    
                       <Link to={{
                         pathname : "/release-dashboard",
                         state : {
                           "release" : release
                           }
-                        }} >{release.release_name}</Link>
+                        }} >
+                          <ListItemIcon><NewReleases /></ListItemIcon>
+                          {release.release_name}
+                        </Link>
                     </div>                
               </ListItemButton>    
             </React.Fragment>
