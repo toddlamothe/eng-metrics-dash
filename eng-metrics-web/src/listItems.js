@@ -4,21 +4,24 @@ import ListItem from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import ListSubheader from '@mui/material/ListSubheader';
-import AssignmentIcon from '@mui/icons-material/Assignment';
-import Link from '@mui/material/Link';
+import SettingsIcon from '@mui/icons-material/Settings';
+import NewReleases from '@mui/icons-material/NewReleases';
+import {
+  Switch,
+  Route,
+  Link,
+} from "react-router-dom";
 
-// To Do: Replace this list with a dynamically-generated list of backlogs. Original dashboard example can be found at
-// https://github.com/mui/material-ui/blob/master/docs/data/material/getting-started/templates/dashboard/Dashboard.js
 export const mainListItems = (
     <React.Fragment>        
         <ListSubheader component="div" inset>
-          Releases
+          Main Menu
         </ListSubheader>    
         <ListItemButton>
           <ListItemIcon>
-            <AssignmentIcon />
-          </ListItemIcon>
-          <ListItemText primary="Test Release" />
+            <SettingsIcon />
+          </ListItemIcon>          
+          <Link to="/release-admin">Release Admin</Link>
         </ListItemButton>        
       </React.Fragment>
 );
@@ -30,9 +33,42 @@ export const secondaryListItems = (
     </ListSubheader>
     <ListItemButton>
       <ListItemIcon>
-        <AssignmentIcon />
+        <NewReleases />
       </ListItemIcon>
       <ListItemText primary="Manage Releases" />
     </ListItemButton>    
   </React.Fragment>
 );
+
+export const generateSecondaryListItems = (releases) => {
+  return(
+    <div>
+      <ListSubheader component="div" inset>
+        Releases
+      </ListSubheader>
+      {
+        releases.map( (release) => {
+          console.log("hello!");
+          return(
+            <React.Fragment>
+              <ListItemButton>
+                <ListItemIcon>
+                  <NewReleases />
+                </ListItemIcon>
+                  <div key={release.uuid}>
+                      <Link to={{
+                        pathname : "/release-dashboard",
+                        state : {
+                          "release" : release
+                          }
+                        }} >{release.release_name}</Link>
+                    </div>                
+              </ListItemButton>    
+            </React.Fragment>
+          )
+        })      
+      }      
+    </div>
+
+  );
+}
