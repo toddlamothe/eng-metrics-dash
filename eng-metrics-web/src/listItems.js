@@ -15,9 +15,6 @@ import {
 
 export const mainListItems = (
     <React.Fragment>        
-        <ListSubheader component="div" inset>
-        <Typography variant="h6" component="div">Main Menu</Typography>
-        </ListSubheader>
         <ListItemButton>
           <Link to="/release-admin">            
             <Typography variant="h6" component="div">
