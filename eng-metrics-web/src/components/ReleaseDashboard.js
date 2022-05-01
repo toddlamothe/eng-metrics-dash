@@ -62,13 +62,12 @@ const ReleaseDashboard = () => {
         return epic.name
       });
       var doneValues = [], inProgressValue = [], toDoValues = [], unestimatedValues = [];
-      var epicTotalPointValues = [];
+      
       backlogData.epics.forEach( (epic) => {
         doneValues.push(epic.issuesDone);
         inProgressValue.push(epic.issuesInProgress);
         toDoValues.push(epic.issuesToDo);
         unestimatedValues.push(epic.issuesUnestimated);
-        // epicTotalPointValues.push(epic.totalPoints)
       })
       
       // Define blank stacked bar chart data set. each element in the datasets array is a stacked block on each bar
@@ -151,6 +150,11 @@ const ReleaseDashboard = () => {
 
   }, [backlogVelocityData]);
 
+  const onEpicClicked = (epicIndex) => {
+    console.log("epicId clicked = ", epicIndex);
+    const clickedEpic = backlogData.epics[epicIndex];
+  }
+
   const classes = useStyles();
   const release = location.state.release;
 
@@ -224,7 +228,7 @@ const ReleaseDashboard = () => {
                   ></CardHeader>
                   <CardContent classes={{ root: classes.removePadding }}>
                     <Box position="relative">
-                      <HorizontalStackedBar data={epicBarChartData}></HorizontalStackedBar>
+                      <HorizontalStackedBar data={epicBarChartData} onEpicClicked={onEpicClicked}></HorizontalStackedBar>
                     </Box>
                   </CardContent>                  
               </Card>
