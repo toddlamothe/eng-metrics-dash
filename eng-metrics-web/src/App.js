@@ -11,7 +11,7 @@ import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-// import { mainListItems, secondaryListItems } from './listItems';
+import { mainListItems, secondaryListItems, generateSecondaryListItems } from './listItems';
 import ReleaseAdmin from './components/ReleaseAdmin';
 import ReleaseDashboard from './components/ReleaseDashboard';
 import {
@@ -143,28 +143,11 @@ function DashboardContent() {
           </Toolbar>
           <Divider />
           <List component="nav">
-            {/* {mainListItems} */}
-            <div>
-              <Link to="/release-admin">Release Admin</Link>
-            </div> 
+            {mainListItems}
             <Divider sx={{ my: 1 }} />
             <div>
-              Releases
-            </div>
-            {
-              releases.map( (release) => {
-                return (
-                  <div key={release.uuid}>
-                    <Link to={{
-                      pathname : "/release-dashboard",
-                      state : {
-                        "release" : release
-                        }
-                      }} >{release.release_name}</Link>
-                  </div>
-                )
-              })
-            }
+              {generateSecondaryListItems(releases)}
+            </div>            
             </List>
         </Drawer>
         <Box

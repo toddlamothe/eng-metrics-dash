@@ -28,7 +28,7 @@ const ReleaseAdmin = (props) => {
   return (
       <>
         <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          <Typography variant="h4" component="div" sx={{ flexGrow: 1 }}>
             Release Admin
           </Typography>  
           <Button color="inherit" onClick={() => { showReleaseDetailComponent() }}>New Release</Button>
@@ -37,9 +37,7 @@ const ReleaseAdmin = (props) => {
           <Grid container spacing={1}>
             {/* List Releases */}
             <Grid item xs={12} md={6} lg={6}>
-              <ReleaseList
-                onReleaseSelected={onReleaseSelected}
-              />
+              <ReleaseList onReleaseSelected={onReleaseSelected} />
             </Grid>
             {/* Release Details */}
             {
