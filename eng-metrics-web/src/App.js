@@ -14,7 +14,6 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { mainListItems, secondaryListItems, generateSecondaryListItems } from './listItems';
 import ReleaseAdmin from './components/ReleaseAdmin';
 import ReleaseDashboard from './components/ReleaseDashboard';
-import { TestComponent } from 'components/TestComponent';
 import {
   Switch,
   Route,
@@ -164,8 +163,8 @@ function DashboardContent() {
             flexGrow: 1,
             height: '100vh',
             overflow: 'auto',
-          }}
-        >
+            }}
+          >
           <Toolbar />
 
           <Switch>
@@ -174,9 +173,6 @@ function DashboardContent() {
             </Route>
             <Route path="/release-dashboard">
               <ReleaseDashboard />
-            </Route>
-            <Route path="/test-component">
-              <TestComponent />
             </Route>
         </Switch>
         </Box>

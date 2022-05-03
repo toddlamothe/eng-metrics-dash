@@ -7,6 +7,7 @@ import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardHeader from '@mui/material/CardHeader';
+import Button from '@mui/material/Button';
 import {Toolbar, Typography} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import MetricCard from "./MetricCard";
@@ -152,23 +153,21 @@ const ReleaseDashboard = () => {
   const onEpicClicked = (epicIndex) => {
     console.log("epicId clicked = ", epicIndex);
     const clickedEpic = backlogData.epics[epicIndex];
+    if (clickedEpic.id) {
+      setEpicStoriesModalEpicId(clickedEpic.id);  
+      setModalIsOpen(true);
+    }
   }
 
-
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const epicStoriesModalStyle = {
-    content: {
-      top: '50%',
-      left: '50%',
-      right: 'auto',
-      bottom: 'auto',
-      marginRight: '-50%',
-      transform: 'translate(-50%, -50%)',
-    },
-  };
+  const [epicStoriesModalEpicId, setEpicStoriesModalEpicId] = useState();
 
-  const openModal = () => {
+  const openEpicStoriesModal = () => {
     setModalIsOpen(true);
+  }
+
+  const closeEpicStoriesModal = () => {
+    setModalIsOpen(false);
   }
 
   const classes = useStyles();
@@ -232,7 +231,7 @@ const ReleaseDashboard = () => {
                               Epics
                             </Box>
                           </Box>
-                          <Box component={Typography} variant="h4" marginBottom="0!important">
+                          <Box component={Typography} variant="h5" marginBottom="0!important">
                             <Box component="span">
                               {release.release_name + " - Stories by Status"}
                             </Box>
@@ -259,7 +258,7 @@ const ReleaseDashboard = () => {
                               Epics
                             </Box>
                           </Box>
-                          <Box component={Typography} variant="h4" marginBottom="0!important">
+                          <Box component={Typography} variant="h5" marginBottom="0!important">
                             <Box component="span">Unestimated stories by epic</Box>
                           </Box>
                         </Grid>
@@ -298,23 +297,23 @@ const ReleaseDashboard = () => {
                     <Box position="relative">
                       <BarLineCombo data={velocityBarChartData} />
                     </Box>
-                  </CardContent>                  
+                  </CardContent>
               </Card>
             </Grid>
           </Grid>
-
-          <button onClick={openModal}>Open Modal</button>
           <Modal
             isOpen={modalIsOpen}
+            onRequestClose={closeEpicStoriesModal}
             contentLabel="Example Modal"
-            style={epicStoriesModalStyle}
+            className="Modal"
+            overlayClassName="Overlay"
           >
-            <UserStoryTable EpicId="123" />
-          </Modal>
+           <UserStoryTable epicId={epicStoriesModalEpicId} />
+           <Button variant="contained" onClick={closeEpicStoriesModal}>Close</Button>
+          </Modal>          
         </Container>    
     </>
   )
-
 };
 
 export default ReleaseDashboard;

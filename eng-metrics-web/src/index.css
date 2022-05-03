@@ -11,3 +11,32 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.Modal {
+  position: relative;
+  background-color: papayawhip;
+  margin-top: 10%;
+  margin-left: 20%;
+  margin-right: 15%;
+  width: 75%;  
+}
+
+.Overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rebeccapurple;
+}
+
+/* const epicStoriesModalStyle = {
+  content: {
+    top: '55%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+  },
+}; */
