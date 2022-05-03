@@ -7,17 +7,17 @@ import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardHeader from '@mui/material/CardHeader';
-
 import {Toolbar, Typography} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import MetricCard from "./MetricCard";
 import {HorizontalStackedBar} from './charts/HorizontalStackedBar';
 import {PieChart} from './charts/Pie';
 import {BarLineCombo} from "./charts/BarLineCombo";
+import { UserStoryTable } from "./charts/UserStoryTable";
 import { useApiGet } from '../hooks/useApiGet';
 import {formatAsPercent, genColor} from "assets/helpers/helpers";
 import componentStyles from "assets/theme/release-dashboard";
-
+import Modal from 'react-modal';
 
 const ReleaseDashboard = () => {
   var [storiesPercentComplete, setStoriesPercentComplete] = useState('');
@@ -33,7 +33,6 @@ const ReleaseDashboard = () => {
   var [pointsToDo, setPointsToDo] = useState('');
   var [epicBarChartData, setEpicBarChartData] = useState({});
   var [epicPieChartData, setEpicPieChartData] = useState({});
-
 
   let location = useLocation();
   const backlogEpicsUrl = 'https://ha4mv8svsk.execute-api.us-east-1.amazonaws.com/test-tl/backlogs/' + location.state.release.backlog_id + '/epics';
@@ -155,6 +154,23 @@ const ReleaseDashboard = () => {
     const clickedEpic = backlogData.epics[epicIndex];
   }
 
+
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const epicStoriesModalStyle = {
+    content: {
+      top: '50%',
+      left: '50%',
+      right: 'auto',
+      bottom: 'auto',
+      marginRight: '-50%',
+      transform: 'translate(-50%, -50%)',
+    },
+  };
+
+  const openModal = () => {
+    setModalIsOpen(true);
+  }
+
   const classes = useStyles();
   const release = location.state.release;
 
@@ -253,7 +269,7 @@ const ReleaseDashboard = () => {
                   ></CardHeader>
                   <CardContent classes={{ root: classes.removePadding }}>
                     <Box position="relative">
-                    <PieChart data={epicPieChartData}/>
+                      <PieChart data={epicPieChartData}/>
                     </Box>
                   </CardContent>                  
               </Card>
@@ -286,8 +302,16 @@ const ReleaseDashboard = () => {
               </Card>
             </Grid>
           </Grid>
+
+          <button onClick={openModal}>Open Modal</button>
+          <Modal
+            isOpen={modalIsOpen}
+            contentLabel="Example Modal"
+            style={epicStoriesModalStyle}
+          >
+            <UserStoryTable EpicId="123" />
+          </Modal>
         </Container>    
-    
     </>
   )
 

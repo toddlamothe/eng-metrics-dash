@@ -14,6 +14,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { mainListItems, secondaryListItems, generateSecondaryListItems } from './listItems';
 import ReleaseAdmin from './components/ReleaseAdmin';
 import ReleaseDashboard from './components/ReleaseDashboard';
+import { TestComponent } from 'components/TestComponent';
 import {
   Switch,
   Route,
@@ -68,10 +69,18 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 );
 
 const mdTheme = createTheme({
-  typography: {
-    // In Chinese and Japanese the characters are usually larger,
-    // so a smaller fontsize may be appropriate.
-    fontSize: 10,
+  components: {
+    MuiCssBaseline: {
+      styleOverrides: `
+        h4 {
+          color: green;
+        },
+        tiny {
+          color:orange
+        }
+      `,
+      
+    },
   },
 });
 
@@ -117,13 +126,7 @@ function DashboardContent() {
             >
               <MenuIcon />
             </IconButton>
-            <Typography
-              component="h1"
-              variant="h4"
-              color="inherit"
-              noWrap
-              sx={{ flexGrow: 1 }}
-            >
+            <Typography component="h1" variant="h4" color="inherit" noWrap sx={{ flexGrow: 1 }} >
               USM Engineering Metrics
             </Typography>
           </Toolbar>
@@ -170,6 +173,9 @@ function DashboardContent() {
             </Route>
             <Route path="/release-dashboard">
               <ReleaseDashboard />
+            </Route>
+            <Route path="/test-component">
+              <TestComponent />
             </Route>
         </Switch>
         </Box>

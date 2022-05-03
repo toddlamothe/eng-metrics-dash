@@ -5,24 +5,28 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import ListSubheader from '@mui/material/ListSubheader';
 import SettingsIcon from '@mui/icons-material/Settings';
-import NewReleases from '@mui/icons-material/NewReleases';
+import StackedBarChart from '@mui/icons-material/StackedBarChart';
 import Typography from '@mui/material/Typography';
-import {
-  Switch,
-  Route,
-  Link,
-} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export const mainListItems = (
-    <React.Fragment>        
+    <React.Fragment>
         <ListItemButton>
-          <Link to="/release-admin">            
+          <Link to="/release-admin">
             <Typography variant="h6" component="div">
               <ListItemIcon><SettingsIcon /></ListItemIcon>
               Release Admin
             </Typography>
           </Link>
-        </ListItemButton>        
+        </ListItemButton>
+        <ListItemButton>
+          <Link to="/test-component">
+              <Typography variant="h6" component="div">
+                <ListItemIcon><SettingsIcon /></ListItemIcon>
+                Test Component
+              </Typography>
+            </Link>
+        </ListItemButton>
       </React.Fragment>
 );
 
@@ -35,27 +39,29 @@ export const generateSecondaryListItems = (releases) => {
       {
         releases.map( (release) => {
           return(
-            <React.Fragment>
-              <ListItemButton>
-                  <div key={release.uuid}>                    
-                      <Link to={{
-                        pathname : "/release-dashboard",
-                        state : {
-                          "release" : release
-                          }
-                        }} >                          
-                          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                            <ListItemIcon><NewReleases /></ListItemIcon>
-                            {release.release_name}
-                          </Typography>                          
-                        </Link>
-                    </div>                
-              </ListItemButton>    
+            <React.Fragment key={release.uuid}>
+              <ListItemButton>                  
+                <Link to={{
+                  pathname : "/release-dashboard",
+                  state : {
+                    "release" : release
+                    }
+                  }} >
+                    <Typography 
+                      component="h1"
+                      variant="h6"
+                      color="inherit"
+                      noWrap
+                      sx={{ flexGrow: 1 }}>
+                        <ListItemIcon><StackedBarChart /></ListItemIcon>
+                        {release.release_name}
+                    </Typography>                    
+                </Link>
+              </ListItemButton>
             </React.Fragment>
           )
-        })      
-      }      
+        })
+      }
     </div>
-
   );
 }
