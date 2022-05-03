@@ -7,6 +7,8 @@ export function UserStoryTable(props) {
   return (
     <div>
       Epic ID: {props.epicId}
+      <br />
+      Epic Name: {props.epicName}
       <br></br>
       I'm baby succulents umami banjo, bicycle rights activated charcoal pabst retro chillwave prism yuccie intelligentsia cornhole tofu actually. Slow-carb kickstarter occupy, asymmetrical coloring book bushwick tbh tousled chillwave. Authentic literally woke fingerstache aesthetic fixie put a bird on it butcher yes plz. Pork belly kickstarter quinoa humblebrag prism pinterest mustache post-ironic brunch normcore, roof party health goth selfies.
 

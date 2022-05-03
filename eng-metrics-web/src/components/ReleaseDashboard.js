@@ -154,13 +154,15 @@ const ReleaseDashboard = () => {
     console.log("epicId clicked = ", epicIndex);
     const clickedEpic = backlogData.epics[epicIndex];
     if (clickedEpic.id) {
-      setEpicStoriesModalEpicId(clickedEpic.id);  
+      setEpicStoriesModalEpicId(clickedEpic.id);
+      setEpicStoriesModalEpicName(clickedEpic.name)
       setModalIsOpen(true);
     }
   }
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [epicStoriesModalEpicId, setEpicStoriesModalEpicId] = useState();
+  const [epicStoriesModalEpicName, setEpicStoriesModalEpicName] = useState();
 
   const openEpicStoriesModal = () => {
     setModalIsOpen(true);
@@ -305,10 +307,10 @@ const ReleaseDashboard = () => {
             isOpen={modalIsOpen}
             onRequestClose={closeEpicStoriesModal}
             contentLabel="Example Modal"
-            className="Modal"
-            overlayClassName="Overlay"
+            className="ReactModal__Content"
+            overlayClassName="ReactModal__Overlay"
           >
-           <UserStoryTable epicId={epicStoriesModalEpicId} />
+           <UserStoryTable epicId={epicStoriesModalEpicId} epicName={epicStoriesModalEpicName} />
            <Button variant="contained" onClick={closeEpicStoriesModal}>Close</Button>
           </Modal>          
         </Container>    
