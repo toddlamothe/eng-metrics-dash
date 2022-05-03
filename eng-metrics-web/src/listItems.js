@@ -1,67 +1,45 @@
 import * as React from 'react';
 import ListItemButton from '@mui/material/ListItemButton';
-import ListItem from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import ListSubheader from '@mui/material/ListSubheader';
-import SettingsIcon from '@mui/icons-material/Settings';
-import StackedBarChart from '@mui/icons-material/StackedBarChart';
-import Typography from '@mui/material/Typography';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import BarChartIcon from '@mui/icons-material/BarChart';
 import { Link } from "react-router-dom";
 
 export const mainListItems = (
-    <React.Fragment>
-        <ListItemButton>
-          <Link to="/release-admin">
-            <Typography variant="h6" component="div">
-              <ListItemIcon><SettingsIcon /></ListItemIcon>
-              Release Admin
-            </Typography>
-          </Link>
-        </ListItemButton>
-        <ListItemButton>
-          <Link to="/test-component">
-              <Typography variant="h6" component="div">
-                <ListItemIcon><SettingsIcon /></ListItemIcon>
-                Test Component
-              </Typography>
-            </Link>
-        </ListItemButton>
-      </React.Fragment>
+  <React.Fragment>    
+      <ListItemButton component={Link} to="/release-admin">
+        <ListItemIcon>
+          <DashboardIcon />
+        </ListItemIcon>
+        <ListItemText primary="Release Admin" />
+      </ListItemButton>
+  </React.Fragment>
 );
 
-export const generateSecondaryListItems = (releases) => {
-  return(
-    <div>
-      <ListSubheader component="div" inset>
-        <Typography variant="h6" component="div">Releases</Typography>
-      </ListSubheader>
-      {
+export const generateSecondaryListItems = (releases) => (
+  <React.Fragment>
+    <ListSubheader component="div" inset>
+      Releases
+    </ListSubheader>    {
         releases.map( (release) => {
           return(
-            <React.Fragment key={release.uuid}>
-              <ListItemButton>                  
-                <Link to={{
-                  pathname : "/release-dashboard",
-                  state : {
-                    "release" : release
-                    }
-                  }} >
-                    <Typography 
-                      component="h1"
-                      variant="h6"
-                      color="inherit"
-                      noWrap
-                      sx={{ flexGrow: 1 }}>
-                        <ListItemIcon><StackedBarChart /></ListItemIcon>
-                        {release.release_name}
-                    </Typography>                    
-                </Link>
-              </ListItemButton>
-            </React.Fragment>
+            <Link to={{
+              pathname : "/release-dashboard",
+              state : {
+                "release" : release
+                }
+              }} >
+                <ListItemButton>
+                  <ListItemIcon>
+                    <BarChartIcon />
+                  </ListItemIcon>
+                  <ListItemText primary={release.release_name} />
+                </ListItemButton>
+            </Link>
           )
         })
       }
-    </div>
-  );
-}
+  </React.Fragment>
+);
