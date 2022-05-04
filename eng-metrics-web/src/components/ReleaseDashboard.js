@@ -183,7 +183,7 @@ const ReleaseDashboard = () => {
             classes={{ root: classes.containerRoot }}
         >
           <Toolbar>
-            <Typography variant="h4" component="div" sx={{ flexGrow: 1 }}>
+            <Typography variant="h5" component="div" sx={{ flexGrow: 1 }}>
               {release.release_name} - Release Dashboard
             </Typography>
           </Toolbar>

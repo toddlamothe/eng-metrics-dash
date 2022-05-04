@@ -126,7 +126,7 @@ function DashboardContent() {
             >
               <MenuIcon />
             </IconButton>
-            <Typography component="h1" variant="h4" color="inherit" noWrap sx={{ flexGrow: 1 }} >
+            <Typography component="h1" variant="h5" color="inherit" noWrap sx={{ flexGrow: 1 }} >
               USM Engineering Metrics
             </Typography>
           </Toolbar>
