@@ -7,17 +7,18 @@ import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardHeader from '@mui/material/CardHeader';
-
+import Button from '@mui/material/Button';
 import {Toolbar, Typography} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import MetricCard from "./MetricCard";
 import {HorizontalStackedBar} from './charts/HorizontalStackedBar';
 import {PieChart} from './charts/Pie';
 import {BarLineCombo} from "./charts/BarLineCombo";
+import { UserStoryTable } from "./charts/UserStoryTable";
 import { useApiGet } from '../hooks/useApiGet';
 import {formatAsPercent, genColor} from "assets/helpers/helpers";
 import componentStyles from "assets/theme/release-dashboard";
-
+import Modal from 'react-modal';
 
 const ReleaseDashboard = () => {
   var [storiesPercentComplete, setStoriesPercentComplete] = useState('');
@@ -33,7 +34,6 @@ const ReleaseDashboard = () => {
   var [pointsToDo, setPointsToDo] = useState('');
   var [epicBarChartData, setEpicBarChartData] = useState({});
   var [epicPieChartData, setEpicPieChartData] = useState({});
-
 
   let location = useLocation();
   const backlogEpicsUrl = 'https://ha4mv8svsk.execute-api.us-east-1.amazonaws.com/test-tl/backlogs/' + location.state.release.backlog_id + '/epics';
@@ -62,13 +62,12 @@ const ReleaseDashboard = () => {
         return epic.name
       });
       var doneValues = [], inProgressValue = [], toDoValues = [], unestimatedValues = [];
-      var epicTotalPointValues = [];
+      
       backlogData.epics.forEach( (epic) => {
         doneValues.push(epic.issuesDone);
         inProgressValue.push(epic.issuesInProgress);
         toDoValues.push(epic.issuesToDo);
         unestimatedValues.push(epic.issuesUnestimated);
-        // epicTotalPointValues.push(epic.totalPoints)
       })
       
       // Define blank stacked bar chart data set. each element in the datasets array is a stacked block on each bar
@@ -151,6 +150,28 @@ const ReleaseDashboard = () => {
 
   }, [backlogVelocityData]);
 
+  const onEpicClicked = (epicIndex) => {
+    console.log("epicId clicked = ", epicIndex);
+    const clickedEpic = backlogData.epics[epicIndex];
+    if (clickedEpic.id) {
+      setEpicStoriesModalEpicId(clickedEpic.id);
+      setEpicStoriesModalEpicName(clickedEpic.name)
+      setModalIsOpen(true);
+    }
+  }
+
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [epicStoriesModalEpicId, setEpicStoriesModalEpicId] = useState();
+  const [epicStoriesModalEpicName, setEpicStoriesModalEpicName] = useState();
+
+  const openEpicStoriesModal = () => {
+    setModalIsOpen(true);
+  }
+
+  const closeEpicStoriesModal = () => {
+    setModalIsOpen(false);
+  }
+
   const classes = useStyles();
   const release = location.state.release;
 
@@ -162,7 +183,7 @@ const ReleaseDashboard = () => {
             classes={{ root: classes.containerRoot }}
         >
           <Toolbar>
-            <Typography variant="h4" component="div" sx={{ flexGrow: 1 }}>
+            <Typography variant="h5" component="div" sx={{ flexGrow: 1 }}>
               {release.release_name} - Release Dashboard
             </Typography>
           </Toolbar>
@@ -212,7 +233,7 @@ const ReleaseDashboard = () => {
                               Epics
                             </Box>
                           </Box>
-                          <Box component={Typography} variant="h4" marginBottom="0!important">
+                          <Box component={Typography} variant="h5" marginBottom="0!important">
                             <Box component="span">
                               {release.release_name + " - Stories by Status"}
                             </Box>
@@ -224,7 +245,7 @@ const ReleaseDashboard = () => {
                   ></CardHeader>
                   <CardContent classes={{ root: classes.removePadding }}>
                     <Box position="relative">
-                      <HorizontalStackedBar data={epicBarChartData}></HorizontalStackedBar>
+                      <HorizontalStackedBar data={epicBarChartData} onEpicClicked={onEpicClicked}></HorizontalStackedBar>
                     </Box>
                   </CardContent>                  
               </Card>
@@ -239,7 +260,7 @@ const ReleaseDashboard = () => {
                               Epics
                             </Box>
                           </Box>
-                          <Box component={Typography} variant="h4" marginBottom="0!important">
+                          <Box component={Typography} variant="h5" marginBottom="0!important">
                             <Box component="span">Unestimated stories by epic</Box>
                           </Box>
                         </Grid>
@@ -249,7 +270,7 @@ const ReleaseDashboard = () => {
                   ></CardHeader>
                   <CardContent classes={{ root: classes.removePadding }}>
                     <Box position="relative">
-                    <PieChart data={epicPieChartData}/>
+                      <PieChart data={epicPieChartData}/>
                     </Box>
                   </CardContent>                  
               </Card>
@@ -278,15 +299,23 @@ const ReleaseDashboard = () => {
                     <Box position="relative">
                       <BarLineCombo data={velocityBarChartData} />
                     </Box>
-                  </CardContent>                  
+                  </CardContent>
               </Card>
             </Grid>
           </Grid>
+          <Modal
+            isOpen={modalIsOpen}
+            onRequestClose={closeEpicStoriesModal}
+            contentLabel="Example Modal"
+            className="ReactModal__Content"
+            overlayClassName="ReactModal__Overlay"
+          >
+           <UserStoryTable epicId={epicStoriesModalEpicId} epicName={epicStoriesModalEpicName} />
+           <Button variant="contained" onClick={closeEpicStoriesModal}>Close</Button>
+          </Modal>          
         </Container>    
-    
     </>
   )
-
 };
 
 export default ReleaseDashboard;
