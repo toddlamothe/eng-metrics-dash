@@ -80,6 +80,20 @@ functions:
           method: get
           cors: true
           private: true
+  get-epic-stories:
+    handler: functions/epic-handlers.epicStories
+    timeout: 20
+    events:
+      - http:
+          path: /epics/{epicId}/stories
+          method: get
+          cors: true
+          private: true
+          caching:
+            enabled: true
+            ttlInSeconds: 300
+            cacheKeyParameters:
+              - name: request.path.epicId
   put-release:
     handler: functions/release-handlers.createRelease
     timeout: 20

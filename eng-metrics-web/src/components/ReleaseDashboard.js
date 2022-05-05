@@ -150,19 +150,18 @@ const ReleaseDashboard = () => {
 
   }, [backlogVelocityData]);
 
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [epicStoriesModalEpic, setEpicStoriesModalEpic] = useState({});
+
   const onEpicClicked = (epicIndex) => {
     console.log("epicId clicked = ", epicIndex);
     const clickedEpic = backlogData.epics[epicIndex];
     if (clickedEpic.id) {
-      setEpicStoriesModalEpicId(clickedEpic.id);
-      setEpicStoriesModalEpicName(clickedEpic.name)
+      console.log("clickedEpic = ", clickedEpic);
+      setEpicStoriesModalEpic(clickedEpic);
       setModalIsOpen(true);
     }
   }
-
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [epicStoriesModalEpicId, setEpicStoriesModalEpicId] = useState();
-  const [epicStoriesModalEpicName, setEpicStoriesModalEpicName] = useState();
 
   const openEpicStoriesModal = () => {
     setModalIsOpen(true);
@@ -178,9 +177,9 @@ const ReleaseDashboard = () => {
   return (
     <>
         <Container
-            maxWidth={false}
-            component={Box}
-            classes={{ root: classes.containerRoot }}
+          maxWidth={false}
+          component={Box}
+          classes={{ root: classes.containerRoot }}
         >
           <Toolbar>
             <Typography variant="h5" component="div" sx={{ flexGrow: 1 }}>
@@ -310,7 +309,7 @@ const ReleaseDashboard = () => {
             className="ReactModal__Content"
             overlayClassName="ReactModal__Overlay"
           >
-           <UserStoryTable epicId={epicStoriesModalEpicId} epicName={epicStoriesModalEpicName} />
+           <UserStoryTable epicId={epicStoriesModalEpic.id} epicKey={epicStoriesModalEpic.key} epicName={epicStoriesModalEpic.name} />
            <Button variant="contained" onClick={closeEpicStoriesModal}>Close</Button>
           </Modal>          
         </Container>    
