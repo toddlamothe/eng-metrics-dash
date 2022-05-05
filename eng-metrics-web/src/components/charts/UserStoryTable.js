@@ -15,7 +15,7 @@ export function UserStoryTable(props) {
       >
         <Toolbar>
           <Typography variant="h5" component="div" sx={{ flexGrow: 1 }}>
-            {props.epicName}
+            {props.epicKey} - {props.epicName}
           </Typography>
         </Toolbar>
         <Grid container spacing={1}>
