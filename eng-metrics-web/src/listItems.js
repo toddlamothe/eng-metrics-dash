@@ -25,7 +25,7 @@ export const generateSecondaryListItems = (releases) => (
     </ListSubheader>    {
         releases.map( (release) => {
           return(
-            <Link to={{
+            <Link key={release.uuid} to={{
               pathname : "/release-dashboard",
               state : {
                 "release" : release

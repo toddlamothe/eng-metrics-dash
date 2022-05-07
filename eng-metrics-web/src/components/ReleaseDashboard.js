@@ -154,10 +154,8 @@ const ReleaseDashboard = () => {
   const [epicStoriesModalEpic, setEpicStoriesModalEpic] = useState({});
 
   const onEpicClicked = (epicIndex) => {
-    console.log("epicId clicked = ", epicIndex);
     const clickedEpic = backlogData.epics[epicIndex];
     if (clickedEpic.id) {
-      console.log("clickedEpic = ", clickedEpic);
       setEpicStoriesModalEpic(clickedEpic);
       setModalIsOpen(true);
     }
@@ -308,6 +306,7 @@ const ReleaseDashboard = () => {
             contentLabel="Example Modal"
             className="ReactModal__Content"
             overlayClassName="ReactModal__Overlay"
+            ariaHideApp={false}
           >
            <UserStoryTable epicId={epicStoriesModalEpic.id} epicKey={epicStoriesModalEpic.key} epicName={epicStoriesModalEpic.name} />
            <Button variant="contained" onClick={closeEpicStoriesModal}>Close</Button>

@@ -165,7 +165,6 @@ const ReleaseDetails = (props) => {
                       setReleaseName(value)
                       }
                     }
-
                 />
               </Grid>
   
