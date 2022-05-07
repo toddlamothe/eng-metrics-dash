@@ -9,7 +9,9 @@ import { DataGrid } from '@mui/x-data-grid';
 
 const dataGridColumns = [
   { field: 'id', headerName: 'id', hide: true },
-  { field: 'summary', headerName: 'Summary', width: 200 },
+  { field: 'summary', headerName: 'Summary', width: 500,  },
+  { field: 'status', headerName: 'Status', width: 200 },
+  { field: 'story_points', headerName: 'Points', width: 200 },
 ];
 
 
@@ -29,13 +31,15 @@ export function UserStoryTable(props) {
   var dataGridRows = [];
   if (epicStoriesData.issues) {
     dataGridRows = epicStoriesData.issues.map( (issue) => {
+      
       return {
         id: issue.id,
-        summary: issue.fields ? issue.fields.summary : "Summary not found"
+        summary: issue.fields ? issue.fields.summary : "Summary not found",
+        status: issue.fields.status ? issue.fields.status.name : "Status not found",
+        story_points: issue.fields.customfield_10035 ? issue.fields.customfield_10035 : null
       }
     });
-    console.log("dataGridRows = ", dataGridRows);
-    }
+  }
 
   return (
       <Container
@@ -53,7 +57,7 @@ export function UserStoryTable(props) {
               rows={dataGridRows}
               columns={dataGridColumns}
               pageSize={10}
-              rowsPerPageOptions={[5]}
+              rowsPerPageOptions={[10]}
             />
           </Grid>
         </Grid>
