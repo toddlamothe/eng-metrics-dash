@@ -68,31 +68,6 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 );
 
 const mdTheme = createTheme();
-// const mdTheme = createTheme({
-//   components: {
-//     MuiCssBaseline: {
-//       styleOverrides: `
-//         h4 {
-//           color: green;
-//         },
-//         tiny {
-//           color:orange
-//         }
-//       `,
-      
-//     },
-//   },
-// });
-
-// mdTheme.typography.h3 = {
-//   fontSize: '1.2rem',
-//   '@media (min-width:600px)': {
-//     fontSize: '1.5rem',
-//   },
-//   [mdTheme.breakpoints.up('md')]: {
-//     fontSize: '2.0rem',
-//   },
-// };
 
 function DashboardContent() {
   const [open, setOpen] = React.useState(true);
