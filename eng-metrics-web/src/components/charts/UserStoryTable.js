@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import '../../index.css';
 import Container from "@mui/material/Container";
 import {Toolbar, Typography} from '@mui/material';
@@ -24,14 +24,6 @@ export function UserStoryTable(props) {
   let [showSpinner, setShowSpinner] = useState(true);
   let [color, setColor] = useState("#36D7B7");
 
-  if (!props.epicKey) {
-    return (
-      <>
-        Error: epicKey not provided
-      </>
-    )
-  }
-
   var dataGridRows = [];
   if (epicStoriesData.issues) {
     dataGridRows = epicStoriesData.issues.map( (issue) => {
@@ -43,11 +35,23 @@ export function UserStoryTable(props) {
         status: issue.fields.status ? issue.fields.status.name : "Status not found",
         story_points: issue.fields.customfield_10035 ? issue.fields.customfield_10035 : null
       }
-    });
+    });    
   }
+
+  useEffect( () => {
+    console.log("useEffect");
+    setShowSpinner(true);
+    setShowSpinner(false);
+  }, [])
+ 
 
   return (
     <>
+      { showSpinner &&      
+        <div className='spinner-style'>
+          <CircularProgress />
+        </div>
+      }    
       <Container
         maxWidth={false}
         component={Box}
@@ -68,11 +72,6 @@ export function UserStoryTable(props) {
           </Grid>
         </Grid>
       </Container>
-      { showSpinner &&
-        <div style={{ alignItems: "center", display: "flex", position: "fixed", zIndex:"10", justifyContent: "center", height: "100vh", width: "100vw" }}>
-          <CircularProgress />
-        </div>
-      }
-    </>    
+    </>
   );
 }
