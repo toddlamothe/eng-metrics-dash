@@ -14,13 +14,13 @@ import MetricCard from "./MetricCard";
 import {HorizontalStackedBar} from './charts/HorizontalStackedBar';
 import {PieChart} from './charts/Pie';
 import {BarLineCombo} from "./charts/BarLineCombo";
-import { UserStoryTable } from "./charts/UserStoryTable";
+import UserStoryTable from "./charts/UserStoryTable";
 import { useApiGet } from '../hooks/useApiGet';
 import {formatAsPercent, genColor} from "assets/helpers/helpers";
 import componentStyles from "assets/theme/release-dashboard";
 import Modal from 'react-modal';
 
-const ReleaseDashboard = () => {
+const ReleaseDashboard = (props) => {
   var [storiesPercentComplete, setStoriesPercentComplete] = useState('');
   var [totalStories, setTotalStories] = useState('');
   var [storiesComplete, setStoriesComplete] = useState('');
@@ -156,10 +156,13 @@ const ReleaseDashboard = () => {
   const onEpicClicked = (epicIndex) => {
     const clickedEpic = backlogData.epics[epicIndex];
     if (clickedEpic.id) {
-      setEpicStoriesModalEpic(clickedEpic);
-      setModalIsOpen(true);
+      setEpicStoriesModalEpic(clickedEpic);      
     }
   }
+
+  useEffect( () => {
+    setModalIsOpen(true);
+  }, [epicStoriesModalEpic])
 
   const openEpicStoriesModal = () => {
     setModalIsOpen(true);
@@ -171,6 +174,12 @@ const ReleaseDashboard = () => {
 
   const classes = useStyles();
   const release = location.state.release;
+
+  const epicStoriesTable = () => {
+    return (
+      <UserStoryTable epicId={epicStoriesModalEpic.id} epicKey={epicStoriesModalEpic.key} epicName={epicStoriesModalEpic.name} />
+    )
+  }
 
   return (
     <>
@@ -300,18 +309,18 @@ const ReleaseDashboard = () => {
               </Card>
             </Grid>
           </Grid>
-          <Modal
-            isOpen={modalIsOpen}
-            onRequestClose={closeEpicStoriesModal}
-            contentLabel="Example Modal"
-            className="ReactModal__Content"
-            overlayClassName="ReactModal__Overlay"
-            ariaHideApp={false}
-          >
-           <UserStoryTable epicId={epicStoriesModalEpic.id} epicKey={epicStoriesModalEpic.key} epicName={epicStoriesModalEpic.name} />
-           <Button variant="contained" onClick={closeEpicStoriesModal}>Close</Button>
-          </Modal>          
-        </Container>    
+        </Container>
+        <Modal
+          isOpen={modalIsOpen}
+          onRequestClose={closeEpicStoriesModal}
+          contentLabel="Example Modal"
+          className="ReactModal__Content"
+          overlayClassName="ReactModal__Overlay"
+          ariaHideApp={false}
+        >
+          <UserStoryTable epicId={epicStoriesModalEpic.id} epicKey={epicStoriesModalEpic.key} epicName={epicStoriesModalEpic.name} />
+          <Button variant="contained" onClick={closeEpicStoriesModal}>Close</Button>
+        </Modal>
     </>
   )
 };
