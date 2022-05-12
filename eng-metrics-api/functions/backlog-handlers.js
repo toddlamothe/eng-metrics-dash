@@ -60,7 +60,8 @@ module.exports.backlogVelocity = async(event, context, callback) => {
     });
 
     try {
-        const veloSelectStatement = "select name, end_date, sum(points_done) as total_points, sum(points_estimated) as total_points_estimated from sprint where backlog_id=" + event.pathParameters.backlogId + " group by end_date order by end_date ASC;"
+        // Only fetch backlog velocity from January 2021 forward
+        const veloSelectStatement = "select name, end_date, sum(points_done) as total_points, sum(points_estimated) as total_points_estimated from sprint where start_date >= '2021-01-01' and backlog_id=" + event.pathParameters.backlogId + " group by end_date order by end_date ASC;"
         const [sprintRows, sprintFields] = await connection.query(veloSelectStatement);
         var sprintResponseObject = JSON.parse(JSON.stringify(sprintRows));
 
