@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState, useEffect } from "react";
+import { useEffect, useRef } from "react";
 import '../../index.css';
 import Container from "@mui/material/Container";
 import {Toolbar, Typography} from '@mui/material';
@@ -16,13 +16,12 @@ const dataGridColumns = [
   { field: 'status', headerName: 'Status', width: 200 },
   { field: 'story_points', headerName: 'Points', width: 200 },
 ];
-export function UserStoryTable(props) {
+
+function UserStoryTable(props) {
+  let showSpinner = useRef(true);
 
   const epicStoriesUri = 'https://ha4mv8svsk.execute-api.us-east-1.amazonaws.com/test-tl/epics/' + props.epicKey + '/stories';
   const epicStoriesData = useApiGet(epicStoriesUri);
-
-  let [showSpinner, setShowSpinner] = useState(true);
-  let [color, setColor] = useState("#36D7B7");
 
   var dataGridRows = [];
   if (epicStoriesData.issues) {
@@ -39,15 +38,12 @@ export function UserStoryTable(props) {
   }
 
   useEffect( () => {
-    console.log("useEffect");
-    setShowSpinner(true);
-    setShowSpinner(false);
-  }, [])
- 
+    showSpinner.current = false;
+  }, [epicStoriesData])
 
   return (
     <>
-      { showSpinner &&      
+      { showSpinner.current &&      
         <div className='spinner-style'>
           <CircularProgress />
         </div>
@@ -75,3 +71,7 @@ export function UserStoryTable(props) {
     </>
   );
 }
+
+// Memoize the component so it doesn't re-render if the parent 
+// re-renders but user story table props don't change
+export default React.memo(UserStoryTable);
