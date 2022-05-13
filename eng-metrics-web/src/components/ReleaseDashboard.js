@@ -134,7 +134,7 @@ const ReleaseDashboard = (props) => {
     ];
 
     backlogVelocityData.forEach( (sprint) => {
-      labels.push(sprint.name);
+      labels.push(sprint.end_date.substring(0,10));
       const barColors = genColor();
       datasets[0].data.push(Number(sprint.total_points));
 
@@ -161,7 +161,10 @@ const ReleaseDashboard = (props) => {
   }
 
   useEffect( () => {
-    setModalIsOpen(true);
+    // Only show the epic stories modal if an epic has been selected
+    if (epicStoriesModalEpic.id) {
+      setModalIsOpen(true);
+    }
   }, [epicStoriesModalEpic])
 
   const openEpicStoriesModal = () => {
