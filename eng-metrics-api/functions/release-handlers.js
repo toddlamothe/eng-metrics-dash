@@ -37,7 +37,7 @@ module.exports.getReleases = async(event, context, callback) => {
   }  
 }
 
-module.exports.createRelease = async (event, context, callback) => {
+module.exports.putRelease = async (event, context, callback) => {
   const body = JSON.parse(event.body);
   // Validate input parameters
   if (! (
@@ -66,18 +66,34 @@ module.exports.createRelease = async (event, context, callback) => {
       database: 'eng_metrics'
   });
 
-  // Insert new release
+  var releaseSqlStatement;
+
+  // Build insert or update statement
+  if (!body.releaseId) {
+    // Create new release
+    releaseSqlStatement = "insert into `release` (uuid, is_active, backlog_id, release_name, release_description, epic_tag, created_dttm) values (" +
+      "UUID(), " +
+      "True, " +
+      body.backlogId + ", " +
+      "'" + body.releaseName + "', " +
+      "'" + body.releaseDescription + "', " +
+      "'" + body.epicTag + "', " +
+      "now()" +
+      ");";
+  } else {
+    // Update release
+    releaseSqlStatement = "update `release` set " +
+      "is_active=True, " +
+      "backlog_id=" + body.backlogId + ", " +
+      "release_name = '" + body.releaseName + "', " +
+      "release_description='" + body.releaseDescription + "', " +
+      "epic_tag='" + body.epicTag + "' " +
+      "WHERE uuid='" + body.releaseId + "';";
+  }
+
+  // Insert or update release
   try {
-      const newReleaseInsertStatement = "insert into `release` (uuid, is_active, backlog_id, release_name, release_description, epic_tag, created_dttm) values (" +
-        "UUID(), " +
-        "True, " +
-        body.backlogId + ", " +
-        "'" + body.releaseName + "', " +
-        "'" + body.releaseDescription + "', " +
-        "'" + body.epicTag + "', " +
-        "now()" +
-        ");";
-      const [newReleaseRows, newReleaseFields] = await connection.query(newReleaseInsertStatement);
+      const [newReleaseRows, newReleaseFields] = await connection.query(releaseSqlStatement);
 
       const responseMessage = {
           "isBase64Encoded": false,

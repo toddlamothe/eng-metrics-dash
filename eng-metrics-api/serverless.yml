@@ -95,7 +95,7 @@ functions:
             cacheKeyParameters:
               - name: request.path.epicId
   put-release:
-    handler: functions/release-handlers.createRelease
+    handler: functions/release-handlers.putRelease
     timeout: 20
     events:
       - http:

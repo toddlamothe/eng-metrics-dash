@@ -7,34 +7,33 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 
 const ReleaseDetails = (props) => {
-  // console.log("props.releaseDetails.release_name = ", props.releaseDetails.release_name);
-
-  const [backlogId, setBacklogId] = useState(props.release ? props.release.backlog_id : props.releaseDetails.backlog_id);
+  const [releaseUuid, setReleaseUuid] = useState(props.releaseDetails ? props.releaseDetails.id : null);
+  const [backlogId, setBacklogId] = useState(props.releaseDetails ? props.releaseDetails.backlog_id : props.releaseDetails.backlog_id);
   const [backlogIdError, setBacklogIdError] = useState(false);
-  const [releaseName, setReleaseName] = useState(props.release ? props.release.release_name : props.releaseDetails.release_name);
+  const [releaseName, setReleaseName] = useState(props.releaseDetails ? props.releaseDetails.release_name : props.releaseDetails.release_name);
   const [releaseNameError, setReleaseNameError] = useState(false);
-  const [releaseDescription, setReleaseDescription] = useState(props.release ? props.release.release_description : props.releaseDetails.release_description);
+  const [releaseDescription, setReleaseDescription] = useState(props.releaseDetails ? props.releaseDetails.release_description : props.releaseDetails.release_description);
   const [releaseDescriptionError, setReleaseDescriptionError] = useState(false);
   const [epicTag, setEpicTag] = useState(props.releaseDetails.epic_tag);
   const [epicTagError, setEpicTagError] = useState(false);
-
-  // Update component state if props change
-  useEffect(() => {
-    setBacklogId(props.releaseDetails.backlog_id);
-  }, 
-  [props.releaseDetails.backlog_id]);
-  useEffect(() => {
-    setReleaseName(props.releaseDetails.release_name);
-  }, 
-  [props.releaseDetails.release_name]);
-  useEffect(() => {
-    setReleaseDescription(props.releaseDetails.release_description);
-  }, 
-  [props.releaseDetails.release_description]);
-  useEffect(() => {
-    setEpicTag(props.releaseDetails.epic_tag);
-  }, 
-  [props.releaseDetails.epic_tag]);
+  
+  // // Update component state if props change
+  // useEffect(() => {
+  //   setBacklogId(props.releaseDetails.backlog_id);
+  // }, 
+  // [props.releaseDetails.backlog_id]);
+  // useEffect(() => {
+  //   setReleaseName(props.releaseDetails.release_name);
+  // }, 
+  // [props.releaseDetails.release_name]);
+  // useEffect(() => {
+  //   setReleaseDescription(props.releaseDetails.release_description);
+  // }, 
+  // [props.releaseDetails.release_description]);
+  // useEffect(() => {
+  //   setEpicTag(props.releaseDetails.epic_tag);
+  // }, 
+  // [props.releaseDetails.epic_tag]);
 
   // Valdiate release detail form fields
   const validateReleaseDetailsForm = () => {
@@ -78,6 +77,7 @@ const ReleaseDetails = (props) => {
       return;
     }      
     const requestBody = {
+      "releaseId" : releaseUuid,
       "backlogId": backlogId,
       "releaseName": releaseName,
       "releaseDescription": releaseDescription,
