@@ -25,13 +25,18 @@ const ReleaseAdmin = (props) => {
     setReleaseDetailComponentVisibile(false);
   }
 
+  const onNewReleaseClicked = () => {
+    setReleaseDetails({});
+    showReleaseDetailComponent()
+  };
+
   return (
       <>
         <Toolbar>
           <Typography variant="h4" component="div" sx={{ flexGrow: 1 }}>
             Release Admin
           </Typography>  
-          <Button color="inherit" onClick={() => { showReleaseDetailComponent() }}>New Release</Button>
+          <Button color="inherit" onClick={() => { onNewReleaseClicked() }}>New Release</Button>
         </Toolbar>
         <Container maxWidth="lg" sx={{ mt: 1, mb: 1 }}>
           <Grid container spacing={1}>
