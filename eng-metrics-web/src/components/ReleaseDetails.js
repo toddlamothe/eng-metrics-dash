@@ -7,7 +7,7 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 
 const ReleaseDetails = (props) => {
-  const [releaseUuid, setReleaseUuid] = useState(props.releaseDetails ? props.releaseDetails.id : null);
+  const [releaseUuid, setReleaseUuid] = useState(props.releaseDetails.id);
   const [backlogId, setBacklogId] = useState(props.releaseDetails ? props.releaseDetails.backlog_id : props.releaseDetails.backlog_id);
   const [backlogIdError, setBacklogIdError] = useState(false);
   const [releaseName, setReleaseName] = useState(props.releaseDetails ? props.releaseDetails.release_name : props.releaseDetails.release_name);
@@ -16,24 +16,16 @@ const ReleaseDetails = (props) => {
   const [releaseDescriptionError, setReleaseDescriptionError] = useState(false);
   const [epicTag, setEpicTag] = useState(props.releaseDetails.epic_tag);
   const [epicTagError, setEpicTagError] = useState(false);
-  
-  // // Update component state if props change
-  // useEffect(() => {
-  //   setBacklogId(props.releaseDetails.backlog_id);
-  // }, 
-  // [props.releaseDetails.backlog_id]);
-  // useEffect(() => {
-  //   setReleaseName(props.releaseDetails.release_name);
-  // }, 
-  // [props.releaseDetails.release_name]);
-  // useEffect(() => {
-  //   setReleaseDescription(props.releaseDetails.release_description);
-  // }, 
-  // [props.releaseDetails.release_description]);
-  // useEffect(() => {
-  //   setEpicTag(props.releaseDetails.epic_tag);
-  // }, 
-  // [props.releaseDetails.epic_tag]);
+
+  // Update component state if props change
+  useEffect(() => {
+    setReleaseUuid(props.releaseDetails.id ? props.releaseDetails.id : "");
+    setBacklogId(props.releaseDetails.backlog_id ? props.releaseDetails.backlog_id : "");
+    setReleaseName(props.releaseDetails.release_name ? props.releaseDetails.release_name : "");
+    setReleaseDescription(props.releaseDetails.release_description ? props.releaseDetails.release_description : "");
+    setEpicTag(props.releaseDetails.epic_tag ? props.releaseDetails.epic_tag : "");
+  }, 
+  [props.releaseDetails]);
 
   // Valdiate release detail form fields
   const validateReleaseDetailsForm = () => {
@@ -108,13 +100,15 @@ const ReleaseDetails = (props) => {
         }
       )
       .then( data => {
-        return(data);
+        props.onReleaseDetailsSaved();
+        // return(data);
       })
       .catch(function(error) {
         const responseMessage = {
           statusCode: 500,
           body: error
         };
+        // TO DO: Why return the response message on a PUT?
         return JSON.stringify(responseMessage);
       });        
   }
