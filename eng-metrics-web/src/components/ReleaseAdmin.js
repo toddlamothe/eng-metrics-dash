@@ -13,15 +13,11 @@ const  ReleaseAdmin = (props) => {
   var [releaseDetailComponentVisible, setReleaseDetailComponentVisibile] = useState(false);
   var [releaseDetails, setReleaseDetails] = useState({});
 
-  const releasesUrl = "https://ha4mv8svsk.execute-api.us-east-1.amazonaws.com/test-tl/releases";
-  var releaseData;
   var [releases, setReleases] = useState();
-  releaseData =  useApiGet(releasesUrl);
-
+  
   useEffect( () => {
-    console.log("useEffect");
-    setReleases(releaseData);
-  }, [releaseData])
+    setReleases(props.releases);
+  }, [])
 
   const onReleaseSelected = (selectedReleaseDetails) => {
     setReleaseDetails(selectedReleaseDetails);
@@ -42,71 +38,8 @@ const  ReleaseAdmin = (props) => {
   };
 
   const onReleaseDetailsSaved = async () => {
-    console.log("[OnReleaseDetailsSaved]");
-    // Somehow re-render ReleaseList component
-    console.log("releasesUrl: ", releasesUrl);
-    releaseData =  await fetch(
-      releasesUrl, {
-        method: 'GET',
-        mode: 'cors',
-        headers: {
-          'x-api-key': 'PI9U8B6hNg3Kb80alaGgx4JqzWpd7Sjn14O1234b'
-        }
-      })
-      .then(response => {
-        if (!response.ok) {
-          const responseMessage = {
-              statusCode: response.status,
-              body: response.statusText
-          };
-          return JSON.stringify(responseMessage);
-        }
-        return response.json()            
-      })
-      .then(data => {
-          return(data);
-      }).catch(function(error) {
-        const responseMessage = {
-          statusCode: 500,
-          body: error
-        };
-        return JSON.stringify(responseMessage);
-      });
-    console.log("releaseData = ", releaseData);
-    setReleases(releaseData);
+    props.onRefreshReleases();
   }
-
-  const fetchData = async () => {
-
-    await fetch(
-      releasesUrl, {
-        method: 'GET',
-        mode: 'cors',
-        headers: {
-          'x-api-key': 'PI9U8B6hNg3Kb80alaGgx4JqzWpd7Sjn14O1234b'
-        }
-      })
-      .then(response => {
-        if (!response.ok) {
-          const responseMessage = {
-              statusCode: response.status,
-              body: response.statusText
-          };
-          return JSON.stringify(responseMessage);
-        }
-        return response.json()            
-      })
-      .then(data => {
-          return(data);
-      }).catch(function(error) {
-        const responseMessage = {
-          statusCode: 500,
-          body: error
-        };
-        return JSON.stringify(responseMessage);
-      });
-  };
-
 
   return (
       <>

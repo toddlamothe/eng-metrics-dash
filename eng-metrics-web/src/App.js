@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useState, useEffect } from 'react';
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import MuiDrawer from '@mui/material/Drawer';
@@ -19,7 +19,6 @@ import {
   Route,
   Link,
 } from "react-router-dom";
-import { useApiGet } from 'hooks/useApiGet';
 
 const drawerWidth = 240;
 
@@ -70,14 +69,52 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 const mdTheme = createTheme();
 
 function DashboardContent() {
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = useState(true);
+  const [releases, setReleases] = useState([]);
   const toggleDrawer = () => {
     setOpen(!open);
   };
 
-  // Get releases
-  const releasesUrl = "https://ha4mv8svsk.execute-api.us-east-1.amazonaws.com/test-tl/releases";
-  const releases =  useApiGet(releasesUrl);
+  const refreshReleases = () => {
+    const releasesUrl = "https://ha4mv8svsk.execute-api.us-east-1.amazonaws.com/test-tl/releases";
+    fetch(
+      releasesUrl, {
+        method: 'GET',
+        mode: 'cors',
+        headers: {
+          'x-api-key': 'PI9U8B6hNg3Kb80alaGgx4JqzWpd7Sjn14O1234b'
+        }
+      })
+      .then(response => {
+        if (!response.ok) {
+          const responseMessage = {
+              statusCode: response.status,
+              body: response.statusText
+          };
+          return JSON.stringify(responseMessage);
+        }
+        return response.json()            
+      })
+      .then(data => {
+        setReleases(data);
+      }).catch(function(error) {
+        const responseMessage = {
+          statusCode: 500,
+          body: error
+        };
+        return JSON.stringify(responseMessage);
+      });    
+  };
+  
+
+  useEffect( () => {
+    console.log("useEffect");
+    refreshReleases();
+  }, []);
+
+  const onRefreshReleases = () => {
+    refreshReleases();
+  }
 
   return (
     <ThemeProvider theme={mdTheme}>
@@ -144,7 +181,7 @@ function DashboardContent() {
 
           <Switch>
             <Route path="/release-admin">
-              <ReleaseAdmin />
+              <ReleaseAdmin onRefreshReleases={onRefreshReleases} releases={releases} />
             </Route>
             <Route path="/release-dashboard">
               <ReleaseDashboard />
