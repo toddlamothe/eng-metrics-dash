@@ -7,7 +7,6 @@ import Typography from '@mui/material/Typography';
 import ReleaseList from './ReleaseList';
 import ReleaseDetails from './ReleaseDetails';
 import Button from '@mui/material/Button';
-import { useApiGet } from '../hooks/useApiGet';
 
 const  ReleaseAdmin = (props) => {
   var [releaseDetailComponentVisible, setReleaseDetailComponentVisibile] = useState(false);
@@ -17,7 +16,7 @@ const  ReleaseAdmin = (props) => {
   
   useEffect( () => {
     setReleases(props.releases);
-  }, [])
+  }, [props.releases])
 
   const onReleaseSelected = (selectedReleaseDetails) => {
     setReleaseDetails(selectedReleaseDetails);

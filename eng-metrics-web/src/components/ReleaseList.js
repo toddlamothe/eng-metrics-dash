@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
-import { PanoramaPhotosphere } from '@mui/icons-material';
 
 const columns = [
   { field: 'id', headerName: 'id', hide: true },
@@ -10,7 +9,7 @@ const columns = [
   { field: 'epic_tag', headerName: 'Epic Tag', hide: true },
 ];
 
-function DataTable(props) {
+function ReleaseList(props) {
 
   if (!props.releases) {
     return(
@@ -47,4 +46,4 @@ function DataTable(props) {
   );
 }
 
-export default React.memo(DataTable);
+export default ReleaseList;

@@ -104,11 +104,9 @@ function DashboardContent() {
         };
         return JSON.stringify(responseMessage);
       });    
-  };
-  
+  };  
 
   useEffect( () => {
-    console.log("useEffect");
     refreshReleases();
   }, []);
 
