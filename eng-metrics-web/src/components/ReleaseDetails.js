@@ -100,13 +100,15 @@ const ReleaseDetails = (props) => {
         }
       )
       .then( data => {
-        return(data);
+        props.onReleaseDetailsSaved();
+        // return(data);
       })
       .catch(function(error) {
         const responseMessage = {
           statusCode: 500,
           body: error
         };
+        // TO DO: Why return the response message on a PUT?
         return JSON.stringify(responseMessage);
       });        
   }

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
-import { useApiGet } from '../hooks/useApiGet';
+import { PanoramaPhotosphere } from '@mui/icons-material';
 
 const columns = [
   { field: 'id', headerName: 'id', hide: true },
@@ -10,11 +10,15 @@ const columns = [
   { field: 'epic_tag', headerName: 'Epic Tag', hide: true },
 ];
 
+function DataTable(props) {
 
-export default function DataTable(props) {
-  const releasesUrl = "https://ha4mv8svsk.execute-api.us-east-1.amazonaws.com/test-tl/releases";
-  const rows =  useApiGet(releasesUrl);
-  const dataGridRows = rows.map( release => {
+  if (!props.releases) {
+    return(
+      <></>
+    )
+  }
+
+  const dataGridRows = props.releases.map( release => {
     return {
       id: release.uuid,
       backlog_id: release.backlog_id,
@@ -42,3 +46,5 @@ export default function DataTable(props) {
     </div>
   );
 }
+
+export default React.memo(DataTable);
