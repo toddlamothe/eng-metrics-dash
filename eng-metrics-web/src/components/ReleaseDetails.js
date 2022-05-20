@@ -5,6 +5,9 @@ import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import moment from "moment";
 
 const ReleaseDetails = (props) => {
   const [releaseUuid, setReleaseUuid] = useState(props.releaseDetails.id);
@@ -16,6 +19,8 @@ const ReleaseDetails = (props) => {
   const [releaseDescriptionError, setReleaseDescriptionError] = useState(false);
   const [epicTag, setEpicTag] = useState(props.releaseDetails.epic_tag);
   const [epicTagError, setEpicTagError] = useState(false);
+  const [releaseStartDate, setReleaseStartDate] = useState();
+  const [releaseStartDateError, setReleaseStartDateError] = useState();
 
   // Update component state if props change
   useEffect(() => {
@@ -24,6 +29,13 @@ const ReleaseDetails = (props) => {
     setReleaseName(props.releaseDetails.release_name ? props.releaseDetails.release_name : "");
     setReleaseDescription(props.releaseDetails.release_description ? props.releaseDetails.release_description : "");
     setEpicTag(props.releaseDetails.epic_tag ? props.releaseDetails.epic_tag : "");
+
+
+    if (props.releaseDetails && props.releaseDetails.start_date) {
+      var startDate = moment(props.releaseDetails.start_date, "YYYY-MM-DD");
+      setReleaseStartDate(startDate.toDate());
+    }
+
   }, 
   [props.releaseDetails]);
 
@@ -101,7 +113,6 @@ const ReleaseDetails = (props) => {
       )
       .then( data => {
         props.onReleaseDetailsSaved();
-        // return(data);
       })
       .catch(function(error) {
         const responseMessage = {
@@ -203,6 +214,10 @@ const ReleaseDetails = (props) => {
                   }
 
                 />
+              </Grid>
+
+              <Grid item xs={12} md={12} lg={12}>
+                <DatePicker selected={releaseStartDate} onChange={(date) => setReleaseStartDate(date)} />
               </Grid>
 
               <Grid item xs={12} md={12} lg={12}>
