@@ -35,7 +35,6 @@ const ReleaseDetails = (props) => {
       var startDate = moment(props.releaseDetails.start_date, "YYYY-MM-DD");
       setReleaseStartDate(startDate.toDate());
     }
-
   }, 
   [props.releaseDetails]);
 
@@ -85,8 +84,10 @@ const ReleaseDetails = (props) => {
       "backlogId": backlogId,
       "releaseName": releaseName,
       "releaseDescription": releaseDescription,
-      "epicTag": epicTag
+      "epicTag": epicTag,
+      "releaseStartDate" : releaseStartDate,
     }
+    console.log("requestBody = ", requestBody);
     const requestOptions = {
       method: 'PUT',
       mode: 'cors',

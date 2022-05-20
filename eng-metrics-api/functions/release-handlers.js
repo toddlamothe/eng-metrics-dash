@@ -45,7 +45,8 @@ module.exports.putRelease = async (event, context, callback) => {
     body.backlogId &&
     body.releaseName &&
     body.releaseDescription &&
-    body.epicTag
+    body.epicTag &&
+    body.releaseStartDate
     )) {
       console.log("Invalid path parameters");
       callback(null, {
@@ -78,7 +79,8 @@ module.exports.putRelease = async (event, context, callback) => {
       "'" + body.releaseName + "', " +
       "'" + body.releaseDescription + "', " +
       "'" + body.epicTag + "', " +
-      "now()" +
+      "now(), " +
+      "'" + body.releaseStartDate + "'"
       ");";
   } else {
     // Update release
@@ -87,9 +89,12 @@ module.exports.putRelease = async (event, context, callback) => {
       "backlog_id=" + body.backlogId + ", " +
       "release_name = '" + body.releaseName + "', " +
       "release_description='" + body.releaseDescription + "', " +
-      "epic_tag='" + body.epicTag + "' " +
+      "epic_tag='" + body.epicTag + "', " +
+      "start_date='" + body.releaseStartDate + "' " +
       "WHERE uuid='" + body.releaseId + "';";
   }
+
+  console.log("releaseSqlStatement = ", releaseSqlStatement);
 
   // Insert or update release
   try {
