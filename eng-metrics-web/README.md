@@ -1,4 +1,4 @@
-# Union Street Media Engineering Metrics Dashboard - Web Front End
+# Engineering Metrics Dashboard - Web Front End
 
 This repo contains the React front-end for the engineering metrics dashboard. The API and warehouse DDL scripts are stored in a separate repo
 
