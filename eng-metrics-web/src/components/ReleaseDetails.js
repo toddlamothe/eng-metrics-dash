@@ -30,7 +30,6 @@ const ReleaseDetails = (props) => {
     setReleaseDescription(props.releaseDetails.release_description ? props.releaseDetails.release_description : "");
     setEpicTag(props.releaseDetails.epic_tag ? props.releaseDetails.epic_tag : "");
 
-
     if (props.releaseDetails && props.releaseDetails.start_date) {
       var startDate = moment(props.releaseDetails.start_date, "YYYY-MM-DD");
       setReleaseStartDate(startDate.toDate());
@@ -67,6 +66,11 @@ const ReleaseDetails = (props) => {
     else {
       setEpicTagError(false);
     }
+
+    if (!moment(releaseStartDate, 'MM/DD/YYYY',true).isValid()) {
+      const defaultReleaseDate = moment("2022-01-01", "YYYY-MM-DD").toDate()
+      setReleaseStartDate(defaultReleaseDate);
+    }    
 
     if (backlogIdError || releaseNameError || releaseDescriptionError || epicTagError) {
       return false;
@@ -218,7 +222,10 @@ const ReleaseDetails = (props) => {
               </Grid>
 
               <Grid item xs={12} md={12} lg={12}>
-                <DatePicker selected={releaseStartDate} onChange={(date) => setReleaseStartDate(date)} />
+                <DatePicker 
+                  selected={releaseStartDate} 
+                  onChange={(date) => setReleaseStartDate(date)}
+                   />
               </Grid>
 
               <Grid item xs={12} md={12} lg={12}>
