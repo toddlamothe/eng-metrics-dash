@@ -40,7 +40,6 @@ const ReleaseDashboard = (props) => {
   const backlogData = useApiGet(backlogEpicsUrl);
   const backlogVelocitiesUrl = 'https://ha4mv8svsk.execute-api.us-east-1.amazonaws.com/test-tl/backlogs/' + location.state.release.backlog_id + '/velocity?startdate=' + location.state.release.start_date;
   const encodedBacklogVelocitiesUrl= encodeURI(backlogVelocitiesUrl);
-  console.log("encodedBacklogVelocitiesUrl = ", encodedBacklogVelocitiesUrl);
   const backlogVelocityData = useApiGet(encodedBacklogVelocitiesUrl);  
   const [velocityBarChartData, setVelocityBarChartData] = useState({});
 
