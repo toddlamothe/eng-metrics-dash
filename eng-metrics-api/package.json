@@ -14,6 +14,7 @@
   "dependencies": {
     "google-spreadsheet": "^3.1.15",
     "googleapis": "^39.2.0",
+    "moment": "^2.29.3",
     "mysql": "^2.18.1",
     "mysql2": "^2.2.5",
     "node-fetch": "^2.6.1",

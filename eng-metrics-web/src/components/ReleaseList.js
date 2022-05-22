@@ -7,6 +7,7 @@ const columns = [
   { field: 'release_name', headerName: 'Name', width: 200 },
   { field: 'release_description', headerName: 'Description', width: 300 },
   { field: 'epic_tag', headerName: 'Epic Tag', hide: true },
+  { field: 'start_date', headerName: 'Start Date', hide: true },
 ];
 
 function ReleaseList(props) {
@@ -23,7 +24,8 @@ function ReleaseList(props) {
       backlog_id: release.backlog_id,
       release_name : release.release_name,
       release_description : release.release_description,
-      epic_tag : release.epic_tag
+      epic_tag : release.epic_tag,
+      start_date : release.start_date
     }
   })
 
