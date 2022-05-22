@@ -91,7 +91,6 @@ const ReleaseDetails = (props) => {
       "epicTag": epicTag,
       "releaseStartDate" : releaseStartDate,
     }
-    console.log("requestBody = ", requestBody);
     const requestOptions = {
       method: 'PUT',
       mode: 'cors',

@@ -1,4 +1,5 @@
 const mysql = require('mysql2/promise');
+const moment = require('moment');
 
 module.exports.backlogEpics = async (event, context, callback) => {
     const connection = await mysql.createConnection( {
@@ -52,40 +53,43 @@ module.exports.backlogEpics = async (event, context, callback) => {
 // Return a list of sprints, combining point totals for sprints that have the same
 // end date, to gain a picture of total work completed by multiple teams during that sprint
 module.exports.backlogVelocity = async(event, context, callback) => {
-    const connection = await mysql.createConnection( {
-        host: 'eng-metrics.cgwxrjuo6oyd.us-east-1.rds.amazonaws.com',
-        user: process.env.DB_USER,
-        password: process.env.DB_PASS,
-        database: 'eng_metrics'
-    });
 
-    try {
-        // Only fetch backlog velocity from January 2021 forward
-        const veloSelectStatement = "select name, end_date, sum(points_done) as total_points, sum(points_estimated) as total_points_estimated from sprint where start_date >= '2021-01-01' and backlog_id=" + event.pathParameters.backlogId + " group by end_date order by end_date ASC;"
-        const [sprintRows, sprintFields] = await connection.query(veloSelectStatement);
-        var sprintResponseObject = JSON.parse(JSON.stringify(sprintRows));
+  const releaseStartDate = moment(event.queryStringParameters.startdate).format("YYYY-MM-DD");
 
-        connection.end()
+  const connection = await mysql.createConnection( {
+      host: 'eng-metrics.cgwxrjuo6oyd.us-east-1.rds.amazonaws.com',
+      user: process.env.DB_USER,
+      password: process.env.DB_PASS,
+      database: 'eng_metrics'
+  });
 
-        const responseMessage = {
-            "isBase64Encoded": false,
-            "statusCode": 200,
-            "headers": {
-                "Access-Control-Allow-Origin" : "*",
-                "Access-Control-Allow-Credentials" : "true"
-            },
-            "body": JSON.stringify(sprintResponseObject)
-        }
-        callback(null, responseMessage);
+  try {
+      // Only fetch backlog velocity from January 2021 forward
+      const veloSelectStatement = "select name, end_date, sum(points_done) as total_points, sum(points_estimated) as total_points_estimated from sprint where start_date >= '" + releaseStartDate + "' and backlog_id=" + event.pathParameters.backlogId + " group by end_date order by end_date ASC;"
+      const [sprintRows, sprintFields] = await connection.query(veloSelectStatement);
+      var sprintResponseObject = JSON.parse(JSON.stringify(sprintRows));
 
-    } catch (error) {
-        console.log(error);
-        connection.end()
-        callback(null, {
-            statusCode: 200, 
-            body: error
-        });	            
-    }
+      connection.end()
+
+      const responseMessage = {
+          "isBase64Encoded": false,
+          "statusCode": 200,
+          "headers": {
+              "Access-Control-Allow-Origin" : "*",
+              "Access-Control-Allow-Credentials" : "true"
+          },
+          "body": JSON.stringify(sprintResponseObject)
+      }
+      callback(null, responseMessage);
+
+  } catch (error) {
+      console.log(error);
+      connection.end()
+      callback(null, {
+          statusCode: 200, 
+          body: error
+      });	            
+  }
 }
 
 // Return a complete list of backlog sprints and sprint statistics
